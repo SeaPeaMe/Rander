@@ -28,7 +28,7 @@ namespace ExampleGame.Scripts
             LinkedObject.Size = new Vector2((float)Math.Sin(Time.TimeSinceStart * PulseSpeed) * PulseMagnitude + BaseSize + PulseMagnitude, (float)Math.Sin(Time.TimeSinceStart * PulseSpeed) * PulseMagnitude + BaseSize + PulseMagnitude);
 
             if (Time.TimeSinceStart > Timer && Input.Mouse.LeftButton == ButtonState.Pressed) {
-                new Object2D("P" + i, LinkedObject.Position, new Vector2(10, 10), Rand.RandomFloat(0, 90), new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.Blue), new Physics2DComponent(), new Particle(i) }, Alignment.Center, 0.95f);
+                new Object2D("P" + i, LinkedObject.Position, new Vector2(10, 10), Rand.RandomFloat(0, 90), new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.Blue), new Particle(i) }, Alignment.Center, 0.95f);
                 i++;
                 Timer += 0.01f;
             }
