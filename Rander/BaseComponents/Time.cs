@@ -27,8 +27,11 @@ namespace Rander
         public static void Wait(int waitTime, Action call)
         {
             Thread thr = new Thread(new ThreadStart(() => {
-                Thread.Sleep(waitTime);
-                call();
+                while (!Game.KillThreads)
+                {
+                    Thread.Sleep(waitTime);
+                    call();
+                }
             }));
 
             thr.Start();

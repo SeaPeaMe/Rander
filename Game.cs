@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-
 using Rander._2D;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Rander
 {
@@ -18,6 +18,8 @@ namespace Rander
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
+
+        public static bool KillThreads = false;
 
         static List<Component> BaseScripts = new List<Component>();
 
@@ -83,19 +85,6 @@ namespace Rander
             }
         }
 
-        public static Object2D FindObject2D(string objectName)
-        {
-            Object2D obj;
-            if (Objects2D.TryGetValue(objectName, out obj))
-            {
-                return obj;
-            } else
-            {
-                Debug.LogError("Object \"" + objectName + "\" does not exist!", true);
-                return null;
-            }
-        }
-
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -106,7 +95,7 @@ namespace Rander
             if (IsActive)
             {
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    Exit();
+                    Close(true);
 
                 // Update important scripts first
                 foreach (Component Scr in BaseScripts.ToList())
@@ -119,10 +108,7 @@ namespace Rander
                 // Update 2D
                 foreach (Object2D Obj in Objects2D.Values.ToList())
                 {
-                    foreach (Component2D Com in Obj.Components.ToList())
-                    {
-                        Com.Update();
-                    }
+                    Obj.Update();
                 }
             }
 
@@ -133,7 +119,8 @@ namespace Rander
         {
             Gametime = gameTime;
 
-            if (IsActive) {
+            if (IsActive)
+            {
                 graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
                 Drawing.Begin(SpriteSortMode.FrontToBack);
@@ -146,7 +133,8 @@ namespace Rander
                 MyGame.Main.OnDraw();
 
                 // Draws 2D
-                foreach (Object2D Obj in Objects2D.Values.ToList()) {
+                foreach (Object2D Obj in Objects2D.Values.ToList())
+                {
                     Obj.Draw();
                 }
                 Drawing.End();
@@ -155,11 +143,17 @@ namespace Rander
             base.Draw(gameTime);
         }
 
-        public static void Close()
+        public static void Close(bool CloseConsole = false)
         {
             // Clears all the lists so it doesn't run them again and then closes the game window
+            KillThreads = true;
             Objects2D.Clear();
             gameWindow.Dispose();
+
+            if (CloseConsole)
+            {
+                Environment.Exit(0);
+            }
         }
     }
 
@@ -167,6 +161,7 @@ namespace Rander
     {
         public static SpriteFont DefaultFont;
         public static Texture2D PixelTexture;
+        public static string ExecutableFolderPath = AppDomain.CurrentDomain.BaseDirectory;
     }
 
     public class Screen

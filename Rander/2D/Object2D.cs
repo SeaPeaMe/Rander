@@ -2,134 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Rander._2D
 {
     public class Object2D
     {
         public string ObjectName;
-        Vector2 Pos;
-        Vector2 ParentPiv = Vector2.Zero;
-        public Vector2 Position { get { return Pos; } set {
-
-                foreach (Object2D Child in Children)
-                {
-                    Child.Position = value + Child.RelativePosition;
-                }
-
-                Pos = value;
-            }
-        }
-        public Vector2 Size;
-        Alignment Al = Alignment.TopLeft;
-        public Vector2 Pivot;
-        public Alignment Align { get { return Al; } set { SetAlign(value); } }
-        float Rot;
-        float ParentRot;
-        public float Rotation { get { return Rot; } set {
-                foreach (Object2D Child in Children)
-                {
-                    Child.Rotation = value;
-                    Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Vector2.Distance(Child.Pos, Pos), (float)Math.Sin(Rotation) * Vector2.Distance(Child.Pos, Pos));
-                }
-
-                SetAlign(Align);
-                Rot = value; 
-            } 
-        }
-        public float RelativeRotation { get { if (Parent != null) { return Rot - Parent.Rot; } else { return Rot; } } set {
-
-                if (Parent == null) // If the object has no parent, set the position normally
-                {
-                    Rotation = ParentRot + value;
-                }
-                else
-                {
-                    foreach (Object2D Child in Children)
-                    {
-                        Child.Rotation = value;
-                        Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Child.RelativePosition.X, (float)Math.Sin(Rotation) * Child.RelativePosition.Y);
-                    }
-
-                    SetAlign(Align);
-                    Rot = value - Parent.Rot;
-                }
-            }
-        }
-        public List<Component2D> Components = new List<Component2D>();
-        public float Layer = 0;
-
-        public Vector2 RelativePosition { get { if (Parent != null) { return Pos - Parent.Pos; } else { return Pos; } } set {
-                // Sets the position and then updates all the children
-                if (Parent == null) // If the object has no parent, set the position normally
-                {
-                    Position = ParentPiv + value;
-                }
-                else
-                {
-                    Pos = Parent.Position + value;
-
-                    foreach (Object2D Child in Children)
-                    {
-                        Child.Position = Pos + Child.RelativePosition;
-                    }
-                }
-            }
-        }
-        public List<Object2D> Children = new List<Object2D>();
         public Object2D Parent;
+        public float Layer = 0;
+        public bool Enabled = true;
 
-        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null)
-        {
-            Size = size;
-            Pos = position;
-            Rot = rotation;
+        public Vector2 PositionNoPivot { get { return Pos - Pivot; } }
 
-            Layer = layer;
+        Alignment Al = Alignment.TopLeft;
+        public Vector2 Pivot = Vector2.Zero;
+        #region Alignment/Pivot
+        public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
-            ObjectName = objectName;
-
-            Parent = parent;
-
-            if (Parent != null) {
-                Parent.AddChild(this);
-            }
-
-            SetAlign(alignment);
-
-            // Goes through all the possible errors
-            if (ObjectName == "")
-            {
-                Debug.LogError("Object name can't be blank!", true, 3);
-            }
-            else if (Game.Objects2D.ContainsKey(ObjectName))
-            {
-                Debug.LogError("The 2DObject \"" + ObjectName + "\" already exists!", true, 3);
-            }
-            else
-            {
-                Game.Objects2D.Add(ObjectName, this);
-            }
-
-            // Starts the scripts
-            if (components != null)
-            {
-                foreach (Component2D com in components)
-                {
-                    AddComponent(com);
-                }
-            }
-        }
-
-        public virtual void Draw()
-        {
-            foreach (Component2D Com in Components)
-            {
-                Com.Draw();
-            }
-        }
-
-        public virtual void SetAlign(Alignment al)
+        public virtual void SetPivot(Alignment al)
         {
             Al = al;
             switch (al)
@@ -166,7 +57,152 @@ namespace Rander._2D
                     break;
             }
         }
+        #endregion
 
+        float Rot = 0;
+        float DestroyedParentRot = 0;
+        #region Get/Set Rotation
+        public float Rotation
+        {
+            get { return Rot; }
+            set
+            {
+                foreach (Object2D Child in Children)
+                {
+                    Child.Rotation = value;
+                    Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Vector2.Distance(Child.Pos, Pos), (float)Math.Sin(Rotation) * Vector2.Distance(Child.Pos, Pos));
+                }
+
+                SetPivot(Align);
+                Rot = value;
+            }
+        }
+        public float RelativeRotation
+        {
+            get { if (Parent != null) { return Rot - Parent.Rot; } else { return Rot; } }
+            set
+            {
+                if (Parent == null) // If the object has no parent, set the position normally
+                {
+                    Rotation = DestroyedParentRot + value;
+                }
+                else
+                {
+                    foreach (Object2D Child in Children)
+                    {
+                        Child.Rotation = value;
+                        Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Child.RelativePosition.X, (float)Math.Sin(Rotation) * Child.RelativePosition.Y);
+                    }
+
+                    SetPivot(Align);
+                    Rot = value - Parent.Rot;
+                }
+            }
+        }
+        #endregion
+
+        Vector2 Pos = Vector2.Zero;
+        Vector2 DestroyedParentPos = Vector2.Zero;
+        #region Get/Set Position
+        public Vector2 RelativePosition
+        {
+            get { if (Parent != null) { return Position - Parent.Position; } else { return Position; } }
+            set
+            {
+                // Sets the position and then updates all the children
+                if (Parent == null) // If the object has no parent, set the position normally
+                {
+                    Position = DestroyedParentPos + value;
+                }
+                else
+                {
+                    Pos = Parent.Position + value;
+
+                    foreach (Object2D Child in Children)
+                    {
+                        Child.Position = Position + Child.RelativePosition;
+                    }
+                }
+            }
+        }
+        public Vector2 Position
+        {
+            get { return Pos; }
+            set
+            {
+                foreach (Object2D Child in Children)
+                {
+                    Child.Position = value + Child.RelativePosition;
+                }
+
+                Pos = value;
+            }
+        }
+        #endregion
+
+        public List<Object2D> Children = new List<Object2D>();
+        #region Children
+        public void AddChild(Object2D object2d)
+        {
+            Children.Add(object2d);
+        }
+
+        public void RemoveChild(Object2D object2d)
+        {
+            Children.Remove(object2d);
+        }
+        #endregion
+
+        // Do This
+        #region Get/Set Size
+        public Vector2 Size = new Vector2(100, 100);
+        #endregion
+
+        #region Creation
+        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null)
+        {
+            Parent = parent;
+            if (Parent != null)
+            {
+                Parent.AddChild(this);
+            }
+
+            Size = size;
+            SetPivot(alignment);
+            RelativePosition = position;
+            RelativeRotation = rotation;
+
+            Layer = layer;
+
+            ObjectName = objectName;
+
+            // Goes through all the possible errors
+            if (ObjectName == "")
+            {
+                Debug.LogError("Object name can't be blank!", true, 3);
+            }
+            else if (Game.Objects2D.ContainsKey(ObjectName))
+            {
+                Debug.LogError("The 2DObject \"" + ObjectName + "\" already exists!", true, 3);
+            }
+            else
+            {
+                Game.Objects2D.Add(ObjectName, this);
+            }
+
+            // Starts the scripts
+            if (components != null)
+            {
+                foreach (Component2D com in components)
+                {
+                    AddComponent(com);
+                }
+            }
+        }
+        #endregion
+
+        public List<Component2D> Components = new List<Component2D>();
+        #region Components
         public Component2D AddComponent(Component2D component)
         {
             component.LinkedObject = this;
@@ -204,23 +240,60 @@ namespace Rander._2D
                 Debug.LogError("2DObject \"" + ObjectName + "\" does not already contain the component \"" + typeof(T).Name + "\"");
             }
         }
+        #endregion
 
-        public void AddChild(Object2D object2d)
+        #region Static
+        public static Object2D Find(string objectName)
         {
-            Children.Add(object2d);
+            Object2D obj;
+            if (Game.Objects2D.TryGetValue(objectName, out obj))
+            {
+                return obj;
+            }
+            else
+            {
+                Debug.LogError("Object \"" + objectName + "\" does not exist!");
+                return null;
+            }
+        }
+
+        public static bool Exists(string objectName)
+        {
+            return Game.Objects2D.Keys.Contains(objectName);
+        }
+        #endregion
+
+        public virtual void Update()
+        {
+            foreach (Component2D Com in Components)
+            {
+                Com.Update();
+            }
+        }
+
+        public virtual void Draw()
+        {
+            if (Enabled) {
+                foreach (Component2D Com in Components)
+                {
+                    Com.Draw();
+                }
+            }
         }
 
         public void Destroy(bool DestroyChildren = false)
         {
-            if (DestroyChildren == false) {
+            if (DestroyChildren == false)
+            {
                 // Re-binds the children to the "Being destroyed" object's parent
                 foreach (Object2D Child in Children)
                 {
-                    Child.ParentPiv = Pos;
-                    Child.ParentRot = Rot;
+                    Child.DestroyedParentPos = Pos;
+                    Child.DestroyedParentRot = Rot;
                     Child.Parent = Parent;
                 }
-            } else
+            }
+            else
             {
                 // Destroys the children
                 foreach (Object2D Child in Children)

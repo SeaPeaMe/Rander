@@ -8,7 +8,6 @@ namespace Rander
 {
     public class ContentLoader
     {
-
         static Dictionary<string, SpriteFont> LoadedFonts = new Dictionary<string, SpriteFont>();
         static Dictionary<string, Texture2D> Loaded2DTextures = new Dictionary<string, Texture2D>();
 

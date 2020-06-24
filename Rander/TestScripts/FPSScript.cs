@@ -17,7 +17,7 @@ namespace Rander.TestScripts
         {
             if ((float)Game.Gametime.TotalGameTime.TotalSeconds > TimeToPass)
             {
-                LinkedObject.GetComponent<Text2DComponent>().Txt = "FPS: " + FramesPassed;
+                LinkedObject.GetComponent<Text2DComponent>().Text = "FPS: " + FramesPassed;
                 TimeToPass += 1;
                 FramesPassed = 0;
             } else

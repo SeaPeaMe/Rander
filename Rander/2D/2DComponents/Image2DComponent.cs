@@ -5,10 +5,10 @@ namespace Rander._2D
 {
     public class Image2DComponent : Component2D
     {
-        public Texture2D Texture;
+        public Texture2D Texture = DefaultValues.PixelTexture;
         public Color Color = Color.White;
 
-
+        #region Creation
         public Image2DComponent(Texture2D texture)
         {
             Texture = texture;
@@ -19,10 +19,11 @@ namespace Rander._2D
             Texture = texture;
             Color = color;
         }
+        #endregion
 
         public override void Draw()
         {
-            Game.Drawing.Draw(Texture, new Rectangle((int)LinkedObject.Position.X, (int)LinkedObject.Position.Y, (int)LinkedObject.Size.X, (int)LinkedObject.Size.Y), new Rectangle((int)LinkedObject.Position.X, (int)LinkedObject.Position.Y, (int)LinkedObject.Size.X, (int)LinkedObject.Size.Y), Color, LinkedObject.Rotation, LinkedObject.Pivot, SpriteEffects.None, LinkedObject.Layer);
+            Game.Drawing.Draw(Texture, LinkedObject.PositionNoPivot, null, Color, LinkedObject.Rotation, new Vector2(0, 0), LinkedObject.Size, SpriteEffects.None, LinkedObject.Layer);
         }
     }
 }

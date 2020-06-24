@@ -1,7 +1,9 @@
 ﻿----- TODO -----
 
-Write UI System
-
-Maybe fix some bugs if I find any
-
-Fuck the physics system
+- Write UI System
+	- Button - [V]
+	- Text - [V]
+		- Alignment [+]
+	- Input - [ ]
+	- Slider - [ ]
+- Write Audio System

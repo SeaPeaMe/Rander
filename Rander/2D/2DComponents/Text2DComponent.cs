@@ -1,44 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Rander._2D
 {
     public class Text2DComponent : Component2D
     {
-        public string Txt = "";
+        public string Text = "";
         public Color Color = Color.White;
-        public float FontSize { get { return FontRect.X; } set { FontRect = new Vector2(value, value); } }
-        public Vector2 FontRect;
+        public float FontSize = 0.18f;
         SpriteFont Font = DefaultValues.DefaultFont;
 
-        Alignment Al;
-        public Vector2 Pivot;
-        public Alignment Align { get { return Al; } set { SetAlign(value); } }
+        Alignment Al = Alignment.TopLeft;
+        public Vector2 Pivot = Vector2.Zero;
+        #region Alignment/Pivot
+        public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
-        public Text2DComponent(string text)
-        {
-            Txt = text;
-        }
-
-        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft)
-        {
-            Txt = text;
-            FontSize = fontSize;
-            Font = font;
-            Color = color;
-            SetAlign(alignment);
-        }
-
-        public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft)
-        {
-            Txt = text;
-            Font = font;
-            Color = color;
-            FontRect = LinkedObject.Size;
-            SetAlign(alignment);
-        }
-
-        public void SetAlign(Alignment al)
+        public void SetPivot(Alignment al)
         {
             Al = al;
             switch (al)
@@ -47,38 +25,79 @@ namespace Rander._2D
                     Pivot = new Vector2(0, 0);
                     break;
                 case Alignment.TopCenter:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X / 2, 0);
+                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, 0);
                     break;
                 case Alignment.TopRight:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X, 0);
+                    Pivot = new Vector2(Font.MeasureString(Text).X, 0);
                     break;
                 case Alignment.MiddleLeft:
-                    Pivot = new Vector2(0, Font.MeasureString(Txt).Y / 2);
+                    Pivot = new Vector2(0, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
                     break;
                 case Alignment.Center:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X / 2, Font.MeasureString(Txt).Y / 2);
+                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
                     break;
                 case Alignment.MiddleRight:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X, Font.MeasureString(Txt).Y / 2);
+                    Pivot = new Vector2(Font.MeasureString(Text).X, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
                     break;
                 case Alignment.BottomLeft:
-                    Pivot = new Vector2(0, Font.MeasureString(Txt).Y);
+                    Pivot = new Vector2(0, Font.MeasureString(Text).Y);
                     break;
                 case Alignment.BottomCenter:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X / 2, Font.MeasureString(Txt).Y);
+                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, Font.MeasureString(Text).Y);
                     break;
                 case Alignment.BottomRight:
-                    Pivot = new Vector2(Font.MeasureString(Txt).X, Font.MeasureString(Txt).Y);
+                    Pivot = new Vector2(Font.MeasureString(Text).X, Font.MeasureString(Text).Y);
                     break;
                 default:
                     Pivot = new Vector2(0, 0);
                     break;
             }
         }
+        #endregion
+
+        #region Creation
+        bool AutoSize = false;
+        Alignment SetAl = Alignment.TopLeft;
+
+        public Text2DComponent(string text)
+        {
+            Text = text;
+            AutoSize = true;
+        }
+
+        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft)
+        {
+            Text = text;
+            FontSize = fontSize;
+            Font = font;
+            Color = color;
+            SetAl = alignment;
+        }
+
+        public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft)
+        {
+            Text = text;
+            Font = font;
+            Color = color;
+            AutoSize = true;
+            SetAl = alignment;
+        }
+
+        public override void Start()
+        {
+            if (AutoSize)
+            {
+                // Redo this, it's fucked
+                FontSize = 0.10f;
+            }
+
+            SetPivot(SetAl);
+        }
+        #endregion
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Txt, LinkedObject.Position, Color, LinkedObject.Rotation, Pivot, FontRect, SpriteEffects.None, LinkedObject.Layer);
+            Game.Drawing.DrawString(Font, Text, LinkedObject.PositionNoPivot + Pivot, Color, LinkedObject.Rotation, Vector2.Zero, FontSize, SpriteEffects.None, LinkedObject.Layer + 0.000000000001f);
         }
     }
 }

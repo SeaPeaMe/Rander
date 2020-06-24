@@ -4,6 +4,7 @@
 ///         Attatch: Base         ///
 /////////////////////////////////////
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Rander
@@ -18,6 +19,11 @@ namespace Rander
         {
             Keys = Keyboard.GetState();
             Mouse = MouseInput.MouseInfo;
+        }
+
+        public static GamePadState Controller(PlayerIndex playerNumber)
+        {
+            return GamePad.GetState(playerNumber);
         }
     }
 }

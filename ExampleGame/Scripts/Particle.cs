@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Rander;
+﻿using Rander;
 using Rander._2D;
 
 namespace ExampleGame.Scripts
@@ -19,7 +18,7 @@ namespace ExampleGame.Scripts
 
             if (ID == int.MaxValue - 1)
             {
-                Rander.Game.FindObject2D("Cursor").GetComponent<CursorReplacement>().i = 0;
+                Object2D.Find("Cursor").GetComponent<CursorReplacement>().i = 0;
             }
         }
     }
