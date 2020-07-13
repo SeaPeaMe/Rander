@@ -1,9 +1,22 @@
 ﻿----- TODO -----
 
-- Write UI System
-	- Button - [V]
-	- Text - [V]
-		- Alignment [+]
+- Write UI System [■■■■■□□]
+	- Button - [■►]
+		- Do button detecting for rotated rectangles [✔️] (YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSS!!!!!)
+		- Do it for other pivots now [✔️] (That took me a good 15 hours or so, I never want to do trig again)
+	- Text - [✔️]
+		- Alignment [✔️] (FINALLY!)
 	- Input - [ ]
 	- Slider - [ ]
-- Write Audio System
+    
+- Write Audio System [►□]
+	- Instance sounds [⌛]
+	- Loop option [ ]
+
+- Instant thread killing [ ]
+
+----- BACKUP CODE -----
+
+* Nothing to see here! *
+
+-----------------------

@@ -7,13 +7,17 @@ namespace ExampleGame.Scripts
 {
     class Rotate : Component2D
     {
-        float MoveSpeed = 1;
-        float MoveAmt = 100;
+        float MoveSpeed = 2;
+
+        public override void Start()
+        {
+            //LinkedObject.Rotation = 50;
+        }
 
         public override void Update()
         {
-            LinkedObject.Position = new Vector2((float)Math.Sin(Time.TimeSinceStart * MoveSpeed) * MoveAmt + Screen.Width / 2, Screen.Height / 2);
-            LinkedObject.Rotation += Time.FrameTime * MoveSpeed;
+            LinkedObject.Rotation = (float)Math.Sin(Time.TimeSinceStart * MoveSpeed) * 10;
+            LinkedObject.Size = new Vector2((float)Math.Cos(Time.TimeSinceStart * MoveSpeed) * 10 + 200, (float)Math.Cos(Time.TimeSinceStart * MoveSpeed) * 10 + 60);
         }
     }
 
@@ -22,7 +26,7 @@ namespace ExampleGame.Scripts
         public override void Update()
         {
             LinkedObject.Rotation = 0;
-            LinkedObject.Position = LinkedObject.Parent.Position + new Vector2(25, -25);
+            LinkedObject.Position = LinkedObject.Parent.Position + new Vector2(15, -10);
         }
     }
 }

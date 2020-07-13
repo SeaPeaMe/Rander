@@ -31,6 +31,11 @@ namespace Rander
             Console.ResetColor();
         }
 
+        public static void Clear()
+        {
+            Console.Clear();
+        }
+
         public static void LogError(string Text, bool CloseWindow = false, int traceBackAmount = 2)
         {
             StackFrame frame = new StackFrame(traceBackAmount, true);

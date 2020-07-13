@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace Rander._2D
 {
@@ -12,11 +13,12 @@ namespace Rander._2D
         SpriteFont Font = DefaultValues.DefaultFont;
 
         Alignment Al = Alignment.TopLeft;
-        public Vector2 Pivot = Vector2.Zero;
+        Vector2 Pivot = Vector2.Zero;
+        Vector2 PivotOffset = Vector2.Zero;
         #region Alignment/Pivot
         public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
-        public void SetPivot(Alignment al)
+        public virtual void SetPivot(Alignment al)
         {
             Al = al;
             switch (al)
@@ -25,33 +27,35 @@ namespace Rander._2D
                     Pivot = new Vector2(0, 0);
                     break;
                 case Alignment.TopCenter:
-                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, 0);
+                    Pivot = new Vector2(0.5f, 0);
                     break;
                 case Alignment.TopRight:
-                    Pivot = new Vector2(Font.MeasureString(Text).X, 0);
+                    Pivot = new Vector2(1, 0);
                     break;
                 case Alignment.MiddleLeft:
-                    Pivot = new Vector2(0, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
+                    Pivot = new Vector2(0, 0.5f);
                     break;
                 case Alignment.Center:
-                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
+                    Pivot = new Vector2(0.5f, 0.5f);
                     break;
                 case Alignment.MiddleRight:
-                    Pivot = new Vector2(Font.MeasureString(Text).X, (LinkedObject.Size.Y - (Font.MeasureString(Text).Y * FontSize)) / 2);
+                    Pivot = new Vector2(1, 0.5f);
                     break;
                 case Alignment.BottomLeft:
-                    Pivot = new Vector2(0, Font.MeasureString(Text).Y);
+                    Pivot = new Vector2(0, 1);
                     break;
                 case Alignment.BottomCenter:
-                    Pivot = new Vector2((LinkedObject.Size.X - (Font.MeasureString(Text).X * FontSize)) / 2, Font.MeasureString(Text).Y);
+                    Pivot = new Vector2(0.5f, 1);
                     break;
                 case Alignment.BottomRight:
-                    Pivot = new Vector2(Font.MeasureString(Text).X, Font.MeasureString(Text).Y);
+                    Pivot = new Vector2(1, 1);
                     break;
                 default:
                     Pivot = new Vector2(0, 0);
                     break;
             }
+
+            PivotOffset = new Vector2(Font.MeasureString(Text).X * Pivot.X, Font.MeasureString(Text).Y * Pivot.Y) + new Vector2(0, -5);
         }
         #endregion
 
@@ -97,7 +101,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.PositionNoPivot + Pivot, Color, LinkedObject.Rotation, Vector2.Zero, FontSize, SpriteEffects.None, LinkedObject.Layer + 0.000000000001f);
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + 0.000000000001f);
         }
     }
 }

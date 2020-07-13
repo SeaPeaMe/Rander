@@ -23,7 +23,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.Draw(Texture, LinkedObject.PositionNoPivot, null, Color, LinkedObject.Rotation, new Vector2(0, 0), LinkedObject.Size, SpriteEffects.None, LinkedObject.Layer);
+            Game.Drawing.Draw(Texture, LinkedObject.Position, null, Color, MathHelper.ToRadians(LinkedObject.Rotation), LinkedObject.Pivot, LinkedObject.Size, SpriteEffects.None, LinkedObject.Layer);
         }
     }
 }

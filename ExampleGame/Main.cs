@@ -30,10 +30,6 @@ namespace ExampleGame
                 case ExampleGame.Particles:
                     new Object2D("Cursor", new Vector2(0, 0), new Vector2(10, 10), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White), new CursorReplacement() }, Alignment.Center, 1);
                     break;
-                case ExampleGame.Physics2D:
-                    new Object2D("Obj1", new Vector2(Screen.Width / 2, 50), new Vector2(200, 200), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.Blue), new Physics2DComponent() }, Alignment.TopCenter);
-                    new Object2D("Obj2", new Vector2(Screen.Width / 2, Screen.Height), new Vector2(Screen.Width, 100), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.Red), new Physics2DComponent(false) }, Alignment.BottomCenter);
-                    break;
                 case ExampleGame.RelativeTranslation:
                     Object2D Parent = new Object2D("Parent", new Vector2(Screen.Width / 2, Screen.Height / 2), new Vector2(20, 20), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.Turquoise), new Rotate() }, Alignment.Center);
                     new Object2D("ParentText", new Vector2(Screen.Width / 2 + 20, Screen.Height / 2 + 20), new Vector2(20, 20), 0, new Component2D[] { new Text2DComponent("Parent", DefaultValues.DefaultFont, Color.Turquoise, 0.18f, Alignment.BottomLeft), new NoRotate() }, Alignment.BottomLeft, 1, Parent);
@@ -41,7 +37,7 @@ namespace ExampleGame
                     new Object2D("ChildText", new Vector2(Child.Position.X + 20, Child.Position.Y + 20), new Vector2(20, 20), 0, new Component2D[] { new Text2DComponent("Child", DefaultValues.DefaultFont, Color.LightBlue, 0.18f, Alignment.BottomLeft), new NoRotate() }, Alignment.BottomLeft, 1, Child);
                     break;
                 case ExampleGame.UI:
-                    new Object2D("Button", new Vector2(Screen.Width / 2, Screen.Height / 2), new Vector2(Rand.RandomFloat(50, 200), Rand.RandomFloat(50, 100)), 0, new Component2D[] { new Button2DComponent(new Action(ButtonClicked), new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.Red), null, null, new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.Red), new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.White)), new Image2DComponent(DefaultValues.PixelTexture), new Text2DComponent("Click Me!", DefaultValues.DefaultFont, Color.Black, Alignment.Center), new Rotate() }, Alignment.Center);
+                    new Object2D("Button", new Vector2(Screen.Width / 2, Screen.Height / 2), new Vector2(200, 60), 0, new Component2D[] { new Button2DComponent(new Action(ButtonClicked), new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.Red), null, null, new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.Red), new Action(() => Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.White)), new Image2DComponent(DefaultValues.PixelTexture), new Text2DComponent("Click Me!", DefaultValues.DefaultFont, Color.Black, 0.18f, Alignment.Center), new Rotate() }, Alignment.Center);
                     break;
             }
         }
@@ -51,7 +47,7 @@ namespace ExampleGame
         {
             Object2D.Find("Button").GetComponent<Image2DComponent>().Color = Color.LightPink;
 
-            Object2D Btn = new Object2D("SomeButton" + i, new Vector2(Rand.RandomInt(0, Screen.Width), Rand.RandomInt(0, Screen.Height)), new Vector2(100, 30), 0, new Component2D[] { new Text2DComponent("Button Was Clicked!") });
+            Object2D Btn = new Object2D("SomeButton" + i, new Vector2(Rand.RandomInt(0, Screen.Width), Rand.RandomInt(0, Screen.Height)), new Vector2(100, 30), 0, new Component2D[] { new Text2DComponent("Button Was Clicked!", DefaultValues.DefaultFont, Color.White, Alignment.Center) });
             i++;
             Time.Wait(5000, () => Btn.Destroy(true));
         }
@@ -65,7 +61,6 @@ namespace ExampleGame
     enum ExampleGame
     {
         Particles = 0,
-        Physics2D = 1,
         RelativeTranslation = 2,
         UI = 3
     }

@@ -23,7 +23,6 @@ namespace Rander
 
         static List<Component> BaseScripts = new List<Component>();
 
-        public static List<Physics2DComponent> Physics2D = new List<Physics2DComponent>();
         public static Dictionary<string, Object2D> Objects2D = new Dictionary<string, Object2D>();
 
         public Game()
@@ -88,6 +87,7 @@ namespace Rander
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            KillThreads = true;
         }
 
         protected override void Update(GameTime gameTime)

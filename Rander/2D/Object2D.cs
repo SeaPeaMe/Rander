@@ -13,8 +13,6 @@ namespace Rander._2D
         public float Layer = 0;
         public bool Enabled = true;
 
-        public Vector2 PositionNoPivot { get { return Pos - Pivot; } }
-
         Alignment Al = Alignment.TopLeft;
         public Vector2 Pivot = Vector2.Zero;
         #region Alignment/Pivot
@@ -29,33 +27,38 @@ namespace Rander._2D
                     Pivot = new Vector2(0, 0);
                     break;
                 case Alignment.TopCenter:
-                    Pivot = new Vector2(Size.X / 2, 0);
+                    Pivot = new Vector2(0.5f, 0);
                     break;
                 case Alignment.TopRight:
-                    Pivot = new Vector2(Size.X, 0);
+                    Pivot = new Vector2(1, 0);
                     break;
                 case Alignment.MiddleLeft:
-                    Pivot = new Vector2(0, Size.Y / 2);
+                    Pivot = new Vector2(0, 0.5f);
                     break;
                 case Alignment.Center:
-                    Pivot = new Vector2(Size.X / 2, Size.Y / 2);
+                    Pivot = new Vector2(0.5f, 0.5f);
                     break;
                 case Alignment.MiddleRight:
-                    Pivot = new Vector2(Size.X, Size.Y / 2);
+                    Pivot = new Vector2(1, 0.5f);
                     break;
                 case Alignment.BottomLeft:
-                    Pivot = new Vector2(0, Size.Y);
+                    Pivot = new Vector2(0, 1);
                     break;
                 case Alignment.BottomCenter:
-                    Pivot = new Vector2(Size.X / 2, Size.Y);
+                    Pivot = new Vector2(0.5f, 1);
                     break;
                 case Alignment.BottomRight:
-                    Pivot = new Vector2(Size.X, Size.Y);
+                    Pivot = new Vector2(1, 1);
                     break;
                 default:
                     Pivot = new Vector2(0, 0);
                     break;
             }
+        }
+
+        public virtual void SetPivot(Vector2 pivot)
+        {
+            Pivot = pivot;
         }
         #endregion
 
@@ -106,22 +109,22 @@ namespace Rander._2D
         #region Get/Set Position
         public Vector2 RelativePosition
         {
-            get { if (Parent != null) { return Position - Parent.Position; } else { return Position; } }
+            get { if (Parent != null) { return Pos - Parent.Position; } else { return Pos; } }
             set
             {
                 // Sets the position and then updates all the children
                 if (Parent == null) // If the object has no parent, set the position normally
                 {
-                    Position = DestroyedParentPos + value;
+                    Pos = DestroyedParentPos + value;
                 }
                 else
                 {
                     Pos = Parent.Position + value;
+                }
 
-                    foreach (Object2D Child in Children)
-                    {
-                        Child.Position = Position + Child.RelativePosition;
-                    }
+                foreach (Object2D Child in Children)
+                {
+                    Child.Position = Pos + Child.RelativePosition;
                 }
             }
         }
@@ -153,7 +156,7 @@ namespace Rander._2D
         }
         #endregion
 
-        // Do This
+        // Do relative size
         #region Get/Set Size
         public Vector2 Size = new Vector2(100, 100);
         #endregion
@@ -161,20 +164,20 @@ namespace Rander._2D
         #region Creation
         public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null)
         {
+            Size = size;
+            SetPivot(alignment);
+            Position = position;
+            Rotation = rotation;
+
+            Layer = layer;
+
+            ObjectName = objectName;
+
             Parent = parent;
             if (Parent != null)
             {
                 Parent.AddChild(this);
             }
-
-            Size = size;
-            SetPivot(alignment);
-            RelativePosition = position;
-            RelativeRotation = rotation;
-
-            Layer = layer;
-
-            ObjectName = objectName;
 
             // Goes through all the possible errors
             if (ObjectName == "")
@@ -265,9 +268,11 @@ namespace Rander._2D
 
         public virtual void Update()
         {
-            foreach (Component2D Com in Components)
-            {
-                Com.Update();
+            if (Enabled) {
+                foreach (Component2D Com in Components)
+                {
+                    Com.Update();
+                }
             }
         }
 
