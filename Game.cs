@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
 using Rander._2D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Timers;
 
 namespace Rander
 {
@@ -13,13 +15,17 @@ namespace Rander
     {
         static int TargetFPS = 144;
         static bool VSync = true;
+        static SamplerState Filter = SamplerState.PointClamp; // Makes textures nice and crisp when doing pixel art
+        public static Color BackgroundColor = Color.CornflowerBlue;
+        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
 
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
 
-        public static bool KillThreads = false;
+        public static List<Timer> Timers = new List<Timer>();
+        public static List<SoundEffectInstance> Sounds = new List<SoundEffectInstance>();
 
         static List<Component> BaseScripts = new List<Component>();
 
@@ -35,8 +41,9 @@ namespace Rander
             IsFixedTimeStep = false;
             graphics.SynchronizeWithVerticalRetrace = VSync;
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            if (Resolution == Vector2.Zero) Resolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
+            graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
             graphics.IsFullScreen = true;
 
             gameWindow = this;
@@ -49,8 +56,6 @@ namespace Rander
             Screen.Width = graphics.PreferredBackBufferWidth;
             Screen.Height = graphics.PreferredBackBufferHeight;
 
-            GraphicsDevice.SetVertexBuffer(new VertexBuffer(GraphicsDevice, new VertexDeclaration(new VertexElement[] { new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0) }), 8, BufferUsage.None));
-
             // Load Base Scripts
             BaseScripts.Add(new MouseInput());
             BaseScripts.Add(new Rand());
@@ -61,6 +66,9 @@ namespace Rander
             {
                 Com.Start();
             }
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            Drawing = new Draw2D(GraphicsDevice);
 
             Debug.LogSuccess("Initialization Complete!");
 
@@ -75,9 +83,6 @@ namespace Rander
             DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/Arial");
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
-            // Create a new SpriteBatch, which can be used to draw textures.
-            Drawing = new Draw2D(GraphicsDevice);
-
             if (MyGame.Main.OnGameLoad())
             {
                 Debug.LogSuccess("Finished!");
@@ -87,7 +92,6 @@ namespace Rander
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            KillThreads = true;
         }
 
         protected override void Update(GameTime gameTime)
@@ -121,9 +125,9 @@ namespace Rander
 
             if (IsActive)
             {
-                graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
+                graphics.GraphicsDevice.Clear(BackgroundColor);
 
-                Drawing.Begin(SpriteSortMode.FrontToBack);
+                Drawing.Begin(SpriteSortMode.FrontToBack, samplerState: Filter);
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
                 {
@@ -145,10 +149,29 @@ namespace Rander
 
         public static void Close(bool CloseConsole = false)
         {
-            // Clears all the lists so it doesn't run them again and then closes the game window
-            KillThreads = true;
+            Debug.LogWarning("Disposing Objects & Instances...");
+            Debug.Log("     2D Objects...");
             Objects2D.Clear();
+            Debug.Log("     Graphic Window...");
             gameWindow.Dispose();
+            Debug.Log("     Sound Instances...");
+            for (int i = 0; i < Sounds.Count;)
+            {
+                Sounds[0].Stop();
+                Sounds[0].Dispose();
+                Sounds.RemoveAt(0);
+            }
+
+            Debug.LogWarning("Disposing Timers...");
+            for (int i = 0; i < Timers.Count;)
+            {
+                Timers[0].Stop();
+                Timers[0].Dispose();
+                Timers.RemoveAt(0);
+            }
+
+            Debug.LogWarning("Disposing Resources...");
+            ContentLoader.Dispose();
 
             if (CloseConsole)
             {

@@ -10,6 +10,7 @@ namespace Rander._2D
         public string Text = "";
         public Color Color = Color.White;
         public float FontSize = 0.18f;
+        public float SubLayer = 1;
         SpriteFont Font = DefaultValues.DefaultFont;
 
         Alignment Al = Alignment.TopLeft;
@@ -69,30 +70,37 @@ namespace Rander._2D
             AutoSize = true;
         }
 
-        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft)
+        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
         {
             Text = text;
             FontSize = fontSize;
             Font = font;
             Color = color;
             SetAl = alignment;
+            SubLayer = subLayer;
         }
 
-        public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft)
+        public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
         {
             Text = text;
             Font = font;
             Color = color;
             AutoSize = true;
             SetAl = alignment;
+            SubLayer = subLayer;
         }
 
         public override void Start()
         {
             if (AutoSize)
             {
-                // Redo this, it's fucked
-                FontSize = 0.10f;
+                FontSize = LinkedObject.Size.Y / 100;
+                MeasureWidth:
+                if ((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X)
+                {
+                    FontSize -= 0.01f;
+                    goto MeasureWidth;
+                }
             }
 
             SetPivot(SetAl);
@@ -101,7 +109,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + 0.000000000001f);
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + (SubLayer / 1000000000));
         }
     }
 }

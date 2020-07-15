@@ -83,13 +83,14 @@
     <Compile Include="ExampleGame\Main.cs" />
     <Compile Include="ExampleGame\Scripts\CursorReplacement.cs" />
     <Compile Include="ExampleGame\Scripts\Particle.cs" />
-    <Compile Include="ExampleGame\Scripts\Rotate.cs" />
+    <Compile Include="ExampleGame\Scripts\ButtonBob.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rander\2D\2DComponents\Button2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Image2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Text2DComponent.cs" />
+    <Compile Include="Rander\BaseComponents\Audio.cs" />
     <Compile Include="Rander\BaseComponents\Input.cs" />
     <Compile Include="Rander\BaseComponents\Rand.cs" />
     <Compile Include="Rander\BaseComponents\Time.cs" />
@@ -114,6 +115,21 @@
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\ExampleGameAssets\Boop.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ExampleGameAssets\Earth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ExampleGameAssets\Moon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ExampleGameAssets\Sun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ExampleGameAssets\Test.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Rander\Todo List.txt" />
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\SDL2.dll">

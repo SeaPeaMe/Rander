@@ -1,19 +1,36 @@
-﻿----- TODO -----
+﻿----- RELEASE NOTES -----
 
-- Write UI System [■■■■■□□]
-	- Button - [■►]
-		- Do button detecting for rotated rectangles [✔️] (YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSS!!!!!)
-		- Do it for other pivots now [✔️] (That took me a good 15 hours or so, I never want to do trig again)
-	- Text - [✔️]
-		- Alignment [✔️] (FINALLY!)
-	- Input - [ ]
-	- Slider - [ ]
+- Fixed image scaling (Image2DComponent)
+- Fixed image pivoting (Image2DComponent)
+- Fixed threads continuing after application terminating (Time)
+- Completely re-wrote how wait method works so it can't break (Time)
+- Added an easier way to do WaitUntil (Time)
+- Text now auto-sizes when it's created [It may not be very efficient though] (Text2DComponent)
+- Added Audio ability (Audio)
+- Added option to prevent audio overlap (Audio)
+
+----- TODO -----
+
+- Write UI System [■□□□]
+	- Button - [✔]
+		- Do button detecting for rotated rectangles [✔]
+		- Do it for other pivots now [✔]
+	- Text - [■■□]
+		- Alignment [✔]
+		- Auto-Size [✔]
+		- Try stay in LinkedObject size [⌛]
+	- Input [ ]
+	- Slider [ ]
+	- Spacer [ ]
     
-- Write Audio System [►□]
-	- Instance sounds [⌛]
-	- Loop option [ ]
+- Write Audio System [■■□]
+	- Instance sounds [✔]
+	- Loop option [✔]
+	- When stopping sound, remove sound from NoOverlap list [ ]
 
-- Instant thread killing [ ]
+- Instant thread killing [✔]
+
+- Relative Scaling [ ]
 
 ----- BACKUP CODE -----
 

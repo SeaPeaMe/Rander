@@ -73,11 +73,11 @@ namespace Rander._2D
                 foreach (Object2D Child in Children)
                 {
                     Child.Rotation = value;
-                    Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Vector2.Distance(Child.Pos, Pos), (float)Math.Sin(Rotation) * Vector2.Distance(Child.Pos, Pos));
+                    Child.RelativePosition = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)) * Vector2.Distance(Child.Pos, Pos), (float)Math.Sin(MathHelper.ToRadians(Rotation)) * Vector2.Distance(Child.Pos, Pos));
                 }
 
-                SetPivot(Align);
                 Rot = value;
+                SetPivot(Align);
             }
         }
         public float RelativeRotation
@@ -94,7 +94,7 @@ namespace Rander._2D
                     foreach (Object2D Child in Children)
                     {
                         Child.Rotation = value;
-                        Child.RelativePosition = new Vector2((float)Math.Cos(Rotation) * Child.RelativePosition.X, (float)Math.Sin(Rotation) * Child.RelativePosition.Y);
+                        Child.RelativePosition = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)) * Child.RelativePosition.X, (float)Math.Sin(MathHelper.ToRadians(Rotation)) * Child.RelativePosition.Y);
                     }
 
                     SetPivot(Align);
