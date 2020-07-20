@@ -15,10 +15,17 @@ namespace ExampleGame.Scripts
             if (LinkedObject.Position.Y > Screen.Height)
             {
                 LinkedObject.Position -= new Vector2(0, Screen.Height);
+            } else if (LinkedObject.Position.Y < 0)
+            {
+                LinkedObject.Position += new Vector2(0, Screen.Height);
             }
+
             if (LinkedObject.Position.X > Screen.Width)
             {
                 LinkedObject.Position -= new Vector2(Screen.Width, 0);
+            } else if (LinkedObject.Position.X < 0)
+            {
+                LinkedObject.Position += new Vector2(Screen.Width, 0);
             }
         }
     }

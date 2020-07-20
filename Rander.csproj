@@ -83,6 +83,7 @@
     <Compile Include="ExampleGame\Main.cs" />
     <Compile Include="ExampleGame\Scripts\ButtonBob.cs" />
     <Compile Include="ExampleGame\Scripts\MenuStarMove.cs" />
+    <Compile Include="ExampleGame\Scripts\PlanetMove.cs" />
     <Compile Include="ExampleGame\Scripts\RocketControl.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Program.cs" />

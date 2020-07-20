@@ -19,8 +19,8 @@ namespace Rander
         static bool VSync = true;
         static SamplerState Filter = SamplerState.PointClamp; // Makes textures nice and crisp when doing pixel art
         public static Color BackgroundColor = Color.CornflowerBlue;
-        static Vector2 Resolution = new Vector2(1280, 720); // Leave as Vector2.Zero for automatic resolution
-        static bool FullScreen = false;
+        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
+        static bool FullScreen = true;
 
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;

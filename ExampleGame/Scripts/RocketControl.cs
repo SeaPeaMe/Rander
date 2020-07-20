@@ -75,7 +75,29 @@ namespace ExampleGame.Scripts
         {
             if (Input.Keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.W))
             {
+                LinkedObject.Rotation = 0;
                 Velocity -= new Vector2(0, 1);
+                MenuStarMove.StarMoveSpeed = -Velocity * 5;
+                ShakeMag += 2 * Time.FrameTime;
+                LinkedObject.GetComponent<Image2DComponent>().Texture = ContentLoader.LoadTexture("ExampleGameAssets/Rocket_2.png");
+            } else if (Input.Keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.A))
+            {
+                LinkedObject.Rotation = -90;
+                Velocity -= new Vector2(1, 0);
+                MenuStarMove.StarMoveSpeed = -Velocity * 5;
+                ShakeMag += 2 * Time.FrameTime;
+                LinkedObject.GetComponent<Image2DComponent>().Texture = ContentLoader.LoadTexture("ExampleGameAssets/Rocket_2.png");
+            } else if (Input.Keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.S))
+            {
+                LinkedObject.Rotation = 180;
+                Velocity -= new Vector2(0, -1);
+                MenuStarMove.StarMoveSpeed = -Velocity * 5;
+                ShakeMag += 2 * Time.FrameTime;
+                LinkedObject.GetComponent<Image2DComponent>().Texture = ContentLoader.LoadTexture("ExampleGameAssets/Rocket_2.png");
+            } else if (Input.Keys.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D))
+            {
+                LinkedObject.Rotation = 90;
+                Velocity -= new Vector2(-1, 0);
                 MenuStarMove.StarMoveSpeed = -Velocity * 5;
                 ShakeMag += 2 * Time.FrameTime;
                 LinkedObject.GetComponent<Image2DComponent>().Texture = ContentLoader.LoadTexture("ExampleGameAssets/Rocket_2.png");
@@ -94,11 +116,10 @@ namespace ExampleGame.Scripts
 
                 if (Velocity.Length() > 0)
                 {
-                    Velocity /= 100 * Time.FrameTime;
+                    Velocity *= 55 * Time.FrameTime;
+                    MenuStarMove.StarMoveSpeed = -Velocity * 5;
                 }
             }
-
-            LinkedObject.Position += Velocity * Time.FrameTime;
 
             Audio.PlaySound(ContentLoader.LoadSound("ExampleGameAssets/RocketRumble"), ShakeMag / 50, MathHelper.Clamp(ShakeMag / 5, 0, 1));
         }

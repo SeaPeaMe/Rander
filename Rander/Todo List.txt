@@ -1,13 +1,6 @@
 ﻿----- RELEASE NOTES -----
 
-- Fixed audio not being able to be re-played after stopping it (Audio)
-- Added ability to clear the level (Game)
-- Moved some functionality to Level.cs [It makes more sense now] (Level)
-	- Level.ClearLevel()
-	- Level.Sounds
-	- Level.Objects2D
-	- Level.Update()
-	- Level.Draw()
+
 
 ----- TODO -----
 
@@ -19,11 +12,11 @@
 		- Alignment [✔]
 		- Auto-Size [✔]
 		- Try stay in LinkedObject size [ ]
-	- Input [ ]
+	- Input [⌛]
 	- Slider [ ]
 	- Spacer [ ]
 
-- Work on the Example Game to test for any errors in Rander [⌛]
+- Work on the Example Game to test for any errors in Rander [✔]
 
 - Write Audio System [✔]
 	- Instance sounds [✔]
