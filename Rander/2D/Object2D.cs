@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Rander._2D
 {
@@ -184,16 +186,16 @@ namespace Rander._2D
             {
                 Debug.LogError("Object name can't be blank!", true, 3);
             }
-            else if (Game.Objects2D.ContainsKey(ObjectName))
+            else if (Level.Objects2D.ContainsKey(ObjectName))
             {
                 Debug.LogError("The 2DObject \"" + ObjectName + "\" already exists!", true, 3);
             }
             else
             {
-                Game.Objects2D.Add(ObjectName, this);
+                Level.Objects2D.Add(ObjectName, this);
             }
 
-            // Starts the scripts
+            // Adds and Starts the scripts
             if (components != null)
             {
                 foreach (Component2D com in components)
@@ -208,9 +210,12 @@ namespace Rander._2D
         #region Components
         public Component2D AddComponent(Component2D component)
         {
-            component.LinkedObject = this;
-            Components.Add(component);
-            component.Start();
+            if (component != null) {
+                Components.Add(component);
+                component.LinkedObject = this;
+                component.Start();
+            }
+
             return component;
         }
 
@@ -224,7 +229,6 @@ namespace Rander._2D
             }
             else
             {
-                StackTrace stk = new StackTrace();
                 Debug.LogError("2DObject \"" + ObjectName + "\" does not contain the component \"" + typeof(T).Name + "\"", true);
                 return (T)Convert.ChangeType(null, typeof(T));
             }
@@ -242,27 +246,6 @@ namespace Rander._2D
             {
                 Debug.LogError("2DObject \"" + ObjectName + "\" does not already contain the component \"" + typeof(T).Name + "\"");
             }
-        }
-        #endregion
-
-        #region Static
-        public static Object2D Find(string objectName)
-        {
-            Object2D obj;
-            if (Game.Objects2D.TryGetValue(objectName, out obj))
-            {
-                return obj;
-            }
-            else
-            {
-                Debug.LogError("Object \"" + objectName + "\" does not exist!");
-                return null;
-            }
-        }
-
-        public static bool Exists(string objectName)
-        {
-            return Game.Objects2D.Keys.Contains(objectName);
         }
         #endregion
 
@@ -308,7 +291,7 @@ namespace Rander._2D
             }
 
             // Completely un-links the object
-            Game.Objects2D.Remove(ObjectName);
+            Level.Objects2D.Remove(ObjectName);
         }
     }
 }

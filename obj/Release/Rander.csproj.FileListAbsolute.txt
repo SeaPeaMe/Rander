@@ -18,7 +18,6 @@ C:\Users\M.R\Desktop\StandaloneProjects\C# - MonoGame\Rander\Rander\obj\Release\
 C:\Users\M.R\Desktop\StandaloneProjects\C# - MonoGame\Rander\Rander\obj\Release\Rander.pdb
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\MonoGame.Framework.dll.config
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\Defaults\Pixel.png
-C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\Test.png
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\Defaults\Arial.xnb
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\x86\SDL2.dll
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\x64\SDL2.dll
@@ -38,3 +37,12 @@ C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\obj\Release\Rande
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\obj\Release\Rander.csproj.CopyComplete
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\obj\Release\Rander.exe
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\obj\Release\Rander.pdb
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Boop.wav
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Earth.png
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Moon.png
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Rocket_1.png
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Rocket_2.png
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Sun.png
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\Test.wav
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\Defaults\Arial.spritefont
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\Rander\bin\DesktopGL\AnyCPU\Release\Content\ExampleGameAssets\VCR OSD Mono.xnb

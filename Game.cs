@@ -7,6 +7,8 @@ using Rander._2D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Timers;
 
 namespace Rander
@@ -17,19 +19,19 @@ namespace Rander
         static bool VSync = true;
         static SamplerState Filter = SamplerState.PointClamp; // Makes textures nice and crisp when doing pixel art
         public static Color BackgroundColor = Color.CornflowerBlue;
-        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
+        static Vector2 Resolution = new Vector2(1280, 720); // Leave as Vector2.Zero for automatic resolution
+        static bool FullScreen = false;
 
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
 
-        public static List<Timer> Timers = new List<Timer>();
-        public static List<SoundEffectInstance> Sounds = new List<SoundEffectInstance>();
+        public static List<System.Timers.Timer> Timers = new List<System.Timers.Timer>();
+        public static List<Action> ThreadSync = new List<Action>();
+        public static bool PauseGame = false;
 
         static List<Component> BaseScripts = new List<Component>();
-
-        public static Dictionary<string, Object2D> Objects2D = new Dictionary<string, Object2D>();
 
         public Game()
         {
@@ -44,7 +46,7 @@ namespace Rander
             if (Resolution == Vector2.Zero) Resolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
             graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = FullScreen;
 
             gameWindow = this;
             Content.RootDirectory = "Content";
@@ -96,7 +98,7 @@ namespace Rander
 
         protected override void Update(GameTime gameTime)
         {
-            if (IsActive)
+            if (IsActive && !PauseGame)
             {
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                     Close(true);
@@ -107,13 +109,16 @@ namespace Rander
                     Scr.Update();
                 }
 
+                // Sync all threads
+                foreach (Action call in ThreadSync.ToArray())
+                {
+                    call();
+                }
+                ThreadSync.Clear();
+
                 MyGame.Main.OnUpdate();
 
-                // Update 2D
-                foreach (Object2D Obj in Objects2D.Values.ToList())
-                {
-                    Obj.Update();
-                }
+                Level.Update();
             }
 
             base.Update(gameTime);
@@ -123,7 +128,7 @@ namespace Rander
         {
             Gametime = gameTime;
 
-            if (IsActive)
+            if (IsActive && !PauseGame)
             {
                 graphics.GraphicsDevice.Clear(BackgroundColor);
 
@@ -136,11 +141,8 @@ namespace Rander
 
                 MyGame.Main.OnDraw();
 
-                // Draws 2D
-                foreach (Object2D Obj in Objects2D.Values.ToList())
-                {
-                    Obj.Draw();
-                }
+                Level.Draw();
+
                 Drawing.End();
             }
 
@@ -149,29 +151,13 @@ namespace Rander
 
         public static void Close(bool CloseConsole = false)
         {
-            Debug.LogWarning("Disposing Objects & Instances...");
-            Debug.Log("     2D Objects...");
-            Objects2D.Clear();
-            Debug.Log("     Graphic Window...");
-            gameWindow.Dispose();
-            Debug.Log("     Sound Instances...");
-            for (int i = 0; i < Sounds.Count;)
-            {
-                Sounds[0].Stop();
-                Sounds[0].Dispose();
-                Sounds.RemoveAt(0);
-            }
+            PauseGame = true;
+            Level.ClearLevel();
+            PauseGame = true;
 
-            Debug.LogWarning("Disposing Timers...");
-            for (int i = 0; i < Timers.Count;)
-            {
-                Timers[0].Stop();
-                Timers[0].Dispose();
-                Timers.RemoveAt(0);
-            }
+            Drawing.Dispose();
 
             Debug.LogWarning("Disposing Resources...");
-            ContentLoader.Dispose();
 
             if (CloseConsole)
             {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/M.R/Desktop/StandaloneProjects/MonoGame/Rander/Rander/Content/Defaults/Arial.spritefont</SourceFile>
-  <SourceTime>2020-06-16T21:17:53.0442332+10:00</SourceTime>
+  <SourceTime>2020-06-16T21:20:31.2796381+10:00</SourceTime>
   <DestFile>C:/Users/M.R/Desktop/StandaloneProjects/MonoGame/Rander/Rander/Content/ContentBuild/bin/DesktopGL/Defaults/Arial.xnb</DestFile>
-  <DestTime>2020-06-16T21:18:07.0990273+10:00</DestTime>
+  <DestTime>2020-07-17T17:12:50.0628769+10:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2018-12-09T03:35:54+11:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

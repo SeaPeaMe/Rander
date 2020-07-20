@@ -5,7 +5,11 @@
 /////////////////////////////////////
 
 using System;
+using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Timers;
 
 namespace Rander
@@ -27,13 +31,16 @@ namespace Rander
 
         public static void Wait(int waitTime, Action call)
         {
-            Timer tim = new Timer(waitTime);
+            System.Timers.Timer tim = new System.Timers.Timer(waitTime);
             tim.Elapsed += (source, exceptions) => {
                 lock (Game.Timers) // Locks timer list so the new thread can edit it without breaking
                 {
-                    Game.Timers.Remove(tim);
-                    call();
-                    tim.Dispose();
+                    lock (Game.ThreadSync)
+                    {
+                        Game.Timers.Remove(tim);
+                        Game.ThreadSync.Add(call);
+                        tim.Dispose();
+                    }
                 }
             };
             tim.AutoReset = false;
@@ -44,15 +51,17 @@ namespace Rander
 
         public static void WaitUntil(Func<bool> condition, Action call)
         {
-            Timer tim = new Timer(10);
+            System.Timers.Timer tim = new System.Timers.Timer(10);
             tim.Elapsed += (source, exceptions) => {
                 if (condition()) {
                     lock (Game.Timers)
                     {
-                        Game.Timers.Remove(tim);
-                        tim.Stop();
-                        call();
-                        tim.Dispose();
+                        lock (Game.ThreadSync) {
+                            Game.Timers.Remove(tim);
+                            tim.Stop();
+                            Game.ThreadSync.Add(call);
+                            tim.Dispose();
+                        }
                     }
                 }
             };

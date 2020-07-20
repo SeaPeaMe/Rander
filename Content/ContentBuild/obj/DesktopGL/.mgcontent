@@ -5,8 +5,10 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/M.R/Desktop/StandaloneProjects/MonoGame/Rander/Rander/Content/Defaults/Arial.spritefont</File>
+    <File>C:/Users/M.R/Desktop/StandaloneProjects/MonoGame/Rander/Rander/Content/ExampleGameAssets/Orange Kid.spritefont</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

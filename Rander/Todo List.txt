@@ -1,13 +1,13 @@
 ﻿----- RELEASE NOTES -----
 
-- Fixed image scaling (Image2DComponent)
-- Fixed image pivoting (Image2DComponent)
-- Fixed threads continuing after application terminating (Time)
-- Completely re-wrote how wait method works so it can't break (Time)
-- Added an easier way to do WaitUntil (Time)
-- Text now auto-sizes when it's created [It may not be very efficient though] (Text2DComponent)
-- Added Audio ability (Audio)
-- Added option to prevent audio overlap (Audio)
+- Fixed audio not being able to be re-played after stopping it (Audio)
+- Added ability to clear the level (Game)
+- Moved some functionality to Level.cs [It makes more sense now] (Level)
+	- Level.ClearLevel()
+	- Level.Sounds
+	- Level.Objects2D
+	- Level.Update()
+	- Level.Draw()
 
 ----- TODO -----
 
@@ -18,19 +18,23 @@
 	- Text - [■■□]
 		- Alignment [✔]
 		- Auto-Size [✔]
-		- Try stay in LinkedObject size [⌛]
+		- Try stay in LinkedObject size [ ]
 	- Input [ ]
 	- Slider [ ]
 	- Spacer [ ]
-    
-- Write Audio System [■■□]
+
+- Work on the Example Game to test for any errors in Rander [⌛]
+
+- Write Audio System [✔]
 	- Instance sounds [✔]
 	- Loop option [✔]
-	- When stopping sound, remove sound from NoOverlap list [ ]
+	- When stopping sound, remove sound from NoOverlap list [✔]
 
 - Instant thread killing [✔]
 
 - Relative Scaling [ ]
+
+- Fix Threads not syncing to main thread [✔]
 
 ----- BACKUP CODE -----
 
