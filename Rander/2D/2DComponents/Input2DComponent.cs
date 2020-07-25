@@ -11,17 +11,19 @@ namespace Rander._2D._2DComponents
     class Input2DComponent : Component2D
     {
         SpriteFont Fnt;
-        public SpriteFont Font { get { return Fnt; } set { Fnt = value; GhostText.Font = Fnt; InputTextComponent.Font = Fnt; } }
+        public SpriteFont Font { get { return Fnt; } set { Fnt = value; GhostTextComponent.Font = Fnt; InputTextComponent.Font = Fnt; } }
         Color GhstClr;
-        public Color GhostTextColor { get { return GhstClr; } set { GhstClr = value; GhostText.Color = GhstClr; } }
+        public Color GhostTextColor { get { return GhstClr; } set { GhstClr = value; GhostTextComponent.Color = GhstClr; } }
         Color TxtClr;
         public Color InputTextColor { get { return TxtClr; } set { TxtClr = value; InputTextComponent.Color = TxtClr; } }
 
         public string InputText { get { return InputTextComponent.Text; } set { InputTextComponent.Text = value; } }
 
+        public string GhostText { get { return GhostTextComponent.Text; } set { GhostTextComponent.Text = value; } }
+
         Image2DComponent Caret;
         Text2DComponent InputTextComponent;
-        Text2DComponent GhostText;
+        Text2DComponent GhostTextComponent;
         Button2DComponent InputButton;
         Object2D InputSeperateObject;
         Object2D CaretObject;
@@ -33,8 +35,8 @@ namespace Rander._2D._2DComponents
             // Text input handler
             Game.gameWindow.Window.TextInput += TextInput;
 
-            InputTextComponent = new Text2DComponent("", font, inputTextColor, fontSize, textAlignment, 10);
-            GhostText = new Text2DComponent(ghostText, font, ghostTextColor, fontSize, textAlignment, 11);
+            InputTextComponent = new Text2DComponent(" ", font, inputTextColor, fontSize, textAlignment, 10);
+            GhostTextComponent = new Text2DComponent(ghostText + " ", font, ghostTextColor, fontSize, textAlignment, 11);
             InputButton = new Button2DComponent(new Action(OnClick), new Action(OnClickOutside));
             Caret = new Image2DComponent(DefaultValues.PixelTexture, caretColor, 12);
 
@@ -46,7 +48,10 @@ namespace Rander._2D._2DComponents
         public override void Start()
         {
             // Creates a whole new object JUST for the input to prevent confusion when looking for components in the main object this component is attatched to
-            InputSeperateObject = new Object2D("Input_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, 0, new Component2D[] { InputTextComponent, GhostText, InputButton }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
+            InputSeperateObject = new Object2D("Input_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, 0, new Component2D[] { InputTextComponent, GhostTextComponent, InputButton }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
+
+            InputText = "";
+            GhostText = GhostText.Substring(0, GhostText.Length - 1);
         }
 
         void TextInput(object sender, TextInputEventArgs args)
@@ -75,7 +80,7 @@ namespace Rander._2D._2DComponents
 
         void OnClick()
         {
-            GhostText.Color = Color.Transparent;
+            GhostTextComponent.Color = Color.Transparent;
 
             float CaretSize = InputTextComponent.FontSize * 100;
             if (CaretObject == null) {
@@ -98,7 +103,7 @@ namespace Rander._2D._2DComponents
 
             if (InputText == "")
             {
-                GhostText.Color = GhostTextColor;
+                GhostTextComponent.Color = GhostTextColor;
             }
         }
 
