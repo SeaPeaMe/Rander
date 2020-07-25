@@ -99,6 +99,13 @@ namespace Rander._2D._2DComponents
         {
             GhostTextComponent.Color = Color.Transparent;
 
+            if (CaretBlinkTimer != null)
+            {
+                CaretBlinkTimer.Stop();
+                CaretBlinkTimer.Dispose();
+                CaretBlinkTimer = null;
+            }
+
             float CaretSize = InputTextComponent.FontSize * 100;
             if (CaretObject == null) {
                 CaretObject = new Object2D("CaretObj_" + LinkedObject.ObjectName, LinkedObject.Position - new Vector2((LinkedObject.Pivot.X * LinkedObject.Size.X), (CaretSize / 2) - (LinkedObject.Size.Y * InputTextComponent.Pivot.Y)), new Vector2(2, CaretSize), 0, new Component2D[] { Caret }, InputTextComponent.Align, LinkedObject.Layer, InputSeperateObject);

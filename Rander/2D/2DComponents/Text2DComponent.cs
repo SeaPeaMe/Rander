@@ -142,7 +142,20 @@ namespace Rander._2D
                     FontSize -= 0.01f;
                     goto MeasureWidth;
                 }
+
+                // Checks wether the text should break (But only if the text actually CAN go beyond the bounds)
+                if (FontSize <= MinFontSize && LinkedObject != null) {
+                    for (int i = 1; i <= Text.Length; i++)
+                    {
+                        if ((Font.MeasureString(Text.Substring(0, i)) * FontSize).X > LinkedObject.Size.X)
+                        {
+                            Text = Text.Insert(i - 1, "\n");
+                        }
+                    }
+                }
             }
+
+            SetPivot(Align);
         }
 
         public override void Draw()
