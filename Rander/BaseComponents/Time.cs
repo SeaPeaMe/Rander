@@ -29,7 +29,7 @@ namespace Rander
             FrameTime = (float)Game.Gametime.ElapsedGameTime.TotalSeconds;
         }
 
-        public static void Wait(int waitTime, Action call)
+        public static System.Timers.Timer Wait(int waitTime, Action call)
         {
             System.Timers.Timer tim = new System.Timers.Timer(waitTime);
             tim.Elapsed += (source, exceptions) => {
@@ -47,9 +47,11 @@ namespace Rander
 
             Game.Timers.Add(tim);
             tim.Start();
+
+            return tim;
         }
 
-        public static void WaitUntil(Func<bool> condition, Action call)
+        public static System.Timers.Timer WaitUntil(Func<bool> condition, Action call)
         {
             System.Timers.Timer tim = new System.Timers.Timer(10);
             tim.Elapsed += (source, exceptions) => {
@@ -69,6 +71,8 @@ namespace Rander
 
             Game.Timers.Add(tim);
             tim.Start();
+
+            return tim;
         }
     }
 }

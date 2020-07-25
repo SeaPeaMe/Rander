@@ -21,6 +21,8 @@ namespace Rander._2D._2DComponents
 
         public string GhostText { get { return GhostTextComponent.Text; } set { GhostTextComponent.Text = value; } }
 
+        public int CaretBlinkSpeed = 1000;
+
         Image2DComponent Caret;
         Text2DComponent InputTextComponent;
         Text2DComponent GhostTextComponent;
@@ -30,13 +32,13 @@ namespace Rander._2D._2DComponents
 
         bool IsFocused = false;
 
-        public Input2DComponent(string ghostText, SpriteFont font, Color ghostTextColor, Color inputTextColor, Color caretColor, float fontSize = 1, Alignment textAlignment = Alignment.MiddleLeft, Alignment alignment = Alignment.TopLeft)
+        public Input2DComponent(string ghostText, SpriteFont font, Color ghostTextColor, Color inputTextColor, Color caretColor, float minFontSize = 0, float maxFontSize = 1, Alignment textAlignment = Alignment.MiddleLeft, Alignment alignment = Alignment.TopLeft)
         {
             // Text input handler
             Game.gameWindow.Window.TextInput += TextInput;
 
-            InputTextComponent = new Text2DComponent(" ", font, inputTextColor, fontSize, textAlignment, 10);
-            GhostTextComponent = new Text2DComponent(ghostText + " ", font, ghostTextColor, fontSize, textAlignment, 11);
+            InputTextComponent = new Text2DComponent(" ", font, inputTextColor, minFontSize, maxFontSize, textAlignment, 10);
+            GhostTextComponent = new Text2DComponent(ghostText + " ", font, ghostTextColor, minFontSize, maxFontSize, textAlignment, 11);
             InputButton = new Button2DComponent(new Action(OnClick), new Action(OnClickOutside));
             Caret = new Image2DComponent(DefaultValues.PixelTexture, caretColor, 12);
 
@@ -50,8 +52,23 @@ namespace Rander._2D._2DComponents
             // Creates a whole new object JUST for the input to prevent confusion when looking for components in the main object this component is attatched to
             InputSeperateObject = new Object2D("Input_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, 0, new Component2D[] { InputTextComponent, GhostTextComponent, InputButton }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
 
+            // Sets the input text to nothing once it's been instantiated, so it can be aligned correctly
             InputText = "";
             GhostText = GhostText.Substring(0, GhostText.Length - 1);
+        }
+
+        System.Timers.Timer CaretBlinkTimer;
+        void CaretBlink()
+        {
+            if (Caret.Color.A == 255)
+            {
+                Caret.Color.A = 0;
+            } else if (Caret.Color.A == 0)
+            {
+                Caret.Color.A = 255;
+            }
+
+            CaretBlinkTimer = Time.Wait(CaretBlinkSpeed, new Action(CaretBlink));
         }
 
         void TextInput(object sender, TextInputEventArgs args)
@@ -75,7 +92,7 @@ namespace Rander._2D._2DComponents
             CaretObject.RelativePosition = 
                   new Vector2(InputTextComponent.Font.MeasureString(InputText).X * InputTextComponent.FontSize, 0)
                 + new Vector2(2, 0)
-                + new Vector2(0, LinkedObject.Size.Y * InputTextComponent.Pivot.Y);
+                + new Vector2(LinkedObject.Size.X * (InputTextComponent.Pivot.X - 0.5f), LinkedObject.Size.Y * (InputTextComponent.Pivot.Y - 0.5f));
         }
 
         void OnClick()
@@ -89,6 +106,8 @@ namespace Rander._2D._2DComponents
 
             UpdateCaret();
 
+            CaretBlink();
+
             IsFocused = true;
         }
 
@@ -96,14 +115,22 @@ namespace Rander._2D._2DComponents
         {
             IsFocused = false;
 
-            if (CaretObject != null) {
-                CaretObject.Destroy(true);
-                CaretObject = null;
-            }
-
             if (InputText == "")
             {
                 GhostTextComponent.Color = GhostTextColor;
+            }
+
+            if (CaretBlinkTimer != null)
+            {
+                CaretBlinkTimer.Stop();
+                CaretBlinkTimer.Dispose();
+                CaretBlinkTimer = null;
+            }
+
+            if (CaretObject != null)
+            {
+                CaretObject.Destroy(true);
+                CaretObject = null;
             }
         }
 
@@ -119,37 +146,5 @@ namespace Rander._2D._2DComponents
             Keys.NumLock
         };
         #endregion
-
-        //Keys[] PrevKeys = new Keys[] { };
-        //List<Keys> CurrentKeys = new List<Keys>();
-        //bool CapsLock = false;
-        //public override void Update()
-        //{
-        //    if (IsFocused) {
-        //        CurrentKeys = Input.Keys.GetPressedKeys().ToList();
-
-        //        // I had to do this because an if statement comparing the two arrays wasn't working for some reason
-        //        bool Caps = CurrentKeys.Contains(Keys.LeftShift) || CurrentKeys.Contains(Keys.RightShift);
-        //        foreach (Keys key in CurrentKeys.ToList())
-        //        {
-        //            if (LegalChars.ContainsKey(key) && !PrevKeys.Contains(key))
-        //            {
-        //                KeyInfo inf;
-        //                if (LegalChars.TryGetValue(key, out inf))
-        //                {
-        //                    InputText += Caps || CapsLock ? inf.UpperCase : inf.LowerCase;
-        //                }
-        //            } else if (!PrevKeys.Contains(key)) // Special Keys
-        //            {
-        //                if (key == Keys.Back && InputText != "")
-        //                {
-        //                    InputText = InputText.Substring(0, InputText.Length - 1);
-        //                }
-        //            }
-        //        }
-
-        //        PrevKeys = CurrentKeys.ToArray();
-        //    }
-        //}
     }
 }

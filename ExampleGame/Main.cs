@@ -33,7 +33,7 @@ namespace ExampleGame
             Object2D Title = new Object2D("Title", new Vector2(Screen.Width / 2, 20), Vector2.Zero, 0, new Component2D[] { new Text2DComponent(ExGame.ToString(), DefaultValues.DefaultFont, Color.White, 0.5f, Alignment.TopCenter) }, Alignment.TopCenter);
 
             // FPS
-            new Object2D("FPSText", new Vector2(10, 5), new Vector2(100, 100), 0, new Component2D[] { new Text2DComponent("FPS", DefaultValues.DefaultFont, Color.LightGreen, 0.18f), new Rander.TestScripts.FPSScript() }); // FPS Counter
+            new Object2D("FPSText", new Vector2(10, 5), new Vector2(100, 100), 0, new Component2D[] { new Text2DComponent("FPS", DefaultValues.DefaultFont, Color.LightGreen, fontSize: 0.18f), new Rander.TestScripts.FPSScript() }); // FPS Counter
 
             Rander.Game.Close();
 

@@ -1,17 +1,7 @@
 ﻿----- RELEASE NOTES -----
 
-<<<<<<< Updated upstream
-- Fixed audio not being able to be re-played after stopping it (Audio)
-- Added ability to clear the level (Game)
-- Moved some functionality to Level.cs [It makes more sense now] (Level)
-	- Level.ClearLevel()
-	- Level.Sounds
-	- Level.Objects2D
-	- Level.Update()
-	- Level.Draw()
-=======
-- Fixed issue when listing components in a strange order an error would be spat out
->>>>>>> Stashed changes
+- Fixed caret alignment in Inputs (Input2DComponent)
+- Text now tries to stay between the min and max size values (Text2DComponent)
 
 ----- TODO -----
 
@@ -19,26 +9,18 @@
 	- Button - [✔]
 		- Do button detecting for rotated rectangles [✔]
 		- Do it for other pivots now [✔]
-	- Text - [■■□]
+	- Text - [■■■□]
 		- Alignment [✔]
 		- Auto-Size [✔]
-		- Try stay in LinkedObject size [ ]
-	- Input [ ]
+		- Try stay in LinkedObject size [✔]
+		- Text breaking when min font size is reached [⌛]
+	- Input [✔]
+		- Fix Caret alignment [✔]
+		- Make text stay in input bounds [✔]
 	- Slider [ ]
 	- Spacer [ ]
 
-- Work on the Example Game to test for any errors in Rander [⌛]
-
-- Write Audio System [✔]
-	- Instance sounds [✔]
-	- Loop option [✔]
-	- When stopping sound, remove sound from NoOverlap list [✔]
-
-- Instant thread killing [✔]
-
 - Relative Scaling [ ]
-
-- Fix Threads not syncing to main thread [✔]
 
 ----- BACKUP CODE -----
 

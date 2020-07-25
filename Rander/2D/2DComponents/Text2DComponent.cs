@@ -7,9 +7,11 @@ namespace Rander._2D
 {
     public class Text2DComponent : Component2D
     {
-        public string Text = "";
+        string txt = "";
+        public string Text { get { return txt; } set { txt = value; UpdateSize(); } }
         public Color Color = Color.White;
-        public float FontSize = 0.18f;
+        public float MaxFontSize = 0.18f;
+        public float MinFontSize = 0.18f;
         public float SubLayer = 1;
         public SpriteFont Font = DefaultValues.DefaultFont;
 
@@ -73,7 +75,21 @@ namespace Rander._2D
         public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
         {
             Text = text;
-            FontSize = fontSize;
+            MaxFontSize = fontSize;
+            MinFontSize = fontSize;
+            AutoSize = false;
+            Font = font;
+            Color = color;
+            SetAl = alignment;
+            SubLayer = subLayer;
+        }
+
+        public Text2DComponent(string text, SpriteFont font, Color color, float minFontSize = 0, float maxFontSize = 1, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
+        {
+            Text = text;
+            MaxFontSize = maxFontSize;
+            MinFontSize = minFontSize;
+            AutoSize = false;
             Font = font;
             Color = color;
             SetAl = alignment;
@@ -92,20 +108,42 @@ namespace Rander._2D
 
         public override void Start()
         {
+            UpdateSize();
+
+            SetPivot(SetAl);
+        }
+        #endregion
+
+        /// <summary>
+        /// The size of the text. Will be overwritten if text is changed
+        /// </summary>
+        public float FontSize;
+        void UpdateSize()
+        {
             if (AutoSize)
             {
-                FontSize = LinkedObject.Size.Y / 100;
+                MinFontSize = LinkedObject.Size.Y / 100;
                 MeasureWidth:
-                if ((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X)
+                if ((Font.MeasureString(Text) * MinFontSize).X > LinkedObject.Size.X)
+                {
+                    MinFontSize -= 0.01f;
+                    goto MeasureWidth;
+                }
+
+                MaxFontSize = MinFontSize;
+                FontSize = MinFontSize;
+            } else
+            {
+                // Calculates between min and max values
+                FontSize = MaxFontSize;
+                MeasureWidth:
+                if (FontSize > MinFontSize && (((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X) || ((Font.MeasureString(Text) * FontSize).Y > LinkedObject.Size.Y)))
                 {
                     FontSize -= 0.01f;
                     goto MeasureWidth;
                 }
             }
-
-            SetPivot(SetAl);
         }
-        #endregion
 
         public override void Draw()
         {

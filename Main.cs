@@ -17,7 +17,7 @@ namespace MyGame
         // Load game's resources and instantiate stuff here
         public static bool OnGameLoad()
         {
-            new Object2D("Input", new Vector2(Screen.Width / 2, Screen.Height / 2), new Vector2(300, 60), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture), new Input2DComponent("Click Me!", DefaultValues.DefaultFont, Color.DarkGray, Color.Black, Color.Black, 0.18f) });
+            new Object2D("Input", new Vector2(Screen.Width / 2, Screen.Height / 2), new Vector2(300, 60), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture), new Input2DComponent("Click Me!", DefaultValues.DefaultFont, Color.DarkGray, Color.Black, Color.Black, 0, 0.18f) }, Alignment.Center);
             //ExampleGame.Main.OnGameLoad(); // Runs the Example
 
             return true;
@@ -26,7 +26,7 @@ namespace MyGame
         // Updates consistently (30TPS)
         public static void OnUpdate()
         {
-            ExampleGame.Main.OnUpdate(); // Updates the Example
+            //ExampleGame.Main.OnUpdate(); // Updates the Example
         }
 
         // Updates inconsistently (Can go from 1-Infinity TPS), main use is for rendering things on-screen
