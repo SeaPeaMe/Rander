@@ -202,6 +202,12 @@ namespace Rander._2D
                 {
                     AddComponent(com);
                 }
+
+                // Starts all the components after they've all been added
+                foreach (Component2D com in Components)
+                {
+                    com.Start();
+                }
             }
         }
         #endregion
@@ -213,10 +219,15 @@ namespace Rander._2D
             if (component != null) {
                 Components.Add(component);
                 component.LinkedObject = this;
-                component.Start();
             }
 
             return component;
+        }
+
+        public bool HasComponent<T>()
+        {
+            Component2D com = Components.Find(x => x is T);
+            return com != null ? true : false;
         }
 
         public T GetComponent<T>()

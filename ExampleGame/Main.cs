@@ -17,8 +17,13 @@ namespace ExampleGame
             GenerateStars(true);
             //Audio.PlaySound(ContentLoader.LoadSound("ExampleGameAssets/RocketRumble"), 0.5f, loop: true);
             //SoundEffectInstance IntroSpeech = Audio.PlaySound(ContentLoader.LoadSound("ExampleGameAssets/Intro"));
+<<<<<<< Updated upstream
             //RocketControl.CtrlLck = true;
             //Time.WaitUntil(() => IntroSpeech.IsDisposed, () => RocketControl.CtrlLck = false);
+=======
+            //RocketControlVertical.CtrlLck = true;
+            //Time.WaitUntil(() => IntroSpeech.IsDisposed, () => RocketControlVertical.CtrlLck = false);
+>>>>>>> Stashed changes
             Object2D Rocket = new Object2D("Rocket", new Vector2(Screen.Width / 2, Screen.Height / 2 + 100), new Vector2(16*10, 18*10), 0, new Component2D[] { new Image2DComponent(ContentLoader.LoadTexture("ExampleGameAssets/Rocket_2.png")), new RocketControlVertical() }, Alignment.Center, 1);
 
             Time.WaitUntil(() => Rocket.Position.Y < 0 - Rocket.Size.Y, () => LoadExample(ExampleGame.RelativeTranslation));

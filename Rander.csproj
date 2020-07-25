@@ -89,6 +89,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rander\2D\2DComponents\Button2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Image2DComponent.cs" />
+    <Compile Include="Rander\2D\2DComponents\Input2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Text2DComponent.cs" />
     <Compile Include="Rander\BaseComponents\Audio.cs" />
     <Compile Include="Rander\BaseComponents\Input.cs" />

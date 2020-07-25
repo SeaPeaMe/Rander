@@ -11,10 +11,10 @@ namespace Rander._2D
         public Color Color = Color.White;
         public float FontSize = 0.18f;
         public float SubLayer = 1;
-        SpriteFont Font = DefaultValues.DefaultFont;
+        public SpriteFont Font = DefaultValues.DefaultFont;
 
         Alignment Al = Alignment.TopLeft;
-        Vector2 Pivot = Vector2.Zero;
+        public Vector2 Pivot = Vector2.Zero;
         Vector2 PivotOffset = Vector2.Zero;
         #region Alignment/Pivot
         public Alignment Align { get { return Al; } set { SetPivot(value); } }

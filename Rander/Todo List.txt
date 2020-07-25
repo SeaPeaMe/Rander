@@ -1,5 +1,6 @@
 ﻿----- RELEASE NOTES -----
 
+<<<<<<< Updated upstream
 - Fixed audio not being able to be re-played after stopping it (Audio)
 - Added ability to clear the level (Game)
 - Moved some functionality to Level.cs [It makes more sense now] (Level)
@@ -8,6 +9,9 @@
 	- Level.Objects2D
 	- Level.Update()
 	- Level.Draw()
+=======
+- Fixed issue when listing components in a strange order an error would be spat out
+>>>>>>> Stashed changes
 
 ----- TODO -----
 
