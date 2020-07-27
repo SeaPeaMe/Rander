@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Rander._2D._2DComponents
+namespace Rander._2D
 {
     class Input2DComponent : Component2D
     {
@@ -32,13 +32,13 @@ namespace Rander._2D._2DComponents
 
         bool IsFocused = false;
 
-        public Input2DComponent(string ghostText, SpriteFont font, Color ghostTextColor, Color inputTextColor, Color caretColor, float minFontSize = 0, float maxFontSize = 1, Alignment textAlignment = Alignment.MiddleLeft, Alignment alignment = Alignment.TopLeft)
+        public Input2DComponent(string ghostText, SpriteFont font, Color ghostTextColor, Color inputTextColor, Color caretColor, float minFontSize = 0, float maxFontSize = 1, Alignment textAlignment = Alignment.MiddleLeft)
         {
             // Text input handler
             Game.gameWindow.Window.TextInput += TextInput;
 
-            InputTextComponent = new Text2DComponent(" ", font, inputTextColor, minFontSize, maxFontSize, textAlignment, 10);
-            GhostTextComponent = new Text2DComponent(ghostText + " ", font, ghostTextColor, minFontSize, maxFontSize, textAlignment, 11);
+            InputTextComponent = new Text2DComponent(" ", font, inputTextColor, minFontSize, maxFontSize, textAlignment, false, 10);
+            GhostTextComponent = new Text2DComponent(ghostText + " ", font, ghostTextColor, minFontSize, maxFontSize, textAlignment, false, 11);
             InputButton = new Button2DComponent(new Action(OnClick), new Action(OnClickOutside));
             Caret = new Image2DComponent(DefaultValues.PixelTexture, caretColor, 12);
 
@@ -50,7 +50,7 @@ namespace Rander._2D._2DComponents
         public override void Start()
         {
             // Creates a whole new object JUST for the input to prevent confusion when looking for components in the main object this component is attatched to
-            InputSeperateObject = new Object2D("Input_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, 0, new Component2D[] { InputTextComponent, GhostTextComponent, InputButton }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
+            InputSeperateObject = new Object2D("Input_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, LinkedObject.Rotation, new Component2D[] { InputTextComponent, GhostTextComponent, InputButton }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
 
             // Sets the input text to nothing once it's been instantiated, so it can be aligned correctly
             InputText = "";
@@ -90,7 +90,7 @@ namespace Rander._2D._2DComponents
         void UpdateCaret()
         {
             CaretObject.RelativePosition = 
-                  new Vector2(InputTextComponent.Font.MeasureString(InputText).X * InputTextComponent.FontSize, 0)
+                  new Vector2(InputTextComponent.Font.MeasureString(InputText).X * InputTextComponent.FontSize * InputTextComponent.Pivot.X, 0)
                 + new Vector2(2, 0)
                 + new Vector2(LinkedObject.Size.X * (InputTextComponent.Pivot.X - 0.5f), LinkedObject.Size.Y * (InputTextComponent.Pivot.Y - 0.5f));
         }
@@ -99,18 +99,15 @@ namespace Rander._2D._2DComponents
         {
             GhostTextComponent.Color = Color.Transparent;
 
-            if (CaretBlinkTimer != null)
-            {
-                CaretBlinkTimer.Stop();
-                CaretBlinkTimer.Dispose();
-                CaretBlinkTimer = null;
-            }
+            Time.CancelWait(CaretBlinkTimer);
+            CaretBlinkTimer = null;
 
             float CaretSize = InputTextComponent.FontSize * 100;
             if (CaretObject == null) {
                 CaretObject = new Object2D("CaretObj_" + LinkedObject.ObjectName, LinkedObject.Position - new Vector2((LinkedObject.Pivot.X * LinkedObject.Size.X), (CaretSize / 2) - (LinkedObject.Size.Y * InputTextComponent.Pivot.Y)), new Vector2(2, CaretSize), 0, new Component2D[] { Caret }, InputTextComponent.Align, LinkedObject.Layer, InputSeperateObject);
             }
 
+            Caret.Color.A = 0;
             UpdateCaret();
 
             CaretBlink();
@@ -127,12 +124,8 @@ namespace Rander._2D._2DComponents
                 GhostTextComponent.Color = GhostTextColor;
             }
 
-            if (CaretBlinkTimer != null)
-            {
-                CaretBlinkTimer.Stop();
-                CaretBlinkTimer.Dispose();
-                CaretBlinkTimer = null;
-            }
+            Time.CancelWait(CaretBlinkTimer);
+            CaretBlinkTimer = null;
 
             if (CaretObject != null)
             {

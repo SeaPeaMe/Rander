@@ -74,5 +74,14 @@ namespace Rander
 
             return tim;
         }
+
+        public static void CancelWait(System.Timers.Timer wait)
+        {
+            if (wait != null) {
+                Game.Timers.Remove(wait);
+                wait.Stop();
+                wait.Dispose();
+            }
+        }
     }
 }

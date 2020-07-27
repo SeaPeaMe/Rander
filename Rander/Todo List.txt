@@ -1,7 +1,7 @@
 ﻿----- RELEASE NOTES -----
 
-- Fixed caret blinking sporadically
-- Text will now try stay in the bounds of the font sizes specified, will try stay in the bounds of the LinkedObject and will break when needed
+- Added Checkbox2DComponent
+- Fixed bug when adding input component, it wouldn't rotate
 
 ----- TODO -----
 
@@ -17,6 +17,8 @@
 	- Input [✔]
 		- Fix Caret alignment [✔]
 		- Make text stay in input bounds [✔]
+	- Checkbox [✔]
+	- InputBox [ ]
 	- Slider [ ]
 	- Spacer [ ]
 

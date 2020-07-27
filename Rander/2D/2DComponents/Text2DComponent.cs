@@ -12,6 +12,7 @@ namespace Rander._2D
         public Color Color = Color.White;
         public float MaxFontSize = 0.18f;
         public float MinFontSize = 0.18f;
+        public bool TextBreaking = true;
         public float SubLayer = 1;
         public SpriteFont Font = DefaultValues.DefaultFont;
 
@@ -72,7 +73,7 @@ namespace Rander._2D
             AutoSize = true;
         }
 
-        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
+        public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
         {
             Text = text;
             MaxFontSize = fontSize;
@@ -82,9 +83,10 @@ namespace Rander._2D
             Color = color;
             SetAl = alignment;
             SubLayer = subLayer;
+            TextBreaking = textBreaking;
         }
 
-        public Text2DComponent(string text, SpriteFont font, Color color, float minFontSize = 0, float maxFontSize = 1, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
+        public Text2DComponent(string text, SpriteFont font, Color color, float minFontSize = 0, float maxFontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
         {
             Text = text;
             MaxFontSize = maxFontSize;
@@ -94,6 +96,7 @@ namespace Rander._2D
             Color = color;
             SetAl = alignment;
             SubLayer = subLayer;
+            TextBreaking = textBreaking;
         }
 
         public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
@@ -104,6 +107,7 @@ namespace Rander._2D
             AutoSize = true;
             SetAl = alignment;
             SubLayer = subLayer;
+            TextBreaking = false;
         }
 
         public override void Start()
@@ -143,13 +147,17 @@ namespace Rander._2D
                     goto MeasureWidth;
                 }
 
-                // Checks wether the text should break (But only if the text actually CAN go beyond the bounds)
-                if (FontSize <= MinFontSize && LinkedObject != null) {
-                    for (int i = 1; i <= Text.Length; i++)
+                if (TextBreaking)
+                {
+                    // Checks wether the text should break (But only if the text actually CAN go beyond the bounds)
+                    if (FontSize <= MinFontSize && LinkedObject != null)
                     {
-                        if ((Font.MeasureString(Text.Substring(0, i)) * FontSize).X > LinkedObject.Size.X)
+                        for (int i = 1; i <= Text.Length; i++)
                         {
-                            Text = Text.Insert(i - 1, "\n");
+                            if ((Font.MeasureString(Text.Substring(0, i)) * FontSize).X > LinkedObject.Size.X)
+                            {
+                                Text = Text.Insert(i - 1, "\n");
+                            }
                         }
                     }
                 }
