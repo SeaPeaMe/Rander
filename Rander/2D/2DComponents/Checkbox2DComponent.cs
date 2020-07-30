@@ -22,6 +22,7 @@ namespace Rander._2D
 
         Button2DComponent Button;
         Image2DComponent Image;
+        Object2D ChkObj;
         #region Creation
         public Checkbox2DComponent(Color upColor, Color downColor, Texture2D upTexture = null, Texture2D downTexture = null)
         {
@@ -54,7 +55,7 @@ namespace Rander._2D
         {
             Button = new Button2DComponent(OnClick, OnClickOutside, new Action(OnCheckClick), OnPress, OnHover, OnEnter, OnExit);
             Image = new Image2DComponent(IsDown ? DownTexture : UpTexture, IsDown ? DownColor : UpColor);
-            new Object2D("Check_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, LinkedObject.Rotation, new Component2D[] { Image, Button }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
+            ChkObj = new Object2D("Check_" + LinkedObject.ObjectName, LinkedObject.Position, LinkedObject.Size, LinkedObject.Rotation, new Component2D[] { Image, Button }, LinkedObject.Align, LinkedObject.Layer, LinkedObject);
         }
         #endregion
 
@@ -65,6 +66,11 @@ namespace Rander._2D
             Image.Color = IsDown ? DownColor : UpColor;
 
             if (OnRelease != null) OnRelease();
+        }
+
+        public override void OnDispose()
+        {
+            ChkObj.Dispose(true);
         }
     }
 }

@@ -92,6 +92,10 @@
     <Compile Include="Rander\2D\2DComponents\Image2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Input2DComponent.cs" />
     <Compile Include="Rander\2D\2DComponents\Text2DComponent.cs" />
+    <Compile Include="Rander\3D\3DComponents\Camera3DComponent.cs" />
+    <Compile Include="Rander\3D\3DComponents\Renderer3DComponent.cs" />
+    <Compile Include="Rander\3D\Component3D.cs" />
+    <Compile Include="Rander\3D\Object3D.cs" />
     <Compile Include="Rander\BaseComponents\Audio.cs" />
     <Compile Include="Rander\BaseComponents\Input.cs" />
     <Compile Include="Rander\BaseComponents\Rand.cs" />

@@ -71,6 +71,18 @@ namespace Rander._2D
             CaretBlinkTimer = Time.Wait(CaretBlinkSpeed, new Action(CaretBlink));
         }
 
+        #region Keys
+        Keys[] IllegalKeys = new Keys[] {
+            Keys.Back,
+            Keys.Insert,
+            Keys.Home,
+            Keys.PageUp,
+            Keys.PageDown,
+            Keys.Delete,
+            Keys.End,
+            Keys.NumLock
+        };
+        #endregion
         void TextInput(object sender, TextInputEventArgs args)
         {
             if (IsFocused) {
@@ -129,22 +141,14 @@ namespace Rander._2D
 
             if (CaretObject != null)
             {
-                CaretObject.Destroy(true);
+                CaretObject.Dispose(true);
                 CaretObject = null;
             }
         }
 
-        #region Keys
-        Keys[] IllegalKeys = new Keys[] {
-            Keys.Back,
-            Keys.Insert,
-            Keys.Home,
-            Keys.PageUp,
-            Keys.PageDown,
-            Keys.Delete,
-            Keys.End,
-            Keys.NumLock
-        };
-        #endregion
+        public override void OnDispose()
+        {
+            InputSeperateObject.Dispose(true);
+        }
     }
 }

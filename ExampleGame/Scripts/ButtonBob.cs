@@ -70,7 +70,7 @@ namespace ExampleGame.Scripts
             }
             else
             {
-                Col.LinkedObject.Destroy();
+                Col.LinkedObject.Dispose();
             }
         }
     }

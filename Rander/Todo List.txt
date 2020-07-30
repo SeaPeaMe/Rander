@@ -1,7 +1,7 @@
 ﻿----- RELEASE NOTES -----
 
-- Added Checkbox2DComponent
-- Fixed bug when adding input component, it wouldn't rotate
+- CheckBoxes and Inputs now remove their seperate objects when destroyed
+- 3D Base classes were added (Not entirely functional at the moment)
 
 ----- TODO -----
 
@@ -21,6 +21,8 @@
 	- InputBox [ ]
 	- Slider [ ]
 	- Spacer [ ]
+
+- Object 3D Relative position [ ]
 
 - Relative Scaling [ ]
 

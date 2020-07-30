@@ -280,7 +280,7 @@ namespace Rander._2D
             }
         }
 
-        public void Destroy(bool DestroyChildren = false)
+        public void Dispose(bool DestroyChildren = false)
         {
             if (DestroyChildren == false)
             {
@@ -297,8 +297,14 @@ namespace Rander._2D
                 // Destroys the children
                 foreach (Object2D Child in Children)
                 {
-                    Child.Destroy();
+                    Child.Dispose();
                 }
+            }
+
+            // Runs OnDispose on all scripts
+            foreach (Component2D Scr in Components)
+            {
+                Scr.OnDispose();
             }
 
             // Completely un-links the object
