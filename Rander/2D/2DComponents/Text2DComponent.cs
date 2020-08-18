@@ -8,7 +8,7 @@ namespace Rander._2D
     public class Text2DComponent : Component2D
     {
         string txt = "";
-        public string Text { get { return txt; } set { txt = value; UpdateSize(); } }
+        public string Text { get { return txt; } set { txt = value; if (LinkedObject != null) { UpdateSize(); } } }
         public Color Color = Color.White;
         public float MaxFontSize = 0.18f;
         public float MinFontSize = 0.18f;
@@ -113,8 +113,6 @@ namespace Rander._2D
         public override void Start()
         {
             UpdateSize();
-
-            SetPivot(SetAl);
         }
         #endregion
 
@@ -124,39 +122,43 @@ namespace Rander._2D
         public float FontSize;
         void UpdateSize()
         {
-            if (AutoSize)
+            if (LinkedObject.Size.X > 0 && LinkedObject.Size.Y > 0)
             {
-                MinFontSize = LinkedObject.Size.Y / 100;
+                if (AutoSize)
+                {
+                    MinFontSize = LinkedObject.Size.Y / 100;
                 MeasureWidth:
-                if ((Font.MeasureString(Text) * MinFontSize).X > LinkedObject.Size.X)
-                {
-                    MinFontSize -= 0.01f;
-                    goto MeasureWidth;
-                }
-
-                MaxFontSize = MinFontSize;
-                FontSize = MinFontSize;
-            } else
-            {
-                // Calculates between min and max values
-                FontSize = MaxFontSize;
-                MeasureWidth:
-                if (FontSize > MinFontSize && (((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X) || ((Font.MeasureString(Text) * FontSize).Y > LinkedObject.Size.Y)))
-                {
-                    FontSize -= 0.01f;
-                    goto MeasureWidth;
-                }
-
-                if (TextBreaking)
-                {
-                    // Checks wether the text should break (But only if the text actually CAN go beyond the bounds)
-                    if (FontSize <= MinFontSize && LinkedObject != null)
+                    if ((Font.MeasureString(Text) * MinFontSize).X > LinkedObject.Size.X)
                     {
-                        for (int i = 1; i <= Text.Length; i++)
+                        MinFontSize -= 0.01f;
+                        goto MeasureWidth;
+                    }
+
+                    MaxFontSize = MinFontSize;
+                    FontSize = MinFontSize;
+                }
+                else
+                {
+                    // Calculates between min and max values
+                    FontSize = MaxFontSize;
+                MeasureWidth:
+                    if (FontSize > MinFontSize && (((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X) || ((Font.MeasureString(Text) * FontSize).Y > LinkedObject.Size.Y)))
+                    {
+                        FontSize -= 0.01f;
+                        goto MeasureWidth;
+                    }
+
+                    if (TextBreaking)
+                    {
+                        // Checks wether the text should break (But only if the text actually CAN go beyond the bounds)
+                        if (FontSize <= MinFontSize && LinkedObject != null)
                         {
-                            if ((Font.MeasureString(Text.Substring(0, i)) * FontSize).X > LinkedObject.Size.X)
+                            for (int i = 1; i <= Text.Length; i++)
                             {
-                                Text = Text.Insert(i - 1, "\n");
+                                if ((Font.MeasureString(Text.Substring(0, i)) * FontSize).X > LinkedObject.Size.X)
+                                {
+                                    Text = Text.Insert(i - 1, "\n");
+                                }
                             }
                         }
                     }

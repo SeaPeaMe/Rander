@@ -17,7 +17,7 @@ namespace MyGame
         // Load game's resources and instantiate stuff here
         public static bool OnGameLoad()
         {
-            ExampleGame.Main.OnGameLoad(); // Runs the Example
+            Rander.Editor.Main.Init();
 
             return true;
         }

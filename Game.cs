@@ -19,8 +19,8 @@ namespace Rander
         static bool VSync = true;
         static SamplerState Filter = SamplerState.PointClamp; // Makes textures nice and crisp when doing pixel art
         public static Color BackgroundColor = Color.CornflowerBlue;
-        static Vector2 Resolution = new Vector2(1280, 720); // Leave as Vector2.Zero for automatic resolution
-        static bool FullScreen = false;
+        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
+        static bool FullScreen = true;
 
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;
@@ -36,8 +36,16 @@ namespace Rander
         public Game()
         {
             Debug.LogWarning("Initializing...");
+
+            // Sets window and graphics
+            gameWindow = this;
             graphics = new GraphicsDeviceManager(this);
 
+            Content.RootDirectory = "Content";
+        }
+
+        protected override void Initialize()
+        {
             // Sets up the window to device's resolution and in full screen
             TargetElapsedTime = TimeSpan.FromSeconds((float)1 / TargetFPS);
             IsFixedTimeStep = false;
@@ -47,13 +55,8 @@ namespace Rander
             graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
             graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
             graphics.IsFullScreen = FullScreen;
+            graphics.ApplyChanges();
 
-            gameWindow = this;
-            Content.RootDirectory = "Content";
-        }
-
-        protected override void Initialize()
-        {
             // Load Default Values
             Screen.Width = graphics.PreferredBackBufferWidth;
             Screen.Height = graphics.PreferredBackBufferHeight;
@@ -85,6 +88,7 @@ namespace Rander
             DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/Arial");
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
+            Debug.LogWarning("Initializing Game...");
             if (MyGame.Main.OnGameLoad())
             {
                 Debug.LogSuccess("Finished!");
@@ -93,7 +97,8 @@ namespace Rander
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Disposes everything if X button pressed in top right
+            Close(true);
         }
 
         protected override void Update(GameTime gameTime)

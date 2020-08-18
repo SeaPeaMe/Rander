@@ -1,7 +1,7 @@
 ﻿----- RELEASE NOTES -----
 
-- CheckBoxes and Inputs now remove their seperate objects when destroyed
-- 3D Base classes were added (Not entirely functional at the moment)
+- Updated to .NET Core 3.1
+- Editor being created
 
 ----- TODO -----
 
@@ -25,6 +25,8 @@
 - Object 3D Relative position [ ]
 
 - Relative Scaling [ ]
+
+- Editor [⌛]
 
 ----- BACKUP CODE -----
 
