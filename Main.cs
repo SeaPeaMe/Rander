@@ -4,12 +4,6 @@
 ///         Attatch: N/A          ///
 /////////////////////////////////////
 
-using Microsoft.Xna.Framework;
-using Rander;
-using Rander._2D;
-using Rander.BaseComponents;
-using Rander.TestScripts;
-
 namespace MyGame
 {
     class Main

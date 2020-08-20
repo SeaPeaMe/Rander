@@ -1,0 +1,25 @@
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Content\Defaults\Pixel.png
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Content\Defaults\Arial.xnb
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Content\ExampleGameAssets\VCR OSD Mono.xnb
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.exe
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.deps.json
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.runtimeconfig.json
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.runtimeconfig.dev.json
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\Rander.pdb
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\MonoGame.Framework.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\linux-x64\native\libSDL2-2.0.so.0
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\linux-x64\native\libopenal.so.1
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\osx\native\libSDL2-2.0.0.dylib
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\osx\native\libopenal.1.dylib
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\win-x64\native\SDL2.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\win-x64\native\soft_oal.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\win-x86\native\SDL2.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Release\netcoreapp3.1\runtimes\win-x86\native\soft_oal.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.AssemblyInfoInputs.cache
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.AssemblyInfo.cs
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.csproj.CoreCompileInputs.cache
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.csproj.CopyComplete
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.dll
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.pdb
+C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\obj\Release\netcoreapp3.1\Rander.genruntimeconfig.cache

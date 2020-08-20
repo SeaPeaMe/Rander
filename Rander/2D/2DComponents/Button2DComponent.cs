@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -10,11 +9,11 @@ namespace Rander._2D
     {
         public Action OnClick = null;
         public Action OnClickOutside = null;
-        public Action OnRelease = null; 
-        public Action OnPress = null; 
-        public Action OnHover = null; 
-        public Action OnEnter = null; 
-        public Action OnExit = null; 
+        public Action OnRelease = null;
+        public Action OnPress = null;
+        public Action OnHover = null;
+        public Action OnEnter = null;
+        public Action OnExit = null;
 
         bool WasIn = false;
         bool WasClicked = false;
@@ -90,7 +89,8 @@ namespace Rander._2D
                 {
                     WasClicked = true;
                     if (OnClick != null) OnClick();
-                } else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                }
+                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
                 {
                     WasClicked = false;
                     if (OnRelease != null) OnRelease();
@@ -100,7 +100,8 @@ namespace Rander._2D
                 {
                     if (OnPress != null) OnPress();
                 }
-            } else
+            }
+            else
             {
                 if (WasIn)
                 {
@@ -112,7 +113,8 @@ namespace Rander._2D
                 {
                     WasClicked = true;
                     if (OnClickOutside != null) OnClickOutside();
-                } else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                }
+                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
                 {
                     WasClicked = false;
                 }

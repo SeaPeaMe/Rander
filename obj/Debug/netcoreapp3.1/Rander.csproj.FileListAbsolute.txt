@@ -1,5 +1,4 @@
 C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Debug\netcoreapp3.1\Content\Defaults\Arial.xnb
-C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Debug\netcoreapp3.1\Content\ExampleGameAssets\VCR OSD Mono.xnb
 C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Debug\netcoreapp3.1\Rander.exe
 C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Debug\netcoreapp3.1\Rander.deps.json
 C:\Users\M.R\Desktop\StandaloneProjects\Rander\Rander\bin\Debug\netcoreapp3.1\Rander.runtimeconfig.json

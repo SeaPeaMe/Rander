@@ -1,7 +1,10 @@
 ﻿----- RELEASE NOTES -----
 
-- Updated to .NET Core 3.1
-- Editor being created
+- Rander now automatically compresses content
+- Added Event handlers to multiple variables such as position, rotation, scale, child added, etc. to make scripts more dynamic
+- Spacers added
+- Fixed Text Alignment
+- Added file compressor (Mainly for compressing content)
 
 ----- TODO -----
 
@@ -20,7 +23,7 @@
 	- Checkbox [✔]
 	- InputBox [ ]
 	- Slider [ ]
-	- Spacer [ ]
+	- Spacer [✔]
 
 - Object 3D Relative position [ ]
 

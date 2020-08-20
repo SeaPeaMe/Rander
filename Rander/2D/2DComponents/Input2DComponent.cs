@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Rander._2D
@@ -63,7 +62,8 @@ namespace Rander._2D
             if (Caret.Color.A == 255)
             {
                 Caret.Color.A = 0;
-            } else if (Caret.Color.A == 0)
+            }
+            else if (Caret.Color.A == 0)
             {
                 Caret.Color.A = 255;
             }
@@ -85,12 +85,16 @@ namespace Rander._2D
         #endregion
         void TextInput(object sender, TextInputEventArgs args)
         {
-            if (IsFocused) {
-                if (!IllegalKeys.Contains(args.Key)) {
-                    if (InputTextComponent.Font.Characters.Contains(args.Character)) {
+            if (IsFocused)
+            {
+                if (!IllegalKeys.Contains(args.Key))
+                {
+                    if (InputTextComponent.Font.Characters.Contains(args.Character))
+                    {
                         InputText += args.Character;
                     }
-                } else if (args.Key == Keys.Back && InputText != "")
+                }
+                else if (args.Key == Keys.Back && InputText != "")
                 {
                     InputText = InputText.Substring(0, InputText.Length - 1);
                 }
@@ -101,7 +105,7 @@ namespace Rander._2D
 
         void UpdateCaret()
         {
-            CaretObject.RelativePosition = 
+            CaretObject.RelativePosition =
                   new Vector2(InputTextComponent.Font.MeasureString(InputText).X * InputTextComponent.FontSize * InputTextComponent.Pivot.X, 0)
                 + new Vector2(2, 0)
                 + new Vector2(LinkedObject.Size.X * (InputTextComponent.Pivot.X - 0.5f), LinkedObject.Size.Y * (InputTextComponent.Pivot.Y - 0.5f));
@@ -115,7 +119,8 @@ namespace Rander._2D
             CaretBlinkTimer = null;
 
             float CaretSize = InputTextComponent.FontSize * 100;
-            if (CaretObject == null) {
+            if (CaretObject == null)
+            {
                 CaretObject = new Object2D("CaretObj_" + LinkedObject.ObjectName, LinkedObject.Position - new Vector2((LinkedObject.Pivot.X * LinkedObject.Size.X), (CaretSize / 2) - (LinkedObject.Size.Y * InputTextComponent.Pivot.Y)), new Vector2(2, CaretSize), 0, new Component2D[] { Caret }, InputTextComponent.Align, LinkedObject.Layer, InputSeperateObject);
             }
 

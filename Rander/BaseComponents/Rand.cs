@@ -11,12 +11,7 @@ namespace Rander
     public class Rand : Component
     {
 
-        static Random Random;
-
-        public override void Start()
-        {
-            Random = new Random(DateTime.Now.Millisecond + DateTime.Now.Second + DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year);
-        }
+        static Random Random = new Random(DateTime.Now.Millisecond + DateTime.Now.Second + DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year);
 
         public static int RandomInt(int Min, int Max)
         {

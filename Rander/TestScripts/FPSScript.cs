@@ -15,7 +15,8 @@ namespace Rander.TestScripts
                 LinkedObject.GetComponent<Text2DComponent>().Text = "FPS: " + FramesPassed;
                 TimeToPass += 1;
                 FramesPassed = 0;
-            } else
+            }
+            else
             {
                 FramesPassed += 1;
             }

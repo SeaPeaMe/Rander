@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Diagnostics;
 
 namespace Rander._2D
 {
@@ -59,7 +57,7 @@ namespace Rander._2D
                     break;
             }
 
-            PivotOffset = new Vector2(Font.MeasureString(Text).X * Pivot.X, Font.MeasureString(Text).Y * Pivot.Y) + new Vector2(0, -5);
+            PivotOffset = new Vector2(Font.MeasureString(Text).X * Pivot.X, Font.MeasureString(Text).Y * Pivot.Y);
         }
         #endregion
 
@@ -165,7 +163,7 @@ namespace Rander._2D
                 }
             }
 
-            SetPivot(Align);
+            SetPivot(SetAl);
         }
 
         public override void Draw()
