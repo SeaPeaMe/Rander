@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
-using Rander._2D;
+using Rander.BaseComponents;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Timers;
 
 namespace Rander
 {
@@ -36,8 +32,45 @@ namespace Rander
         public Game()
         {
             Debug.LogWarning("Initializing...");
+
+            // Sets window and graphics
+            gameWindow = this;
             graphics = new GraphicsDeviceManager(this);
 
+            // Deletes Temp
+            if (Directory.Exists(DefaultValues.ExecutableTempFolderPath + "/Content"))
+            {
+                Directory.Delete(DefaultValues.ExecutableTempFolderPath + "/Content", true);
+            }
+
+            Content.RootDirectory = DefaultValues.ExecutableTempFolderPath + "/Content/";
+
+            // Decompresses and/or creates Content file
+            DecompressContent:
+            if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content"))
+            {
+                Debug.LogWarning("    Rebuilding Content.dat...");
+                FolderCompressor.Compress(DefaultValues.ExecutableFolderPath + "/Content", DefaultValues.ExecutableFolderPath + "/Content.dat", System.IO.Compression.CompressionLevel.Fastest, true, true);
+                goto DecompressContent;
+            }
+            else
+            {
+                if (File.Exists(DefaultValues.ExecutableFolderPath + "/Content.dat"))
+                {
+                    Debug.Log("    Decompressing Content...");
+                    FolderCompressor.Decompress(DefaultValues.ExecutableFolderPath + "/Content.dat", DefaultValues.ExecutableTempFolderPath + "/Content", false);
+                }
+                else
+                {
+                    Debug.LogError("There's no content file/folder!", true);
+                }
+            }
+
+            if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content")) Directory.Delete(DefaultValues.ExecutableFolderPath + "/Content", true);
+        }
+
+        protected override void Initialize()
+        {
             // Sets up the window to device's resolution and in full screen
             TargetElapsedTime = TimeSpan.FromSeconds((float)1 / TargetFPS);
             IsFixedTimeStep = false;
@@ -47,16 +80,11 @@ namespace Rander
             graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
             graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
             graphics.IsFullScreen = FullScreen;
+            graphics.ApplyChanges();
 
-            gameWindow = this;
-            Content.RootDirectory = "Content";
-        }
-
-        protected override void Initialize()
-        {
             // Load Default Values
-            Screen.Width = graphics.PreferredBackBufferWidth;
-            Screen.Height = graphics.PreferredBackBufferHeight;
+            Screen.Resolution = Resolution;
+            Screen.Fullscreen = FullScreen;
 
             // Load Base Scripts
             BaseScripts.Add(new MouseInput());
@@ -85,6 +113,7 @@ namespace Rander
             DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/Arial");
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
+            Debug.LogWarning("Initializing Game...");
             if (MyGame.Main.OnGameLoad())
             {
                 Debug.LogSuccess("Finished!");
@@ -93,7 +122,8 @@ namespace Rander
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // Disposes everything if X button pressed in top right
+            Close(true);
         }
 
         protected override void Update(GameTime gameTime)
@@ -171,12 +201,24 @@ namespace Rander
         public static SpriteFont DefaultFont;
         public static Texture2D PixelTexture;
         public static string ExecutableFolderPath = AppDomain.CurrentDomain.BaseDirectory;
+        public static string ExecutableTempFolderPath = Path.GetTempPath() + "/" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
     }
 
     public class Screen
     {
-        public static int Width;
-        public static int Height;
+        public static Vector2 Resolution;
+        public readonly static Vector2 DeviceResolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+        public static bool Fullscreen;
+        public static bool AllowResizing = false;
+
+        public static void ApplyChanges()
+        {
+            Game.graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
+            Game.graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
+            Game.graphics.IsFullScreen = Fullscreen;
+            Game.gameWindow.Window.AllowUserResizing = AllowResizing;
+            Game.graphics.ApplyChanges();
+        }
     }
 
     public class Draw2D : SpriteBatch

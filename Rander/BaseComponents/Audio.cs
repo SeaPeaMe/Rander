@@ -36,7 +36,8 @@ namespace Rander.BaseComponents
                     Level.Sounds.Add(Snd, sound);
 
                     return Snd;
-                } catch
+                }
+                catch
                 {
                     if (volume > 1)
                     {
