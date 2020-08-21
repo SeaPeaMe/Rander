@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -8,12 +7,13 @@ namespace Rander._2D
 {
     class Button2DComponent : Component2D
     {
-        public Action OnClick = null; 
-        public Action OnRelease = null; 
-        public Action OnPress = null; 
-        public Action OnHover = null; 
-        public Action OnEnter = null; 
-        public Action OnExit = null; 
+        public Action OnClick = null;
+        public Action OnClickOutside = null;
+        public Action OnRelease = null;
+        public Action OnPress = null;
+        public Action OnHover = null;
+        public Action OnEnter = null;
+        public Action OnExit = null;
 
         bool WasIn = false;
         bool WasClicked = false;
@@ -26,9 +26,10 @@ namespace Rander._2D
         List<float> CursorDistances = new List<float>();
 
         #region Creation
-        public Button2DComponent(Action onClick = null, Action onRelease = null, Action onPress = null, Action onHover = null, Action onEnter = null, Action onExit = null)
+        public Button2DComponent(Action onClick = null, Action onClickOutside = null, Action onRelease = null, Action onPress = null, Action onHover = null, Action onEnter = null, Action onExit = null)
         {
             OnClick = onClick;
+            OnClickOutside = onClickOutside;
             OnRelease = onRelease;
             OnPress = onPress;
             OnHover = onHover;
@@ -89,8 +90,7 @@ namespace Rander._2D
                     WasClicked = true;
                     if (OnClick != null) OnClick();
                 }
-
-                if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
                 {
                     WasClicked = false;
                     if (OnRelease != null) OnRelease();
@@ -100,12 +100,23 @@ namespace Rander._2D
                 {
                     if (OnPress != null) OnPress();
                 }
-            } else
+            }
+            else
             {
                 if (WasIn)
                 {
                     WasIn = false;
                     if (OnExit != null) OnExit();
+                }
+
+                if (Input.Mouse.LeftButton == ButtonState.Pressed && WasClicked == false)
+                {
+                    WasClicked = true;
+                    if (OnClickOutside != null) OnClickOutside();
+                }
+                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                {
+                    WasClicked = false;
                 }
             }
         }

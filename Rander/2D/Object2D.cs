@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Rander._2D
 {
@@ -17,6 +13,7 @@ namespace Rander._2D
 
         Alignment Al = Alignment.TopLeft;
         public Vector2 Pivot = Vector2.Zero;
+        public event Action AlignmentChanged;
         #region Alignment/Pivot
         public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
@@ -56,6 +53,8 @@ namespace Rander._2D
                     Pivot = new Vector2(0, 0);
                     break;
             }
+
+            if (AlignmentChanged != null) AlignmentChanged();
         }
 
         public virtual void SetPivot(Vector2 pivot)
@@ -66,6 +65,8 @@ namespace Rander._2D
 
         float Rot = 0;
         float DestroyedParentRot = 0;
+        public event Action RotationChanged;
+        public event Action RelativeRotationChanged;
         #region Get/Set Rotation
         public float Rotation
         {
@@ -79,6 +80,7 @@ namespace Rander._2D
                 }
 
                 Rot = value;
+                if (RotationChanged != null) RotationChanged();
                 SetPivot(Align);
             }
         }
@@ -102,12 +104,16 @@ namespace Rander._2D
                     SetPivot(Align);
                     Rot = value - Parent.Rot;
                 }
+
+                if (RelativePositionChanged != null) RelativeRotationChanged();
             }
         }
         #endregion
 
         Vector2 Pos = Vector2.Zero;
         Vector2 DestroyedParentPos = Vector2.Zero;
+        public event Action PositionChanged;
+        public event Action RelativePositionChanged;
         #region Get/Set Position
         public Vector2 RelativePosition
         {
@@ -117,17 +123,14 @@ namespace Rander._2D
                 // Sets the position and then updates all the children
                 if (Parent == null) // If the object has no parent, set the position normally
                 {
-                    Pos = DestroyedParentPos + value;
+                    Position = DestroyedParentPos + value;
                 }
                 else
                 {
-                    Pos = Parent.Position + value;
+                    Position = Parent.Position + value;
                 }
 
-                foreach (Object2D Child in Children)
-                {
-                    Child.Position = Pos + Child.RelativePosition;
-                }
+                if (RelativePositionChanged != null) RelativePositionChanged();
             }
         }
         public Vector2 Position
@@ -141,19 +144,26 @@ namespace Rander._2D
                 }
 
                 Pos = value;
+
+                if (PositionChanged != null) PositionChanged();
             }
         }
         #endregion
 
         public List<Object2D> Children = new List<Object2D>();
+        public delegate void Object2DEvent(Object2D object2d);
+        public event Object2DEvent ChildAdded;
         #region Children
         public void AddChild(Object2D object2d)
         {
             Children.Add(object2d);
+            object2d.Parent = this;
+            if (ChildAdded != null) ChildAdded(object2d);
         }
 
         public void RemoveChild(Object2D object2d)
         {
+            object2d.Parent = null;
             Children.Remove(object2d);
         }
         #endregion
@@ -202,21 +212,37 @@ namespace Rander._2D
                 {
                     AddComponent(com);
                 }
+
+                // Starts all the components after they've all been added
+                foreach (Component2D com in Components)
+                {
+                    com.Start();
+                }
             }
         }
         #endregion
 
         public List<Component2D> Components = new List<Component2D>();
+        public delegate void Component2DEvent(Component2D component2d);
+        public event Component2DEvent ComponentAdded;
         #region Components
         public Component2D AddComponent(Component2D component)
         {
-            if (component != null) {
+            if (component != null)
+            {
                 Components.Add(component);
                 component.LinkedObject = this;
-                component.Start();
             }
 
+            if (ComponentAdded != null) ComponentAdded(component);
+
             return component;
+        }
+
+        public bool HasComponent<T>()
+        {
+            Component2D com = Components.Find(x => x is T);
+            return com != null ? true : false;
         }
 
         public T GetComponent<T>()
@@ -251,7 +277,8 @@ namespace Rander._2D
 
         public virtual void Update()
         {
-            if (Enabled) {
+            if (Enabled)
+            {
                 foreach (Component2D Com in Components)
                 {
                     Com.Update();
@@ -261,7 +288,8 @@ namespace Rander._2D
 
         public virtual void Draw()
         {
-            if (Enabled) {
+            if (Enabled)
+            {
                 foreach (Component2D Com in Components)
                 {
                     Com.Draw();
@@ -269,7 +297,7 @@ namespace Rander._2D
             }
         }
 
-        public void Destroy(bool DestroyChildren = false)
+        public void Dispose(bool DestroyChildren = false)
         {
             if (DestroyChildren == false)
             {
@@ -286,8 +314,14 @@ namespace Rander._2D
                 // Destroys the children
                 foreach (Object2D Child in Children)
                 {
-                    Child.Destroy();
+                    Child.Dispose();
                 }
+            }
+
+            // Runs OnDispose on all scripts
+            foreach (Component2D Scr in Components)
+            {
+                Scr.OnDispose();
             }
 
             // Completely un-links the object

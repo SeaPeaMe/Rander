@@ -5,12 +5,6 @@
 /////////////////////////////////////
 
 using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Timers;
 
 namespace Rander
 {
@@ -29,10 +23,17 @@ namespace Rander
             FrameTime = (float)Game.Gametime.ElapsedGameTime.TotalSeconds;
         }
 
-        public static void Wait(int waitTime, Action call)
+        public static System.Timers.Timer Wait(int waitTime, Action call)
         {
+            if (waitTime <= 0)
+            {
+                Debug.LogError("Wait time can not be <= 0!", true);
+                return null;
+            }
+
             System.Timers.Timer tim = new System.Timers.Timer(waitTime);
-            tim.Elapsed += (source, exceptions) => {
+            tim.Elapsed += (source, exceptions) =>
+            {
                 lock (Game.Timers) // Locks timer list so the new thread can edit it without breaking
                 {
                     lock (Game.ThreadSync)
@@ -47,16 +48,21 @@ namespace Rander
 
             Game.Timers.Add(tim);
             tim.Start();
+
+            return tim;
         }
 
-        public static void WaitUntil(Func<bool> condition, Action call)
+        public static System.Timers.Timer WaitUntil(Func<bool> condition, Action call)
         {
             System.Timers.Timer tim = new System.Timers.Timer(10);
-            tim.Elapsed += (source, exceptions) => {
-                if (condition()) {
+            tim.Elapsed += (source, exceptions) =>
+            {
+                if (condition())
+                {
                     lock (Game.Timers)
                     {
-                        lock (Game.ThreadSync) {
+                        lock (Game.ThreadSync)
+                        {
                             Game.Timers.Remove(tim);
                             tim.Stop();
                             Game.ThreadSync.Add(call);
@@ -69,6 +75,18 @@ namespace Rander
 
             Game.Timers.Add(tim);
             tim.Start();
+
+            return tim;
+        }
+
+        public static void CancelWait(System.Timers.Timer wait)
+        {
+            if (wait != null)
+            {
+                Game.Timers.Remove(wait);
+                wait.Stop();
+                wait.Dispose();
+            }
         }
     }
 }

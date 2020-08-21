@@ -32,7 +32,7 @@ namespace Rander
 
             if (Lck == true)
             {
-                SetPosition(Screen.Width / 2, Screen.Height / 2);
+                SetPosition((int)Screen.Resolution.X / 2, (int)Screen.Resolution.Y / 2);
             }
 
             MousePrev = MouseInfo.Position;
