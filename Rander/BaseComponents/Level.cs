@@ -15,6 +15,11 @@ namespace Rander
 
         public static Camera3DComponent ActiveCamera = null;
 
+        public static void SaveLevel(string Path)
+        {
+            // TODO
+        }
+
         public static void ClearLevel()
         {
             Game.PauseGame = true;
@@ -51,7 +56,6 @@ namespace Rander
             }
             else
             {
-                Debug.LogError("Object2D \"" + objectName + "\" does not exist!");
                 return null;
             }
         }

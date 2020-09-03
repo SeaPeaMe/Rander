@@ -10,16 +10,17 @@ namespace Rander
 {
     public class ContentLoader
     {
-        static Dictionary<string, SoundEffect> LoadedSounds = new Dictionary<string, SoundEffect>();
-        static Dictionary<string, SpriteFont> LoadedFonts = new Dictionary<string, SpriteFont>();
-        static Dictionary<string, Texture2D> Loaded2DTextures = new Dictionary<string, Texture2D>();
+        public static string ContentPath = DefaultValues.ContentPath;
+        public static Dictionary<string, SoundEffect> LoadedSounds = new Dictionary<string, SoundEffect>();
+        public static Dictionary<string, SpriteFont> LoadedFonts = new Dictionary<string, SpriteFont>();
+        public static Dictionary<string, Texture2D> Loaded2DTextures = new Dictionary<string, Texture2D>();
 
         public static Texture2D LoadTexture(string Image)
         {
             Texture2D Tex = null;
             // If texture is already in memory, reference that instead of having to load the texture again
-            if (Loaded2DTextures.ContainsKey(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Image))) {
-                Loaded2DTextures.TryGetValue(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Image), out Tex);
+            if (Loaded2DTextures.ContainsKey(Image)) {
+                Loaded2DTextures.TryGetValue(Image, out Tex);
             } else
             {
                 if (File.Exists(Game.gameWindow.Content.RootDirectory + "/" + Image)) {
@@ -28,7 +29,7 @@ namespace Rander
                     Tex = Texture2D.FromStream(Game.graphics.GraphicsDevice, ImageStream);
                     ImageStream.Dispose();
 
-                    Loaded2DTextures.Add(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Image), Tex);
+                    Loaded2DTextures.Add(Path.GetFileName(Image), Tex);
                 } else
                 {
                     Debug.LogError("The Image \"" + Game.gameWindow.Content.RootDirectory + "/" + Image + "\" does not exist!", true, 2);

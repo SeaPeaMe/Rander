@@ -24,6 +24,8 @@ namespace Rander._2D
         Image2DComponent Image;
         Object2D ChkObj;
         #region Creation
+        Checkbox2DComponent() { }
+
         public Checkbox2DComponent(Color upColor, Color downColor, Texture2D upTexture = null, Texture2D downTexture = null)
         {
             UpColor = upColor;

@@ -11,7 +11,7 @@ namespace Rander._2D
         public float MaxFontSize = 0.18f;
         public float MinFontSize = 0.18f;
         public bool TextBreaking = true;
-        public float SubLayer = 1;
+        public int SubLayer = 1;
         public SpriteFont Font = DefaultValues.DefaultFont;
 
         Alignment Al = Alignment.TopLeft;
@@ -65,11 +65,7 @@ namespace Rander._2D
         bool AutoSize = false;
         Alignment SetAl = Alignment.TopLeft;
 
-        public Text2DComponent(string text)
-        {
-            Text = text;
-            AutoSize = true;
-        }
+        Text2DComponent() { }
 
         public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
         {
@@ -168,7 +164,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + (SubLayer / 1000000000));
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 100000));
         }
     }
 }

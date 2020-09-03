@@ -1,15 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
+using System.Linq;
+using System.Xml.Serialization;
 
 namespace Rander._2D
 {
+    [XmlInclude(typeof(Image2DComponent))]
     public class Object2D
     {
         public string ObjectName;
         public Object2D Parent;
         public float Layer = 0;
-        public bool Enabled = true;
+        bool En = true;
+        public bool Enabled { get { return En; } set { foreach (Object2D Child in Children.ToArray()) { Child.Enabled = value; } En = value; } }
 
         Alignment Al = Alignment.TopLeft;
         public Vector2 Pivot = Vector2.Zero;
@@ -154,10 +159,11 @@ namespace Rander._2D
         public delegate void Object2DEvent(Object2D object2d);
         public event Object2DEvent ChildAdded;
         #region Children
-        public void AddChild(Object2D object2d)
+        public void AddChild(Object2D object2d, float SubLayer = 1)
         {
             Children.Add(object2d);
             object2d.Parent = this;
+            object2d.Layer = Layer + (SubLayer / 100000);
             if (ChildAdded != null) ChildAdded(object2d);
         }
 
@@ -174,7 +180,26 @@ namespace Rander._2D
         #endregion
 
         #region Creation
-        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null)
+        internal void OnDeserialize()
+        {
+            ObjectName += "_" + Level.Objects2D.Count((x) => x.Key == ObjectName);
+            Level.Objects2D.Add(ObjectName, this);
+
+            foreach (Component2D com in Components)
+            {
+                com.OnDeserialize();
+            }
+
+            foreach (Object2D child in Children)
+            {
+                child.Parent = this;
+                child.OnDeserialize();
+            }
+
+            SetPivot(Al);
+        }
+
+        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null, Object2D[] children = null)
         {
             Size = size;
             SetPivot(alignment);
@@ -212,11 +237,13 @@ namespace Rander._2D
                 {
                     AddComponent(com);
                 }
+            }
 
-                // Starts all the components after they've all been added
-                foreach (Component2D com in Components)
+            if (children != null)
+            {
+                foreach (Object2D Child in children)
                 {
-                    com.Start();
+                    AddChild(Child);
                 }
             }
         }
@@ -232,9 +259,9 @@ namespace Rander._2D
             {
                 Components.Add(component);
                 component.LinkedObject = this;
+                component.Start();
+                if (ComponentAdded != null) ComponentAdded(component);
             }
-
-            if (ComponentAdded != null) ComponentAdded(component);
 
             return component;
         }
@@ -277,7 +304,7 @@ namespace Rander._2D
 
         public virtual void Update()
         {
-            if (Enabled)
+            if (En)
             {
                 foreach (Component2D Com in Components)
                 {
@@ -288,7 +315,7 @@ namespace Rander._2D
 
         public virtual void Draw()
         {
-            if (Enabled)
+            if (En)
             {
                 foreach (Component2D Com in Components)
                 {

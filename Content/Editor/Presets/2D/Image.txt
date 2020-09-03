@@ -1,0 +1,1 @@
+{"ObjectName":"Editor_Preset2DObject_Image","Parent":null,"Layer":0.0,"Pivot":"0.5, 0.5","Children":[],"Size":"50, 50","Components":[{"TexturePath":"Pixel.png","Color":{"B":255,"G":255,"R":255,"A":255},"SubLayer":0}],"Enabled":true,"Align":4,"Rotation":0.0,"RelativeRotation":0.0,"RelativePosition":"0, 0","Position":"0, 0"}

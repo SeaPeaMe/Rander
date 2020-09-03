@@ -11,6 +11,8 @@ namespace Rander._2D
         public Alignment ChildAlign;
         Vector2 Pivot;
 
+        Spacer2DComponent() { }
+
         public Spacer2DComponent(SpacerOption spacerOption, Vector2 spacing, Alignment childAlign, Vector2 offset)
         {
             Offset = offset;

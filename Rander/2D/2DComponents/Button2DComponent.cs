@@ -7,34 +7,34 @@ namespace Rander._2D
 {
     class Button2DComponent : Component2D
     {
-        public Action OnClick = null;
-        public Action OnClickOutside = null;
-        public Action OnRelease = null;
-        public Action OnPress = null;
-        public Action OnHover = null;
-        public Action OnEnter = null;
-        public Action OnExit = null;
+        public event Action OnClick;
+        public event Action OnClickOutside;
+        public event Action OnRelease;
+        public event Action OnPress;
+        public event Action OnHover;
+        public event Action OnEnter;
+        public event Action OnExit;
 
         bool WasIn = false;
         bool WasClicked = false;
 
         Vector2 Left;
-        Vector2 Top;
-        Vector2 Bottom;
         Vector2 Right;
         List<Vector2> Corners = new List<Vector2>();
         List<float> CursorDistances = new List<float>();
 
         #region Creation
+        Button2DComponent() { }
+
         public Button2DComponent(Action onClick = null, Action onClickOutside = null, Action onRelease = null, Action onPress = null, Action onHover = null, Action onEnter = null, Action onExit = null)
         {
-            OnClick = onClick;
-            OnClickOutside = onClickOutside;
-            OnRelease = onRelease;
-            OnPress = onPress;
-            OnHover = onHover;
-            OnEnter = onEnter;
-            OnExit = onExit;
+            OnClick += onClick;
+            OnClickOutside += onClickOutside;
+            OnRelease += onRelease;
+            OnPress += onPress;
+            OnHover += onHover;
+            OnEnter += onEnter;
+            OnExit += onExit;
         }
         #endregion
 
@@ -51,8 +51,6 @@ namespace Rander._2D
             Vector2 MagnitudeLeft = new Vector2(LinkedObject.Size.X * Math.Abs(LinkedObject.Pivot.X));
             Vector2 PosOffsetLeftRight = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * (LinkedObject.Pivot.Y - 0.5f);
 
-            Top = LinkedObject.Position - new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset))) * MagnitudeTopBottom - PosOffsetTop;
-            Bottom = LinkedObject.Position - new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset))) * MagnitudeTopBottom - PosOffsetBottom;
             Left = LinkedObject.Position - new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeLeft - PosOffsetLeftRight;
             Right = LinkedObject.Position + new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeRight - PosOffsetLeftRight;
 
