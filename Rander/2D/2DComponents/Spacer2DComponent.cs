@@ -4,12 +4,13 @@ namespace Rander._2D
 {
     class Spacer2DComponent : Component2D
     {
-
         public Vector2 Offset;
         public SpacerOption SpacerOption;
         public Vector2 Spacing;
         public Alignment ChildAlign;
         Vector2 Pivot;
+
+        Spacer2DComponent() { }
 
         public Spacer2DComponent(SpacerOption spacerOption, Vector2 spacing, Alignment childAlign, Vector2 offset)
         {
@@ -18,6 +19,43 @@ namespace Rander._2D
             Spacing = spacing;
             ChildAlign = childAlign;
 
+            switch (ChildAlign)
+            {
+                case Alignment.TopLeft:
+                    Pivot = new Vector2(0, 0);
+                    break;
+                case Alignment.TopCenter:
+                    Pivot = new Vector2(0.5f, 0);
+                    break;
+                case Alignment.TopRight:
+                    Pivot = new Vector2(1, 0);
+                    break;
+                case Alignment.MiddleLeft:
+                    Pivot = new Vector2(0, 0.5f);
+                    break;
+                case Alignment.Center:
+                    Pivot = new Vector2(0.5f, 0.5f);
+                    break;
+                case Alignment.MiddleRight:
+                    Pivot = new Vector2(1, 0.5f);
+                    break;
+                case Alignment.BottomLeft:
+                    Pivot = new Vector2(0, 1);
+                    break;
+                case Alignment.BottomCenter:
+                    Pivot = new Vector2(0.5f, 1);
+                    break;
+                case Alignment.BottomRight:
+                    Pivot = new Vector2(1, 1);
+                    break;
+                default:
+                    Pivot = new Vector2(0, 0);
+                    break;
+            }
+        }
+
+        public override void OnDeserialize()
+        {
             switch (ChildAlign)
             {
                 case Alignment.TopLeft:

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Rander.BaseComponents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +12,7 @@ namespace Rander
     {
         static int TargetFPS = 144;
         static bool VSync = true;
-        static SamplerState Filter = SamplerState.PointClamp; // Makes textures nice and crisp when doing pixel art
+        static SamplerState Filter = SamplerState.LinearClamp; // Texture mode. Use Linear point for pixelart
         public static Color BackgroundColor = Color.CornflowerBlue;
         static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
         static bool FullScreen = true;
@@ -44,13 +43,14 @@ namespace Rander
             }
 
             Content.RootDirectory = DefaultValues.ExecutableTempFolderPath + "/Content/";
+            DefaultValues.ContentPath = DefaultValues.ExecutableTempFolderPath + "/Content/";
 
-            // Decompresses and/or creates Content file
-            DecompressContent:
+        // Decompresses and/or creates Content file
+        DecompressContent:
             if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content"))
             {
                 Debug.LogWarning("    Rebuilding Content.dat...");
-                FolderCompressor.Compress(DefaultValues.ExecutableFolderPath + "/Content", DefaultValues.ExecutableFolderPath + "/Content.dat", System.IO.Compression.CompressionLevel.Fastest, true, true);
+                FolderCompressor.Compress(DefaultValues.ExecutableFolderPath + "/Content", DefaultValues.ExecutableFolderPath + "/Content.dat", System.IO.Compression.CompressionLevel.Fastest, true);
                 goto DecompressContent;
             }
             else
@@ -202,6 +202,7 @@ namespace Rander
         public static Texture2D PixelTexture;
         public static string ExecutableFolderPath = AppDomain.CurrentDomain.BaseDirectory;
         public static string ExecutableTempFolderPath = Path.GetTempPath() + "/" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+        public static string ContentPath;
     }
 
     public class Screen
@@ -236,7 +237,7 @@ namespace Rander
             Vector2 v = Vector2.Normalize(begin - end);
             float angle = (float)Math.Acos(Vector2.Dot(v, -Vector2.UnitX));
             if (begin.Y > end.Y) angle = MathHelper.TwoPi - angle;
-            Draw(DefaultValues.PixelTexture, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
+            Draw(DefaultValues.PixelTexture, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 1);
         }
     }
 }

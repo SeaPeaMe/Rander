@@ -1,0 +1,11 @@
+﻿using Rander._2D;
+using Rander;
+using Microsoft.Xna.Framework;
+using System;
+
+public static class Compile
+{
+    public static void Main() {
+        new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, null, Alignment.Center, 0, null, null);
+    }
+}
