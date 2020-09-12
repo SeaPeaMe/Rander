@@ -1,33 +1,25 @@
 ﻿----- RELEASE NOTES -----
 
-
+- Serialization for 2D Objects (Presets)
+- Fixed bug where if you held down the mouse it would be registered as a click
+- Added button bounds debug option
+- Optimised buttons a bit
 
 ----- TODO -----
 
-- Write UI System [■□□□]
+- Write UI System [■■■■>□]
 	- Button - [✔]
-		- Do button detecting for rotated rectangles [✔]
-		- Do it for other pivots now [✔]
-	- Text - [■■□]
-		- Alignment [✔]
-		- Auto-Size [✔]
-		- Try stay in LinkedObject size [ ]
-	- Input [⌛]
+	- Text - [✔]
+	- Input [✔]
 	- Slider [ ]
-	- Spacer [ ]
-
-- Work on the Example Game to test for any errors in Rander [✔]
-
-- Write Audio System [✔]
-	- Instance sounds [✔]
-	- Loop option [✔]
-	- When stopping sound, remove sound from NoOverlap list [✔]
-
-- Instant thread killing [✔]
+	- Spacer [✔]
+	- Dropdown [⌛]
+		- Scroll Bar [⌛]
 
 - Relative Scaling [ ]
 
-- Fix Threads not syncing to main thread [✔]
+- Serialization [ ]
+	- Fix for 2DComponents with textures [ ]
 
 ----- BACKUP CODE -----
 

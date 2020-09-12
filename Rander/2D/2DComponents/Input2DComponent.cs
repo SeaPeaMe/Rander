@@ -31,6 +31,8 @@ namespace Rander._2D
 
         bool IsFocused = false;
 
+        Input2DComponent() { }
+
         public Input2DComponent(string ghostText, SpriteFont font, Color ghostTextColor, Color inputTextColor, Color caretColor, float minFontSize = 0, float maxFontSize = 1, Alignment textAlignment = Alignment.MiddleLeft)
         {
             // Text input handler

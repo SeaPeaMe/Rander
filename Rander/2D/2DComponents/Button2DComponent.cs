@@ -7,20 +7,18 @@ namespace Rander._2D
 {
     class Button2DComponent : Component2D
     {
-        public Action OnClick = null;
-        public Action OnClickOutside = null;
-        public Action OnRelease = null;
-        public Action OnPress = null;
-        public Action OnHover = null;
-        public Action OnEnter = null;
-        public Action OnExit = null;
+        public event Action OnClick;
+        public event Action OnClickOutside;
+        public event Action OnRelease;
+        public event Action OnPress;
+        public event Action OnHover;
+        public event Action OnEnter;
+        public event Action OnExit;
 
         bool WasIn = false;
-        bool WasClicked = false;
+        bool WasClicked = Input.Mouse.LeftButton == ButtonState.Pressed;
 
         Vector2 Left;
-        Vector2 Top;
-        Vector2 Bottom;
         Vector2 Right;
         List<Vector2> Corners = new List<Vector2>();
         List<float> CursorDistances = new List<float>();
@@ -28,31 +26,23 @@ namespace Rander._2D
         #region Creation
         public Button2DComponent(Action onClick = null, Action onClickOutside = null, Action onRelease = null, Action onPress = null, Action onHover = null, Action onEnter = null, Action onExit = null)
         {
-            OnClick = onClick;
-            OnClickOutside = onClickOutside;
-            OnRelease = onRelease;
-            OnPress = onPress;
-            OnHover = onHover;
-            OnEnter = onEnter;
-            OnExit = onExit;
+            OnClick += onClick;
+            OnClickOutside += onClickOutside;
+            OnRelease += onRelease;
+            OnPress += onPress;
+            OnHover += onHover;
+            OnEnter += onEnter;
+            OnExit += onExit;
         }
         #endregion
 
         public override void Update()
         {
-
             // Calculates side points
-            float RotOffset = -((LinkedObject.Pivot.X - 0.5f) * 180);
-            Vector2 MagnitudeTopBottom = new Vector2(LinkedObject.Size.X * Math.Abs(LinkedObject.Pivot.X - 0.5f));
-            Vector2 PosOffsetTop = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * LinkedObject.Pivot.Y;
-            Vector2 PosOffsetBottom = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * -(1 - LinkedObject.Pivot.Y);
-
             Vector2 MagnitudeRight = new Vector2(LinkedObject.Size.X * Math.Abs(1 - LinkedObject.Pivot.X));
             Vector2 MagnitudeLeft = new Vector2(LinkedObject.Size.X * Math.Abs(LinkedObject.Pivot.X));
             Vector2 PosOffsetLeftRight = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * (LinkedObject.Pivot.Y - 0.5f);
 
-            Top = LinkedObject.Position - new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset))) * MagnitudeTopBottom - PosOffsetTop;
-            Bottom = LinkedObject.Position - new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation + RotOffset))) * MagnitudeTopBottom - PosOffsetBottom;
             Left = LinkedObject.Position - new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeLeft - PosOffsetLeftRight;
             Right = LinkedObject.Position + new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeRight - PosOffsetLeftRight;
 
@@ -132,17 +122,16 @@ namespace Rander._2D
 
         // This was for debugging the bounds of the button
         // -----------------------------------------------
-        //public override void Draw()
-        //{
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Left, null, Color.Blue, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Right, null, Color.Yellow, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Top, null, Color.Red, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Bottom, null, Color.Green, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Corners[0], null, Color.Coral, 0, Vector2.Zero, 15, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Corners[1], null, Color.Coral, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Corners[2], null, Color.Coral, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //    Game.Drawing.Draw(DefaultValues.PixelTexture, Corners[3], null, Color.Coral, 0, Vector2.Zero, 10, SpriteEffects.None, 1);
-        //}
+        public override void Draw()
+        {
+            if (Corners.Count != 0 && Debug.ShowButtonBounds == true)
+            {
+                Game.Drawing.DrawLine(Corners[0], Corners[1], Color.Blue, 1);
+                Game.Drawing.DrawLine(Corners[0], Corners[2], Color.Blue, 1);
+                Game.Drawing.DrawLine(Corners[0], Corners[3], Color.Blue, 1);
+                Game.Drawing.DrawLine(Corners[3], Corners[1], Color.Blue, 1);
+                Game.Drawing.DrawLine(Corners[3], Corners[2], Color.Blue, 1);
+            }
+        }
     }
 }

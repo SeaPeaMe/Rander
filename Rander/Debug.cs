@@ -5,15 +5,27 @@ namespace Rander
 {
     public static class Debug
     {
+
+        public static bool ShowButtonBounds = false;
+
         public static void Log(string Text)
         {
             Console.WriteLine(Text);
         }
 
-        public static void LogWarning(string Text)
+        public static void LogWarning(string Text, bool MakeBold = false)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(Text);
+            if (MakeBold)
+            {
+                Console.WriteLine("\n-----! WARNING !-----");
+                Console.WriteLine(Text);
+                Console.WriteLine("---------------------");
+            }
+            else
+            {
+                Console.WriteLine(Text);
+            }
             Console.ResetColor();
         }
 
