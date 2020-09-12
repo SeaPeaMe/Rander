@@ -9,12 +9,13 @@ namespace Rander._2D
     {
         public string TexturePath;
         Texture2D Tex = DefaultValues.PixelTexture;
-        [JsonIgnore]
-        public Texture2D Texture { get { return Tex; } set { Tex = value; TexturePath = ContentLoader.Loaded2DTextures.First((x) => x.Value == Tex).Key; } }
+        [JsonIgnore] public Texture2D Texture { get { return Tex; } set { Tex = value; TexturePath = ContentLoader.Loaded2DTextures.First((x) => x.Value == Tex).Key; } }
         public Color Color = Color.White;
         public int SubLayer = 0;
 
         #region Creation
+        Image2DComponent() { }
+
         public Image2DComponent(Texture2D texture, int subLayer = 0)
         {
             Texture = texture;
@@ -31,7 +32,7 @@ namespace Rander._2D
 
         public override void OnDeserialize()
         {
-            Texture = ContentLoader.LoadTexture(TexturePath);
+            Texture = TexturePath == "" ? DefaultValues.PixelTexture : ContentLoader.LoadTexture(TexturePath);
         }
 
         public override void Draw()

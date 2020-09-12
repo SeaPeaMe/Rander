@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
-using System.Xml.Serialization;
 
 namespace Rander._2D
 {
-    [XmlInclude(typeof(Image2DComponent))]
     public class Object2D
     {
         public string ObjectName;
@@ -182,18 +179,17 @@ namespace Rander._2D
         #region Creation
         internal void OnDeserialize()
         {
-            ObjectName += "_" + Level.Objects2D.Count((x) => x.Key == ObjectName);
-            Level.Objects2D.Add(ObjectName, this);
-
-            foreach (Component2D com in Components)
-            {
-                com.OnDeserialize();
-            }
-
-            foreach (Object2D child in Children)
+            foreach (Object2D child in Children.ToArray())
             {
                 child.Parent = this;
                 child.OnDeserialize();
+            }
+
+            foreach (Component2D comp in Components.ToArray())
+            {
+                comp.LinkedObject = this;
+                comp.OnDeserialize();
+                comp.Start();
             }
 
             SetPivot(Al);
@@ -223,7 +219,18 @@ namespace Rander._2D
             }
             else if (Level.Objects2D.ContainsKey(ObjectName))
             {
-                Debug.LogError("The 2DObject \"" + ObjectName + "\" already exists!", true, 3);
+                Debug.LogWarning("The 2DObject \"" + ObjectName + "\" already exists! Appending name.", true);
+
+                List<string> Num = Level.Objects2D.Keys.ToList().FindAll((x) => x.Contains(ObjectName + "_"));
+                int CurrentBiggest = 1;
+                foreach (string item in Num.ToList())
+                {
+                    CurrentBiggest = Math.Max(int.Parse(item.Substring(ObjectName.Length + 1)), CurrentBiggest) + 1;
+                }
+
+                ObjectName += "_" + CurrentBiggest;
+
+                Level.Objects2D.Add(ObjectName, this);
             }
             else
             {

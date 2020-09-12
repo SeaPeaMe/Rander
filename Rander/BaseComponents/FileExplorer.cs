@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Ookii.Dialogs.Wpf;
+﻿using Ookii.Dialogs.Wpf;
 
 namespace Rander
 {

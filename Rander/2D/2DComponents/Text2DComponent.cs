@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using System.Linq;
 
 namespace Rander._2D
 {
@@ -12,7 +14,9 @@ namespace Rander._2D
         public float MinFontSize = 0.18f;
         public bool TextBreaking = true;
         public int SubLayer = 1;
-        public SpriteFont Font = DefaultValues.DefaultFont;
+        public string FontPath;
+        SpriteFont Fnt = DefaultValues.DefaultFont;
+        [JsonIgnore] public SpriteFont Font { get { return Fnt; } set { Fnt = value; FontPath = ContentLoader.LoadedFonts.First((x) => x.Value == Fnt).Key; } }
 
         Alignment Al = Alignment.TopLeft;
         public Vector2 Pivot = Vector2.Zero;
@@ -93,15 +97,9 @@ namespace Rander._2D
             TextBreaking = textBreaking;
         }
 
-        public Text2DComponent(string text, SpriteFont font, Color color, Alignment alignment = Alignment.TopLeft, int subLayer = 1)
+        public override void OnDeserialize()
         {
-            Text = text;
-            Font = font;
-            Color = color;
-            AutoSize = true;
-            SetAl = alignment;
-            SubLayer = subLayer;
-            TextBreaking = false;
+            Font = FontPath == "" ? ContentLoader.LoadFont(FontPath) : DefaultValues.DefaultFont;
         }
 
         public override void Start()

@@ -51,5 +51,6 @@ C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Ookii.Dialogs.Wpf.dll
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\Rander.csproj.CoreCompileInputs.cache
-C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Content\Editor\Presets\2D\Empty.txt
-C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Content\Editor\Presets\2D\Image.txt
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Content\Editor\Presets\2D\Empty.pre
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Content\Editor\Presets\2D\Image.pre
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Content\Editor\Presets\2D\Text.pre

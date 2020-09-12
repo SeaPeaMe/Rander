@@ -23,18 +23,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\Defaults\Splash.png" />
-    <None Remove="Content\Editor\Presets\2D\Empty.txt" />
-    <None Remove="Content\Editor\Presets\2D\Image.txt" />
+    <None Remove="Content\Editor\Presets\2D\Empty.pre" />
+    <None Remove="Content\Editor\Presets\2D\Image.pre" />
+    <None Remove="Content\Editor\Presets\2D\Text.pre" />
     <None Remove="RanderIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Defaults\Splash.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Editor\Presets\2D\Empty.txt">
+    <Content Include="Content\Editor\Presets\2D\Empty.pre">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Editor\Presets\2D\Image.txt">
+    <Content Include="Content\Editor\Presets\2D\Image.pre">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Editor\Presets\2D\Text.pre">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="RanderIcon.ico" />

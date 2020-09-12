@@ -1,8 +1,9 @@
 ﻿----- RELEASE NOTES -----
 
-- Fixed Sub-layering issues
-- Added file explorer
-- Serialization in-progress
+- Serialization for 2D Objects (Presets)
+- Fixed bug where if you held down the mouse it would be registered as a click
+- Added button bounds debug option
+- Optimised buttons a bit
 
 ----- TODO -----
 

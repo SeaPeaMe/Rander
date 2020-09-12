@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Rander._2D;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Rander.Editor
@@ -13,15 +12,15 @@ namespace Rander.Editor
             Game.BackgroundColor = new Color(40, 40, 40);
 
             Debug.LogWarning("Init...");
-            UI.Init();
             SetPresets();
+            UI.Init();
         }
 
         public static void Update()
         {
             if (Input.Mouse.RightButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
             {
-                if (UI.AddWindow != null) UI.AddWindow.Dispose(true); 
+                if (UI.AddWindow != null) UI.AddWindow.Dispose(true);
 
                 UI.RClick.Position = Input.Mouse.Position.ToVector2();
                 UI.RClick.Enabled = true;
@@ -32,11 +31,11 @@ namespace Rander.Editor
         {
             if (!Directory.Exists(ContentLoader.ContentPath + "/Editor/Presets/"))
             {
-                Directory.CreateDirectory(ContentLoader.ContentPath + "/Editor/Presets/2D");
-
                 // Adds 2D Presets
-                Serialization.Save(new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, null, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Empty.txt");
-                Serialization.Save(new Object2D("Editor_Preset2DObject_Image", Vector2.Zero, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White) }, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Image.txt");
+                Debug.LogWarning("Creating Presets...");
+                Presets.Save(new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, null, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Empty.pre", true);
+                Presets.Save(new Object2D("Editor_Preset2DObject_Image", Vector2.Zero, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White) }, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Image.pre", true);
+                Presets.Save(new Object2D("Editor_Preset2DObject_Text", Vector2.Zero, new Vector2(135, 30), 0, new Component2D[] { new Text2DComponent("Hello World!", DefaultValues.DefaultFont, Color.White, 0.18f, Alignment.TopLeft, true) }, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Text.pre", true);
             }
         }
     }
@@ -69,7 +68,7 @@ namespace Rander.Editor
                     onExit: () => FileButton.GetComponent<Image2DComponent>().Color = EditorTheme.ToolBar
                     ),
                 new Dropdown2DComponent(new Object2D[] { new Object2D("Editor_SaveButton", Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.ToolBar), new Text2DComponent("Save Level", DefaultValues.DefaultFont, EditorTheme.Window, 0, 0.2f, Alignment.Center) , new Button2DComponent(onClick: () => Level.SaveLevel(FileExplorer.SaveFile("Save"))) }) }, new Vector2(250, 500), new Vector2(5, 5), EditorTheme.Window, true)
-            });
+            }, Alignment.TopLeft, EditorUILayer - 0.0005f);
 
             TopBar.AddChild(FileButton);
 
@@ -100,8 +99,8 @@ namespace Rander.Editor
                 new Spacer2DComponent(SpacerOption.VerticalSpacer, new Vector2(0, 5), Alignment.TopCenter, new Vector2(0, 5))
             }, Alignment.TopLeft, EditorUILayer - 0.0004f, null, new Object2D[] { 
                 // Menu Items
-                new Object2D("Editor_RClickMenu_NewObject2D", Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] { 
-                    new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.ToolBar), 
+                new Object2D("Editor_RClickMenu_NewObject2D", Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] {
+                    new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.ToolBar),
                     new Text2DComponent("Create 2D Object", DefaultValues.DefaultFont, EditorTheme.Window, 0.1f, 0.2f, Alignment.Center, false),
                     new Button2DComponent(
                     onHover: () => RClick.Children.Find((x) => x.ObjectName == "Editor_RClickMenu_NewObject2D").GetComponent<Image2DComponent>().Color = new Color(EditorTheme.ToolBar.ToVector3() + new Vector3(0.1f)),
@@ -110,7 +109,6 @@ namespace Rander.Editor
                     )
                 })
             });
-
             RClick.Enabled = false;
         }
 
@@ -122,7 +120,7 @@ namespace Rander.Editor
             int i = 0;
             foreach (string Preset in Directory.GetFiles(ContentLoader.ContentPath + "/Editor/Presets/2D/"))
             {
-                Object2D Btn = new Object2D(Preset, Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.TitleBar), new Text2DComponent(Path.GetFileNameWithoutExtension(Preset), DefaultValues.DefaultFont, EditorTheme.Window, 0, 0.2f, Alignment.Center), new InstantiateObject() }, Alignment.TopCenter, EditorUILayer - 0.0005f, AddWindow);
+                Object2D Btn = new Object2D(Preset, Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.ToolBar), new Text2DComponent(Path.GetFileNameWithoutExtension(Preset), DefaultValues.DefaultFont, EditorTheme.Window, 0, 0.2f, Alignment.Center), new InstantiateObject() }, Alignment.TopCenter, EditorUILayer - 0.0005f, AddWindow);
                 Btn.AddComponent(new Button2DComponent(
                     onHover: () => Btn.GetComponent<Image2DComponent>().Color = new Color(EditorTheme.ToolBar.ToVector3() + new Vector3(0.1f)),
                     onExit: () => Btn.GetComponent<Image2DComponent>().Color = EditorTheme.ToolBar,

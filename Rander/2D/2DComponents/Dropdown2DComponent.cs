@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Rander._2D
 {
@@ -17,8 +15,6 @@ namespace Rander._2D
         Vector2 Size;
         Color DropDownColor;
         Vector2 ItemSpacing;
-
-        Dropdown2DComponent() { }
 
         public Dropdown2DComponent(Object2D[] dropdownItems, Vector2 size, Vector2 itemSpacing, Color dropDownColor, bool mustClick = false)
         {
@@ -40,10 +36,12 @@ namespace Rander._2D
 
             DropDownParent = new Object2D("Dropdown_" + LinkedObject.ObjectName, LinkedObject.Position + new Vector2(0, LinkedObject.Size.Y / 2), Size, LinkedObject.Rotation, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, DropDownColor), new Spacer2DComponent(SpacerOption.VerticalSpacer, ItemSpacing, Alignment.TopLeft, ItemSpacing) }, Alignment.TopLeft, LinkedObject.Layer, LinkedObject);
 
-            if (MustClick) {
+            if (MustClick)
+            {
                 LinkedObject.GetComponent<Button2DComponent>().OnClick += () => OpenDropdown();
                 LinkedObject.GetComponent<Button2DComponent>().OnClickOutside += () => CloseDropdown();
-            } else
+            }
+            else
             {
                 LinkedObject.GetComponent<Button2DComponent>().OnEnter += () => OpenDropdown();
                 LinkedObject.GetComponent<Button2DComponent>().OnExit += () => CloseDropdown();
@@ -80,9 +78,11 @@ namespace Rander._2D
 
                 foreach (Object2D obj in DropdownItems.ToArray())
                 {
-                    if (!DropDownParent.Children.Contains(obj)) {
+                    if (!DropDownParent.Children.Contains(obj))
+                    {
                         DropDownParent.AddChild(obj);
-                    } else
+                    }
+                    else
                     {
                         obj.Enabled = true;
                     }

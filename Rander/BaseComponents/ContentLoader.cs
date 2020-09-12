@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,20 +17,24 @@ namespace Rander
         {
             Texture2D Tex = null;
             // If texture is already in memory, reference that instead of having to load the texture again
-            if (Loaded2DTextures.ContainsKey(Image)) {
-                Loaded2DTextures.TryGetValue(Image, out Tex);
-            } else
+            if (Loaded2DTextures.ContainsKey(Image))
             {
-                if (File.Exists(Game.gameWindow.Content.RootDirectory + "/" + Image)) {
+                Loaded2DTextures.TryGetValue(Image, out Tex);
+            }
+            else
+            {
+                if (File.Exists(Game.gameWindow.Content.RootDirectory + "/" + Image))
+                {
                     // I hate the XNA content system, so I'll use streams whenever possible
                     FileStream ImageStream = File.OpenRead(Game.gameWindow.Content.RootDirectory + "/" + Image);
                     Tex = Texture2D.FromStream(Game.graphics.GraphicsDevice, ImageStream);
                     ImageStream.Dispose();
 
-                    Loaded2DTextures.Add(Path.GetFileName(Image), Tex);
-                } else
+                    Loaded2DTextures.Add(Image, Tex);
+                }
+                else
                 {
-                    Debug.LogError("The Image \"" + Game.gameWindow.Content.RootDirectory + "/" + Image + "\" does not exist!", true, 2);
+                    Debug.LogError("The Image \"" + Image + "\" does not exist!", true, 2);
                 }
             }
 
@@ -43,20 +45,20 @@ namespace Rander
         {
             SpriteFont outFont = null;
             // If font is already in memory, reference that instead of having to load the texture again
-            if (LoadedFonts.ContainsKey(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Font)))
+            if (LoadedFonts.ContainsKey(Font))
             {
-                LoadedFonts.TryGetValue(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Font), out outFont);
+                LoadedFonts.TryGetValue(Font, out outFont);
             }
             else
             {
                 if (File.Exists(Game.gameWindow.Content.RootDirectory + "/" + Font + ".xnb"))
                 {
                     outFont = Game.gameWindow.Content.Load<SpriteFont>(Font);
-                    LoadedFonts.Add(Path.GetFileNameWithoutExtension(Game.gameWindow.Content.RootDirectory + "/" + Font), outFont);
+                    LoadedFonts.Add(Font, outFont);
                 }
                 else
                 {
-                    Debug.LogError("The Font \"" + Game.gameWindow.Content.RootDirectory + "/" + Font + ".xnb\" does not exist!", true, 2);
+                    Debug.LogError("The Font \"" + Font + ".xnb\" does not exist!", true, 2);
                 }
             }
 
