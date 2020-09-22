@@ -39,6 +39,7 @@ namespace Rander
                     lock (Game.ThreadSync)
                     {
                         Game.Timers.Remove(tim);
+                        tim.Stop();
                         Game.ThreadSync.Add(call);
                         tim.Dispose();
                     }

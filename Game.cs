@@ -10,13 +10,6 @@ namespace Rander
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
-        static int TargetFPS = 144;
-        static bool VSync = true;
-        static SamplerState Filter = SamplerState.LinearClamp; // Texture mode. Use Linear point for pixelart
-        public static Color BackgroundColor = Color.CornflowerBlue;
-        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
-        static bool FullScreen = true;
-
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
@@ -51,6 +44,8 @@ namespace Rander
             {
                 Debug.LogWarning("    Rebuilding Content.dat...");
                 FolderCompressor.Compress(DefaultValues.ExecutableFolderPath + "/Content", DefaultValues.ExecutableFolderPath + "/Content.dat", System.IO.Compression.CompressionLevel.Fastest, true);
+                Debug.LogWarning("    Overwriting Settings.dat...");
+                if (File.Exists(DefaultValues.ExecutableFolderPath + "/Settings.dat")) File.Delete(DefaultValues.ExecutableFolderPath + "/Settings.dat");
                 goto DecompressContent;
             }
             else
@@ -67,30 +62,22 @@ namespace Rander
             }
 
             if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content")) Directory.Delete(DefaultValues.ExecutableFolderPath + "/Content", true);
+
+            GameSettings.LoadSettings();
         }
 
         protected override void Initialize()
         {
             // Sets up the window to device's resolution and in full screen
-            TargetElapsedTime = TimeSpan.FromSeconds((float)1 / TargetFPS);
             IsFixedTimeStep = false;
-            graphics.SynchronizeWithVerticalRetrace = VSync;
-
-            if (Resolution == Vector2.Zero) Resolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-            graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
-            graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
-            graphics.IsFullScreen = FullScreen;
-            graphics.ApplyChanges();
-
-            // Load Default Values
-            Screen.Resolution = Resolution;
-            Screen.Fullscreen = FullScreen;
+            Screen.ApplyChanges();
 
             // Load Base Scripts
             BaseScripts.Add(new MouseInput());
             BaseScripts.Add(new Rand());
             BaseScripts.Add(new Time());
             BaseScripts.Add(new Input());
+            BaseScripts.Add(new DebugMenu());
 
             foreach (Component Com in BaseScripts.ToList())
             {
@@ -110,7 +97,7 @@ namespace Rander
             Debug.LogWarning("Loading Content...");
 
             // Sets default graphic stuff
-            DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/Arial");
+            DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/UASQUARE.TTF");
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
             Debug.LogWarning("Initializing Game...");
@@ -160,9 +147,9 @@ namespace Rander
 
             if (IsActive && !PauseGame)
             {
-                graphics.GraphicsDevice.Clear(BackgroundColor);
+                graphics.GraphicsDevice.Clear(Screen.BackgroundColor);
 
-                Drawing.Begin(SpriteSortMode.FrontToBack, samplerState: Filter);
+                Drawing.Begin(SpriteSortMode.FrontToBack, samplerState: Screen.Filter);
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
                 {
@@ -203,23 +190,6 @@ namespace Rander
         public static string ExecutableFolderPath = AppDomain.CurrentDomain.BaseDirectory;
         public static string ExecutableTempFolderPath = Path.GetTempPath() + "/" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
         public static string ContentPath;
-    }
-
-    public class Screen
-    {
-        public static Vector2 Resolution;
-        public readonly static Vector2 DeviceResolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-        public static bool Fullscreen;
-        public static bool AllowResizing = false;
-
-        public static void ApplyChanges()
-        {
-            Game.graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
-            Game.graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
-            Game.graphics.IsFullScreen = Fullscreen;
-            Game.gameWindow.Window.AllowUserResizing = AllowResizing;
-            Game.graphics.ApplyChanges();
-        }
     }
 
     public class Draw2D : SpriteBatch

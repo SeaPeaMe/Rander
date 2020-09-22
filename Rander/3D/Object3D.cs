@@ -12,16 +12,20 @@ namespace Rander._3D
 
         public Matrix WorldMatrix;
 
+        // All matrix's are broken
         Vector3 Pos;
-        public Vector3 Position { get { return Pos; } set { Pos = value; } }
+        public Vector3 Position { get { return Pos; } set { Pos = value; UpdateMatrix(); } }
         Vector3 DestroyedParentPos;
 
+        public Vector3 Forward { get; private set; }
+        public Vector3 Left { get; private set; }
+
         Vector3 Rot;
-        public Vector3 Rotation { get { return Rot; } set { Rot = value; } }
+        public Vector3 Rotation { get { return Rot; } set { Rot = value; UpdateMatrix(); } }
         Vector3 DestroyedParentRot;
 
         Vector3 Sz;
-        public Vector3 Size { get { return Sz; } set { Sz = value; } }
+        public Vector3 Size { get { return Sz; } set { Sz = value; UpdateMatrix(); } }
         Vector3 DestroyedParentSz;
 
         public List<Component3D> Components = new List<Component3D>();
@@ -89,6 +93,8 @@ namespace Rander._3D
         #region Creation
         public Object3D(string objectName, Vector3 position, Vector3 size, Vector3 rotation, Component3D[] components = null, Object3D parent = null)
         {
+            WorldMatrix = Matrix.Identity;
+
             Size = size;
             Position = position;
             Rotation = rotation;
@@ -131,6 +137,14 @@ namespace Rander._3D
             }
         }
         #endregion
+
+        void UpdateMatrix()
+        {
+            Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(Rot.Y), MathHelper.ToRadians(Rot.X), MathHelper.ToRadians(Rot.Z));
+            WorldMatrix = Matrix.Identity * Matrix.CreateFromQuaternion(rotation) * Matrix.CreateScale(Sz) * Matrix.CreateTranslation(Pos);
+            Forward = -Vector3.Transform(Vector3.Forward, -rotation);
+            Left = -Vector3.Transform(Vector3.Left, -rotation);
+        }
 
         public virtual void Update()
         {

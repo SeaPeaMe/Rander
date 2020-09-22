@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Rander._2D;
+using System;
 using System.Diagnostics;
 
 namespace Rander
@@ -67,6 +69,12 @@ namespace Rander
                     // Waits for the console window to close, then terminates the program
                 }
             }
+        }
+
+        public static void PlacePoint(Vector2 point, Color color, int displayTime)
+        {
+            Object2D obj = new Object2D("DebugPoint_" + Rand.RandomFloat(0, float.MaxValue), point, new Vector2(2, 2), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, color, 0) }, Alignment.Center, 1);
+            Time.Wait(displayTime, () => obj.Dispose(true));
         }
     }
 }

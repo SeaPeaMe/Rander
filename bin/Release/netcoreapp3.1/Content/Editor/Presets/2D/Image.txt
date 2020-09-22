@@ -1,1 +1,0 @@
-﻿new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture) }, Alignment.Center, 0, null, null)

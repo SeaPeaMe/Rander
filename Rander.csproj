@@ -9,6 +9,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>RanderIcon.ico</ApplicationIcon>
     <Authors>SeaPeaMe</Authors>
+    <PackageIcon>RanderIcon.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702</NoWarn>
@@ -20,16 +21,33 @@
     <EmbeddedResource Remove="Content\obj\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
+    <None Include="RanderIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Defaults\Cube.dae" />
+    <None Remove="Content\Defaults\Pixel.png" />
     <None Remove="Content\Defaults\Splash.png" />
+    <None Remove="Content\Defaults\UASQUARE.TTF" />
     <None Remove="Content\Editor\Presets\2D\Empty.pre" />
     <None Remove="Content\Editor\Presets\2D\Image.pre" />
     <None Remove="Content\Editor\Presets\2D\Text.pre" />
+    <None Remove="Content\Editor\TestImages\ThisLooksCreepy.png" />
     <None Remove="RanderIcon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Defaults\Cube.dae">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Defaults\Pixel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Defaults\Splash.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Defaults\UASQUARE.TTF">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Editor\Presets\2D\Empty.pre">
@@ -41,24 +59,24 @@
     <Content Include="Content\Editor\Presets\2D\Text.pre">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Editor\TestImages\ThisLooksCreepy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="RanderIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Ookii.Dialogs.Wpf.NETCore" Version="2.1.0" />
+    <PackageReference Include="SpriteFontPlus" Version="0.8.1.40" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Content\Defaults\Pixel.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

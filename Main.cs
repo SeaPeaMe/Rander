@@ -11,7 +11,10 @@ namespace MyGame
         // Load game's resources and instantiate stuff here
         public static bool OnGameLoad()
         {
-            Rander.Editor.Main.Init();
+            //Rander.Editor.Main.Init();
+
+            //Rander.Examples.FirstPerson3D.Start();
+            Rander.Examples.Test.Start();
 
             return true;
         }
@@ -19,7 +22,10 @@ namespace MyGame
         // Updates consistently (30TPS)
         public static void OnUpdate()
         {
-            Rander.Editor.Main.Update();
+            //Rander.Editor.Main.Update();
+
+            //Rander.Examples.FirstPerson3D.Update();
+            Rander.Examples.Test.Update();
         }
 
         // Updates inconsistently (Can go from 1-Infinity TPS), main use is for rendering things on-screen

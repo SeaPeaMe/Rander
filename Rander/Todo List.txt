@@ -1,9 +1,16 @@
 ﻿----- RELEASE NOTES -----
 
-- Serialization for 2D Objects (Presets)
-- Fixed bug where if you held down the mouse it would be registered as a click
-- Added button bounds debug option
-- Optimised buttons a bit
+Pipeline Removal
+================
+- Removed the Monogame Content Pipeline, now all you need to do
+  is put your resources in the content folder and load them using
+  the rander content pipeline
+
+- Moved game settings to seperate class
+
+- Settings now save when game is created
+
+- A debug menu can now be opened with LSHIFT + `
 
 ----- TODO -----
 
@@ -14,15 +21,19 @@
 	- Slider [ ]
 	- Spacer [✔]
 	- Dropdown [⌛]
-		- Scroll Bar [⌛]
+	- Scroll Bar [⌛]
+
+- Masking for UI [⌛]
 
 - Relative Scaling [ ]
 
-- Serialization [ ]
-	- Fix for 2DComponents with textures [ ]
+- 3D [■■□]
+	- Model Importing [✔]
+	- Rendering [✔]
+	- Lighting [ ]
 
 ----- BACKUP CODE -----
 
-* Nothing to see here! *
+// Nothing to see here!
 
 -----------------------

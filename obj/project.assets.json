@@ -2,6 +2,39 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
+      "AssimpNet/4.1.0": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/AssimpNet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/AssimpNet.dll": {}
+        },
+        "build": {
+          "build/AssimpNet.targets": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libassimp.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libassimp.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/assimp.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/assimp.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {
         "type": "package",
         "compile": {
@@ -99,10 +132,44 @@
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App"
         ]
+      },
+      "SpriteFontPlus/0.8.1.40": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/SpriteFontPlus.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SpriteFontPlus.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "AssimpNet/4.1.0": {
+      "sha512": "z/4Tmf3Q2r1+vN6o/szArEZvPsdYNRYiS0L/yArybQd7n7KCiS9L4lRZhwwlHJb/edECM+Jky0XisVspr5aQWQ==",
+      "type": "package",
+      "path": "assimpnet/4.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "AssimpNet Documentation (October 2018).chm",
+        "ChangeLog.txt",
+        "License.txt",
+        "assimpnet.4.1.0.nupkg.sha512",
+        "assimpnet.nuspec",
+        "build/AssimpNet.targets",
+        "lib/net35/AssimpNet.dll",
+        "lib/net35/AssimpNet.xml",
+        "lib/net40/AssimpNet.dll",
+        "lib/net40/AssimpNet.xml",
+        "lib/netstandard1.3/AssimpNet.dll",
+        "lib/netstandard1.3/AssimpNet.xml",
+        "runtimes/linux-x64/native/libassimp.so",
+        "runtimes/osx-x64/native/libassimp.dylib",
+        "runtimes/win-x64/native/assimp.dll",
+        "runtimes/win-x86/native/assimp.dll"
+      ]
+    },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "sha512": "a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
       "type": "package",
@@ -399,15 +466,30 @@
         "ookii.dialogs.wpf.netcore.2.1.0.nupkg.sha512",
         "ookii.dialogs.wpf.netcore.nuspec"
       ]
+    },
+    "SpriteFontPlus/0.8.1.40": {
+      "sha512": "gAjIBHV3q0os61Tsd9PlmWb56tQBoPQYg8yKH3NM3cMzKofpOLzOwK0AIarKU7WyZrDMwYcp+VY9A43JSrUx/Q==",
+      "type": "package",
+      "path": "spritefontplus/0.8.1.40",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/SpriteFontPlus.dll",
+        "lib/netstandard2.0/SpriteFontPlus.dll",
+        "spritefontplus.0.8.1.40.nupkg.sha512",
+        "spritefontplus.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "AssimpNet >= 4.1.0",
       "MonoGame.Content.Builder.Task >= 3.8.0.1641",
       "MonoGame.Framework.DesktopGL >= 3.8.0.1641",
       "NETStandard.Library >= 2.0.3",
       "Newtonsoft.Json >= 12.0.3",
-      "Ookii.Dialogs.Wpf.NETCore >= 2.1.0"
+      "Ookii.Dialogs.Wpf.NETCore >= 2.1.0",
+      "SpriteFontPlus >= 0.8.1.40"
     ]
   },
   "packageFolders": {
@@ -456,6 +538,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "AssimpNet": {
+            "target": "Package",
+            "version": "[4.1.0, )"
+          },
           "MonoGame.Content.Builder.Task": {
             "target": "Package",
             "version": "[3.8.0.1641, )"
@@ -475,6 +561,10 @@
           "Ookii.Dialogs.Wpf.NETCore": {
             "target": "Package",
             "version": "[2.1.0, )"
+          },
+          "SpriteFontPlus": {
+            "target": "Package",
+            "version": "[0.8.1.40, )"
           }
         },
         "imports": [
