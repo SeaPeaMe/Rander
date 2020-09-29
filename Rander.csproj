@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
@@ -13,6 +13,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702</NoWarn>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Content\bin\**" />
@@ -34,7 +35,8 @@
     <None Remove="Content\Editor\Presets\2D\Empty.pre" />
     <None Remove="Content\Editor\Presets\2D\Image.pre" />
     <None Remove="Content\Editor\Presets\2D\Text.pre" />
-    <None Remove="Content\Editor\TestImages\ThisLooksCreepy.png" />
+    <None Remove="Content\Editor\TestImages\....png" />
+    <None Remove="Content\Editor\TestImages\Mask.png" />
     <None Remove="RanderIcon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +61,10 @@
     <Content Include="Content\Editor\Presets\2D\Text.pre">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Editor\TestImages\ThisLooksCreepy.png">
+    <Content Include="Content\Editor\TestImages\....png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Editor\TestImages\Mask.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="RanderIcon.ico" />

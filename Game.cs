@@ -27,7 +27,10 @@ namespace Rander
 
             // Sets window and graphics
             gameWindow = this;
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8
+            };
 
             // Deletes Temp
             if (Directory.Exists(DefaultValues.ExecutableTempFolderPath + "/Content"))
@@ -147,9 +150,44 @@ namespace Rander
 
             if (IsActive && !PauseGame)
             {
-                graphics.GraphicsDevice.Clear(Screen.BackgroundColor);
+                graphics.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, Screen.BackgroundColor, 0, 0);
 
-                Drawing.Begin(SpriteSortMode.FrontToBack, samplerState: Screen.Filter);
+                DepthStencilState MaskStencil = new DepthStencilState
+                {
+                    StencilEnable = true,
+                    StencilFunction = CompareFunction.Always,
+                    StencilPass = StencilOperation.Replace,
+                    ReferenceStencil = 1,
+                    DepthBufferEnable = true,
+                };
+
+                DepthStencilState ImageStencil = new DepthStencilState
+                {
+                    StencilEnable = true,
+                    StencilFunction = CompareFunction.LessEqual,
+                    StencilPass = StencilOperation.Keep,
+                    ReferenceStencil = 1,
+                    DepthBufferEnable = true,
+                };
+
+                BlendState Transparency = new BlendState
+                {
+                    ColorSourceBlend = Blend.SourceColor, // multiplier of the source color
+                    ColorBlendFunction = BlendFunction.Max, // function to combine colors
+                    ColorDestinationBlend = Blend.DestinationColor, // multiplier of the destination color
+                    AlphaSourceBlend = Blend.SourceAlpha, // multiplier of the source alpha
+                    AlphaBlendFunction = BlendFunction.Subtract, // function to combine alpha
+                    AlphaDestinationBlend = Blend.DestinationAlpha, // multiplier of the destination alpha
+                };
+
+                // Draw Masks
+                Drawing.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, Screen.Filter, null);
+                Drawing.Draw(ContentLoader.LoadTexture("Editor/TestImages/Mask.png"), new Rectangle(Input.Mouse.Position.X, Input.Mouse.Position.Y, 100, 100), null, Color.White, 0, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
+                Drawing.End();
+
+                // Draw Objects
+                Drawing.Begin(SpriteSortMode.BackToFront, Transparency, Screen.Filter, null);
+
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
                 {

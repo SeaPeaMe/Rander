@@ -11,6 +11,7 @@ namespace Rander
         public static Dictionary<SoundEffectInstance, SoundEffect> Sounds = new Dictionary<SoundEffectInstance, SoundEffect>();
         public static Dictionary<string, Object2D> Objects2D = new Dictionary<string, Object2D>();
         public static Dictionary<string, Object3D> Objects3D = new Dictionary<string, Object3D>();
+        public static List<Mask2DComponent> Masks = new List<Mask2DComponent>();
 
         public static Camera3DComponent ActiveCamera = null;
 
@@ -108,6 +109,7 @@ namespace Rander
             {
                 Obj.Draw();
             }
+
             // Draws 3D Objects
             foreach (Object3D Obj in Objects3D.Values.ToList())
             {

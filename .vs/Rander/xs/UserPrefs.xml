@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{54C25EAA-A46E-489E-827D-9BF537041316}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Game.cs">
+    <Files>
+      <File FileName="Game.cs" Line="30" Column="55" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Rander" expanded="True">
+            <Node name="Rander" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Rander" expanded="True">
+                <Node name="Examples" expanded="True" />
+              </Node>
+              <Node name="Game.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Rander PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

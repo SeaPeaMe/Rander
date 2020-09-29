@@ -1,16 +1,6 @@
 ﻿----- RELEASE NOTES -----
 
-Pipeline Removal
-================
-- Removed the Monogame Content Pipeline, now all you need to do
-  is put your resources in the content folder and load them using
-  the rander content pipeline
 
-- Moved game settings to seperate class
-
-- Settings now save when game is created
-
-- A debug menu can now be opened with LSHIFT + `
 
 ----- TODO -----
 

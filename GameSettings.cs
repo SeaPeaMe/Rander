@@ -12,7 +12,7 @@ namespace Rander
 {
     public class GameSettings
     {
-        public readonly static int TargetFPS = 144;
+        public readonly static int TargetFPS = 60;
         public readonly static bool VSync = true;
         public readonly static SamplerState Filter = SamplerState.LinearClamp; // Texture mode. Use Linear point for pixelart
         public readonly static Color BackgroundColor = Color.CornflowerBlue;
