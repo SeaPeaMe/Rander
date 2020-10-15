@@ -2,14 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Rander
 {
     public class Screen
     {
-        [JsonRequired]public static Vector2 Resolution;
+        [JsonRequired] public static Vector2 Resolution;
         [JsonIgnore] public readonly static Vector2 DeviceResolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         [JsonRequired] public static bool Fullscreen;
         [JsonRequired] public static bool AllowResizing = false;
@@ -27,8 +25,9 @@ namespace Rander
         {
             if (Resolution == Vector2.Zero)
             {
-                Game.graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-                Game.graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                Resolution = DeviceResolution;
+                Game.graphics.PreferredBackBufferWidth = (int)Resolution.X;
+                Game.graphics.PreferredBackBufferHeight = (int)Resolution.Y;
             }
             else
             {

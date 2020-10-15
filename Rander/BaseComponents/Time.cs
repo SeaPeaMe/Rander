@@ -5,25 +5,28 @@
 /////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 
 namespace Rander
 {
     public class Time : Component
     {
+        internal static List<WaitTimer> Timers = new List<WaitTimer>();
         public static float FrameTime = 0;
         public static float TimeSinceStart = 0;
 
         public override void Update()
         {
             TimeSinceStart = (float)Game.Gametime.TotalGameTime.TotalSeconds;
-        }
-
-        public override void Draw()
-        {
             FrameTime = (float)Game.Gametime.ElapsedGameTime.TotalSeconds;
+
+            foreach (WaitTimer tim in Timers.ToArray())
+            {
+                tim.RunTimer();
+            }
         }
 
-        public static System.Timers.Timer Wait(int waitTime, Action call)
+        public static WaitTimer Wait(int waitTime, Action call)
         {
             if (waitTime <= 0)
             {
@@ -31,62 +34,65 @@ namespace Rander
                 return null;
             }
 
-            System.Timers.Timer tim = new System.Timers.Timer(waitTime);
-            tim.Elapsed += (source, exceptions) =>
-            {
-                lock (Game.Timers) // Locks timer list so the new thread can edit it without breaking
-                {
-                    lock (Game.ThreadSync)
-                    {
-                        Game.Timers.Remove(tim);
-                        tim.Stop();
-                        Game.ThreadSync.Add(call);
-                        tim.Dispose();
-                    }
-                }
-            };
-            tim.AutoReset = false;
-
-            Game.Timers.Add(tim);
-            tim.Start();
-
+            WaitTimer tim = new WaitTimer(waitTime, call);
+            Timers.Add(tim);
             return tim;
         }
 
-        public static System.Timers.Timer WaitUntil(Func<bool> condition, Action call)
+        public static WaitTimer WaitUntil(Func<bool> condition, Action call)
         {
-            System.Timers.Timer tim = new System.Timers.Timer(10);
-            tim.Elapsed += (source, exceptions) =>
-            {
-                if (condition())
-                {
-                    lock (Game.Timers)
-                    {
-                        lock (Game.ThreadSync)
-                        {
-                            Game.Timers.Remove(tim);
-                            tim.Stop();
-                            Game.ThreadSync.Add(call);
-                            tim.Dispose();
-                        }
-                    }
-                }
-            };
-            tim.AutoReset = true;
-
-            Game.Timers.Add(tim);
-            tim.Start();
-
+            WaitTimer tim = new WaitTimer(condition, call);
+            Timers.Add(tim);
             return tim;
         }
 
-        public static void CancelWait(System.Timers.Timer wait)
+        public static void CancelWait(WaitTimer wait)
         {
-            if (wait != null)
+            if (wait != null) wait.Dispose();
+        }
+
+        public class WaitTimer
+        {
+            public Action Call;
+            public int WaitTime;
+            public bool Repeat;
+            Func<bool> Condition;
+            int TimeOnCreation;
+
+            public WaitTimer(int waitTime, Action call, bool repeat = false)
             {
-                Game.Timers.Remove(wait);
-                wait.Stop();
-                wait.Dispose();
+                Call = call;
+                WaitTime = waitTime;
+                Condition = () => 1 == 1;
+                Repeat = repeat;
+                TimeOnCreation = (int)(TimeSinceStart * 1000);
+            }
+
+            public WaitTimer(Func<bool> condition, Action call)
+            {
+                Call = call;
+                WaitTime = 10;
+                Condition = condition;
+                Repeat = true;
+                TimeOnCreation = (int)(TimeSinceStart * 1000);
+            }
+
+            public void RunTimer()
+            {
+                if ((int)(TimeSinceStart * 1000) >= TimeOnCreation + WaitTime)
+                {
+                    if (Condition())
+                    {
+                        Call();
+                        Dispose();
+                    }
+                    if (!Repeat) Dispose();
+                }
+            }
+
+            public void Dispose()
+            {
+                Timers.Remove(this);
             }
         }
     }

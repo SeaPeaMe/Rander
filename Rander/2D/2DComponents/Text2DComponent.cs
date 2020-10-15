@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Rander._2D
 {
-    public class Text2DComponent : Component2D
+    public class Text2DComponent : DrawableComponent2D
     {
         string txt = "";
         public string Text { get { return txt; } set { txt = value; if (LinkedObject != null) { UpdateSize(); } } }
@@ -69,7 +69,19 @@ namespace Rander._2D
         bool AutoSize = false;
         Alignment SetAl = Alignment.TopLeft;
 
-        Text2DComponent() { }
+        public Text2DComponent(string text, SpriteFont font, Color color, Rectangle offset, float fontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
+        {
+            Text = text;
+            MaxFontSize = fontSize;
+            MinFontSize = fontSize;
+            AutoSize = false;
+            Font = font;
+            Color = color;
+            SetAl = alignment;
+            SubLayer = subLayer;
+            TextBreaking = textBreaking;
+            Offset = offset;
+        }
 
         public Text2DComponent(string text, SpriteFont font, Color color, float fontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
         {
@@ -97,6 +109,20 @@ namespace Rander._2D
             TextBreaking = textBreaking;
         }
 
+        public Text2DComponent(string text, SpriteFont font, Color color, Rectangle offset, float minFontSize = 0, float maxFontSize = 1, Alignment alignment = Alignment.TopLeft, bool textBreaking = true, int subLayer = 1)
+        {
+            Text = text;
+            MaxFontSize = maxFontSize;
+            MinFontSize = minFontSize;
+            AutoSize = false;
+            Font = font;
+            Color = color;
+            SetAl = alignment;
+            SubLayer = subLayer;
+            TextBreaking = textBreaking;
+            Offset = offset;
+        }
+
         public override void OnDeserialize()
         {
             Font = FontPath == "" ? ContentLoader.LoadFont(FontPath) : DefaultValues.DefaultFont;
@@ -119,7 +145,7 @@ namespace Rander._2D
                 if (AutoSize)
                 {
                     MinFontSize = LinkedObject.Size.Y / 100;
-                MeasureWidth:
+                    MeasureWidth:
                     if ((Font.MeasureString(Text) * MinFontSize).X > LinkedObject.Size.X)
                     {
                         MinFontSize -= 0.01f;
@@ -133,7 +159,7 @@ namespace Rander._2D
                 {
                     // Calculates between min and max values
                     FontSize = MaxFontSize;
-                MeasureWidth:
+                    MeasureWidth:
                     if (FontSize > MinFontSize && (((Font.MeasureString(Text) * FontSize).X > LinkedObject.Size.X) || ((Font.MeasureString(Text) * FontSize).Y > LinkedObject.Size.Y)))
                     {
                         FontSize -= 0.01f;
@@ -162,7 +188,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.Position, Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 100000));
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position + Offset.Location.ToVector2(), Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize + Offset.Size.Y, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 100000));
         }
     }
 }

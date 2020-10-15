@@ -14,12 +14,11 @@ namespace Rander
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
+        int FixedUpdateTime = (int)((float)1 / GameSettings.TargetFPS * 1000);
 
-        public static List<System.Timers.Timer> Timers = new List<System.Timers.Timer>();
-        public static List<Action> ThreadSync = new List<Action>();
         public static bool PauseGame = false;
 
-        static List<Component> BaseScripts = new List<Component>();
+        internal static List<Component> BaseScripts = new List<Component>();
 
         public Game()
         {
@@ -41,8 +40,8 @@ namespace Rander
             Content.RootDirectory = DefaultValues.ExecutableTempFolderPath + "/Content/";
             DefaultValues.ContentPath = DefaultValues.ExecutableTempFolderPath + "/Content/";
 
-        // Decompresses and/or creates Content file
-        DecompressContent:
+            // Decompresses and/or creates Content file
+            DecompressContent:
             if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content"))
             {
                 Debug.LogWarning("    Rebuilding Content.dat...");
@@ -104,10 +103,11 @@ namespace Rander
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
             Debug.LogWarning("Initializing Game...");
-            if (MyGame.Main.OnGameLoad())
-            {
-                Debug.LogSuccess("Finished!");
-            }
+            MyGame.Main.Initialize();
+            MyGame.Main.Start();
+
+            Debug.LogSuccess("Finished!");
+            FixedUpdate();
         }
 
         protected override void UnloadContent()
@@ -129,14 +129,7 @@ namespace Rander
                     Scr.Update();
                 }
 
-                // Sync all threads
-                foreach (Action call in ThreadSync.ToArray())
-                {
-                    call();
-                }
-                ThreadSync.Clear();
-
-                MyGame.Main.OnUpdate();
+                MyGame.Main.Update();
 
                 Level.Update();
             }
@@ -151,42 +144,11 @@ namespace Rander
             if (IsActive && !PauseGame)
             {
                 graphics.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, Screen.BackgroundColor, 0, 0);
-
-                DepthStencilState MaskStencil = new DepthStencilState
-                {
-                    StencilEnable = true,
-                    StencilFunction = CompareFunction.Always,
-                    StencilPass = StencilOperation.Replace,
-                    ReferenceStencil = 1,
-                    DepthBufferEnable = true,
-                };
-
-                DepthStencilState ImageStencil = new DepthStencilState
-                {
-                    StencilEnable = true,
-                    StencilFunction = CompareFunction.LessEqual,
-                    StencilPass = StencilOperation.Keep,
-                    ReferenceStencil = 1,
-                    DepthBufferEnable = true,
-                };
-
-                BlendState Transparency = new BlendState
-                {
-                    ColorSourceBlend = Blend.SourceColor, // multiplier of the source color
-                    ColorBlendFunction = BlendFunction.Max, // function to combine colors
-                    ColorDestinationBlend = Blend.DestinationColor, // multiplier of the destination color
-                    AlphaSourceBlend = Blend.SourceAlpha, // multiplier of the source alpha
-                    AlphaBlendFunction = BlendFunction.Subtract, // function to combine alpha
-                    AlphaDestinationBlend = Blend.DestinationAlpha, // multiplier of the destination alpha
-                };
-
-                // Draw Masks
-                Drawing.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, Screen.Filter, null);
-                Drawing.Draw(ContentLoader.LoadTexture("Editor/TestImages/Mask.png"), new Rectangle(Input.Mouse.Position.X, Input.Mouse.Position.Y, 100, 100), null, Color.White, 0, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
-                Drawing.End();
+                RenderTarget2D target = new RenderTarget2D(GraphicsDevice, (int)GameSettings.UIScaleResolution.X, (int)GameSettings.UIScaleResolution.Y);
+                GraphicsDevice.SetRenderTarget(target);
 
                 // Draw Objects
-                Drawing.Begin(SpriteSortMode.BackToFront, Transparency, Screen.Filter, null);
+                Drawing.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, Screen.Filter, null);
 
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
@@ -194,14 +156,25 @@ namespace Rander
                     Com.Draw();
                 }
 
-                MyGame.Main.OnDraw();
+                MyGame.Main.Draw();
 
                 Level.Draw();
 
+                GraphicsDevice.SetRenderTarget(null);
+                Drawing.Draw(target, new Rectangle(0, 0, (int)(target.Width * Screen.Resolution.X / target.Width), (int)(target.Height * Screen.Resolution.Y / target.Height)), Color.White);
                 Drawing.End();
+
+                target.Dispose();
             }
 
             base.Draw(gameTime);
+        }
+
+        void FixedUpdate()
+        {
+            MyGame.Main.FixedUpdate();
+            Level.FixedUpdate();
+            Time.Wait(FixedUpdateTime, () => FixedUpdate());
         }
 
         public static void Close(bool CloseConsole = false)
@@ -212,7 +185,9 @@ namespace Rander
 
             Drawing.Dispose();
 
-            Debug.LogWarning("Disposing Resources...");
+            Debug.LogWarning("Closing Window...");
+
+            gameWindow.Dispose();
 
             if (CloseConsole)
             {

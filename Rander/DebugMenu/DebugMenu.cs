@@ -1,16 +1,16 @@
 ﻿
 /////////////////////////////////////
+using Microsoft.Xna.Framework;
 /// DEBUG MENU CAN BE OPENED WITH ///
 ///           LSHIFT + `          ///
 /////////////////////////////////////
 
 using Rander._2D;
-using Microsoft.Xna.Framework;
 using Rander.TestScripts;
 
 namespace Rander
 {
-    class DebugMenu : Component2D
+    public class DebugMenu : Component2D
     {
 
         bool DebugOpen = false;
@@ -31,7 +31,8 @@ namespace Rander
                 {
                     // Show Debug Menu
                     OpenMenu();
-                } else
+                }
+                else
                 {
                     Parent.Dispose(true);
                 }

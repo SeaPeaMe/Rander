@@ -62,6 +62,26 @@ namespace Rander._3D
             }
         }
 
+        public List<T> GetComponents<T>()
+        {
+            List<T> Com = new List<T>();
+
+            foreach (var item in Components.FindAll(x => x is T))
+            {
+                Com.Add((T)Convert.ChangeType(item, typeof(T)));
+            }
+
+            if (Com.Count > 0)
+            {
+                return Com;
+            }
+            else
+            {
+                Debug.LogError("3DObject \"" + ObjectName + "\" does not contain any components of type \"" + typeof(T).Name + "\"", true);
+                return null;
+            }
+        }
+
         public void RemoveComponent<T>()
         {
             Component3D Com = Components.Find(x => x is T);
@@ -153,6 +173,17 @@ namespace Rander._3D
                 foreach (Component3D Com in Components)
                 {
                     Com.Update();
+                }
+            }
+        }
+
+        public virtual void FixedUpdate()
+        {
+            if (Enabled)
+            {
+                foreach (Component3D Com in Components)
+                {
+                    Com.FixedUpdate();
                 }
             }
         }

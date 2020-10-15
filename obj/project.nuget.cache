@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "AjuhboSN3TBP0hW55sZO2cPSuEec6xkiC2olg6sncN72zy7HZMoHuFf4OGk9HuYeiuSpZXpi016I/RuoV15WiA==",
+  "dgSpecHash": "MTjMRp6zHKkT7hQVOjTbBm0I2R9VBd5zwnOLscCh+skBYwIp746Ux3UtYn/V47tFkrPH9r+uaLHC6RAf/ilttw==",
   "success": true,
   "projectFilePath": "C:\\Users\\M.R\\Desktop\\StandaloneProjects\\MonoGame\\Rander\\Rander.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\M.R\\.nuget\\packages\\aether.physics2d\\1.5.0\\aether.physics2d.1.5.0.nupkg.sha512",
     "C:\\Users\\M.R\\.nuget\\packages\\assimpnet\\4.1.0\\assimpnet.4.1.0.nupkg.sha512",
     "C:\\Users\\M.R\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Users\\M.R\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\M.R\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
     "C:\\Users\\M.R\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",

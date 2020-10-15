@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Rander._2D;
-
-namespace Rander._2D
+﻿namespace Rander._2D
 {
     public class Mask2DComponent : Component2D
     {
@@ -25,7 +22,8 @@ namespace Rander._2D
                 if (Obj.Position.X > LinkedObject.Position.X + LinkedObject.Size.X || Obj.Position.X < LinkedObject.Position.X || Obj.Position.Y < LinkedObject.Position.Y || Obj.Position.Y > LinkedObject.Position.Y + LinkedObject.Size.Y)
                 {
                     Obj.Enabled = false;
-                } else
+                }
+                else
                 {
                     Obj.Enabled = true;
                 }

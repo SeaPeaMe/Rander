@@ -45,13 +45,13 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Aether.Physics2D": {
+              "target": "Package",
+              "version": "[1.5.0, )"
+            },
             "AssimpNet": {
               "target": "Package",
               "version": "[4.1.0, )"
-            },
-            "MonoGame.Content.Builder.Task": {
-              "target": "Package",
-              "version": "[3.8.0.1641, )"
             },
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",

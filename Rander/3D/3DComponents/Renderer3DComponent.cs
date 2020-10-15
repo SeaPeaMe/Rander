@@ -56,8 +56,8 @@ namespace Rander._3D
 
         public override void Draw()
         {
-            Material.Projection = Level.ActiveCamera.ProjectionMatrix;
-            Material.View = Level.ActiveCamera.ViewMatrix;
+            Material.Projection = Level.Active3DCamera.ProjectionMatrix;
+            Material.View = Level.Active3DCamera.ViewMatrix;
             Material.World = LinkedObject.WorldMatrix;
 
             Game.graphics.GraphicsDevice.SetVertexBuffer(Buffer);

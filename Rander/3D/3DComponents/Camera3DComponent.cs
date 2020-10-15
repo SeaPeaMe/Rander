@@ -12,9 +12,9 @@ namespace Rander._3D
         {
             FOV = fov;
 
-            if (Level.ActiveCamera == null)
+            if (Level.Active3DCamera == null)
             {
-                Level.ActiveCamera = this;
+                Level.Active3DCamera = this;
             }
         }
 

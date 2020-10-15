@@ -1,29 +1,4 @@
-﻿----- RELEASE NOTES -----
-
-
-
------ TODO -----
-
-- Write UI System [■■■■>□]
-	- Button - [✔]
-	- Text - [✔]
-	- Input [✔]
-	- Slider [ ]
-	- Spacer [✔]
-	- Dropdown [⌛]
-	- Scroll Bar [⌛]
-
-- Masking for UI [⌛]
-
-- Relative Scaling [ ]
-
-- 3D [■■□]
-	- Model Importing [✔]
-	- Rendering [✔]
-	- Lighting [ ]
-
------ BACKUP CODE -----
-
-// Nothing to see here!
-
------------------------
+﻿- Fix threading issues
+	= Hold down X, pump but don't release
+	= Wait until thread runs (5s)
+	= The X flashing will stop

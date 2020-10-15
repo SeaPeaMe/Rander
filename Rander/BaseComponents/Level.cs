@@ -13,7 +13,7 @@ namespace Rander
         public static Dictionary<string, Object3D> Objects3D = new Dictionary<string, Object3D>();
         public static List<Mask2DComponent> Masks = new List<Mask2DComponent>();
 
-        public static Camera3DComponent ActiveCamera = null;
+        public static Camera3DComponent Active3DCamera = null;
 
         public static void SaveLevel(string Path)
         {
@@ -36,12 +36,8 @@ namespace Rander
             Sounds.Clear();
 
             Debug.LogWarning("Disposing Timers...");
-            for (int i = 0; i < Game.Timers.Count;)
-            {
-                Game.Timers[0].Stop();
-                Game.Timers[0].Dispose();
-                Game.Timers.RemoveAt(0);
-            }
+            Time.Timers.Clear();
+
             Debug.LogSuccess("--- LEVEL CLEAR SUCCESS ---");
             Game.PauseGame = false;
         }
@@ -87,7 +83,7 @@ namespace Rander
         }
         #endregion
 
-        public static void Update()
+        internal static void Update()
         {
             // Update 2D Objects
             foreach (Object2D Obj in Objects2D.Values.ToList())
@@ -102,7 +98,22 @@ namespace Rander
             }
         }
 
-        public static void Draw()
+        internal static void FixedUpdate()
+        {
+            // Update 2D Objects
+            foreach (Object2D Obj in Objects2D.Values.ToList())
+            {
+                Obj.FixedUpdate();
+            }
+
+            // Update 3D Objects
+            foreach (Object3D Obj in Objects3D.Values.ToList())
+            {
+                Obj.FixedUpdate();
+            }
+        }
+
+        internal static void Draw()
         {
             // Draws 2D Objects
             foreach (Object2D Obj in Objects2D.Values.ToList())

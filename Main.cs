@@ -6,30 +6,29 @@
 
 namespace MyGame
 {
-    class Main
+    public class Main
     {
-        // Load game's resources and instantiate stuff here
-        public static bool OnGameLoad()
+        public static void Initialize()
         {
-            //Rander.Editor.Main.Init();
-
-            //Rander.Examples.FirstPerson3D.Start();
-            Rander.Examples.Test.Start();
-
-            return true;
+            
         }
 
-        // Updates consistently (30TPS)
-        public static void OnUpdate()
+        public static void Start()
         {
-            //Rander.Editor.Main.Update();
+            Rander.Examples.Test.Start();
+        }
 
-            //Rander.Examples.FirstPerson3D.Update();
+        public static void Update()
+        {
             Rander.Examples.Test.Update();
         }
 
-        // Updates inconsistently (Can go from 1-Infinity TPS), main use is for rendering things on-screen
-        public static void OnDraw()
+        public static void Draw()
+        {
+
+        }
+
+        public static void FixedUpdate()
         {
 
         }
