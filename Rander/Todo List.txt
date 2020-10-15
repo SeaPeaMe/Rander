@@ -1,28 +1,4 @@
-﻿----- RELEASE NOTES -----
-
-- Serialization for 2D Objects (Presets)
-- Fixed bug where if you held down the mouse it would be registered as a click
-- Added button bounds debug option
-- Optimised buttons a bit
-
------ TODO -----
-
-- Write UI System [■■■■>□]
-	- Button - [✔]
-	- Text - [✔]
-	- Input [✔]
-	- Slider [ ]
-	- Spacer [✔]
-	- Dropdown [⌛]
-		- Scroll Bar [⌛]
-
-- Relative Scaling [ ]
-
-- Serialization [ ]
-	- Fix for 2DComponents with textures [ ]
-
------ BACKUP CODE -----
-
-* Nothing to see here! *
-
------------------------
+﻿- Fix threading issues
+	= Hold down X, pump but don't release
+	= Wait until thread runs (5s)
+	= The X flashing will stop

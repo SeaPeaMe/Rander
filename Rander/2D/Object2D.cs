@@ -209,6 +209,7 @@ namespace Rander._2D
             Parent = parent;
             if (Parent != null)
             {
+                Position = Parent.Position + position;
                 Parent.AddChild(this);
             }
 
@@ -250,6 +251,8 @@ namespace Rander._2D
             {
                 foreach (Object2D Child in children)
                 {
+                    Child.Position = Pos + Child.Position;
+
                     AddChild(Child);
                 }
             }
@@ -266,6 +269,7 @@ namespace Rander._2D
             {
                 Components.Add(component);
                 component.LinkedObject = this;
+                component.Awake();
                 component.Start();
                 if (ComponentAdded != null) ComponentAdded(component);
             }
@@ -294,6 +298,26 @@ namespace Rander._2D
             }
         }
 
+        public List<T> GetComponents<T>()
+        {
+            List<T> Com = new List<T>();
+
+            foreach (var item in Components.FindAll(x => x is T))
+            {
+                Com.Add((T)Convert.ChangeType(item, typeof(T)));
+            }
+
+            if (Com.Count > 0)
+            {
+                return Com;
+            }
+            else
+            {
+                Debug.LogError("2DObject \"" + ObjectName + "\" does not contain any components of type \"" + typeof(T).Name + "\"", true);
+                return null;
+            }
+        }
+
         public void RemoveComponent<T>()
         {
             Component2D Com = Components.Find(x => x is T);
@@ -316,6 +340,17 @@ namespace Rander._2D
                 foreach (Component2D Com in Components)
                 {
                     Com.Update();
+                }
+            }
+        }
+
+        public virtual void FixedUpdate()
+        {
+            if (En)
+            {
+                foreach (Component2D Com in Components)
+                {
+                    Com.FixedUpdate();
                 }
             }
         }

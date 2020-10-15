@@ -3,7 +3,7 @@ using System.IO.Compression;
 
 namespace Rander
 {
-    class FolderCompressor
+    public class FolderCompressor
     {
         public static void Compress(string InputDirectory, string OutputFile, CompressionLevel Compression = CompressionLevel.Optimal, bool DeleteFolder = false)
         {

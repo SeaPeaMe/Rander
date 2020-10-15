@@ -58,7 +58,7 @@ namespace Rander._2D
             GhostText = GhostText.Substring(0, GhostText.Length - 1);
         }
 
-        System.Timers.Timer CaretBlinkTimer;
+        Time.WaitTimer CaretBlinkTimer;
         void CaretBlink()
         {
             if (Caret.Color.A == 255)
@@ -118,7 +118,6 @@ namespace Rander._2D
             GhostTextComponent.Color = Color.Transparent;
 
             Time.CancelWait(CaretBlinkTimer);
-            CaretBlinkTimer = null;
 
             float CaretSize = InputTextComponent.FontSize * 100;
             if (CaretObject == null)
@@ -144,7 +143,6 @@ namespace Rander._2D
             }
 
             Time.CancelWait(CaretBlinkTimer);
-            CaretBlinkTimer = null;
 
             if (CaretObject != null)
             {

@@ -10,23 +10,15 @@ namespace Rander
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
-        static int TargetFPS = 144;
-        static bool VSync = true;
-        static SamplerState Filter = SamplerState.LinearClamp; // Texture mode. Use Linear point for pixelart
-        public static Color BackgroundColor = Color.CornflowerBlue;
-        static Vector2 Resolution = Vector2.Zero; // Leave as Vector2.Zero for automatic resolution
-        static bool FullScreen = true;
-
         public static GraphicsDeviceManager graphics;
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
+        int FixedUpdateTime = (int)((float)1 / GameSettings.TargetFPS * 1000);
 
-        public static List<System.Timers.Timer> Timers = new List<System.Timers.Timer>();
-        public static List<Action> ThreadSync = new List<Action>();
         public static bool PauseGame = false;
 
-        static List<Component> BaseScripts = new List<Component>();
+        internal static List<Component> BaseScripts = new List<Component>();
 
         public Game()
         {
@@ -34,7 +26,10 @@ namespace Rander
 
             // Sets window and graphics
             gameWindow = this;
-            graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8
+            };
 
             // Deletes Temp
             if (Directory.Exists(DefaultValues.ExecutableTempFolderPath + "/Content"))
@@ -45,12 +40,14 @@ namespace Rander
             Content.RootDirectory = DefaultValues.ExecutableTempFolderPath + "/Content/";
             DefaultValues.ContentPath = DefaultValues.ExecutableTempFolderPath + "/Content/";
 
-        // Decompresses and/or creates Content file
-        DecompressContent:
+            // Decompresses and/or creates Content file
+            DecompressContent:
             if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content"))
             {
                 Debug.LogWarning("    Rebuilding Content.dat...");
                 FolderCompressor.Compress(DefaultValues.ExecutableFolderPath + "/Content", DefaultValues.ExecutableFolderPath + "/Content.dat", System.IO.Compression.CompressionLevel.Fastest, true);
+                Debug.LogWarning("    Overwriting Settings.dat...");
+                if (File.Exists(DefaultValues.ExecutableFolderPath + "/Settings.dat")) File.Delete(DefaultValues.ExecutableFolderPath + "/Settings.dat");
                 goto DecompressContent;
             }
             else
@@ -67,30 +64,22 @@ namespace Rander
             }
 
             if (Directory.Exists(DefaultValues.ExecutableFolderPath + "/Content")) Directory.Delete(DefaultValues.ExecutableFolderPath + "/Content", true);
+
+            GameSettings.LoadSettings();
         }
 
         protected override void Initialize()
         {
             // Sets up the window to device's resolution and in full screen
-            TargetElapsedTime = TimeSpan.FromSeconds((float)1 / TargetFPS);
             IsFixedTimeStep = false;
-            graphics.SynchronizeWithVerticalRetrace = VSync;
-
-            if (Resolution == Vector2.Zero) Resolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-            graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
-            graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
-            graphics.IsFullScreen = FullScreen;
-            graphics.ApplyChanges();
-
-            // Load Default Values
-            Screen.Resolution = Resolution;
-            Screen.Fullscreen = FullScreen;
+            Screen.ApplyChanges();
 
             // Load Base Scripts
             BaseScripts.Add(new MouseInput());
             BaseScripts.Add(new Rand());
             BaseScripts.Add(new Time());
             BaseScripts.Add(new Input());
+            BaseScripts.Add(new DebugMenu());
 
             foreach (Component Com in BaseScripts.ToList())
             {
@@ -110,14 +99,15 @@ namespace Rander
             Debug.LogWarning("Loading Content...");
 
             // Sets default graphic stuff
-            DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/Arial");
+            DefaultValues.DefaultFont = ContentLoader.LoadFont("Defaults/UASQUARE.TTF");
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
             Debug.LogWarning("Initializing Game...");
-            if (MyGame.Main.OnGameLoad())
-            {
-                Debug.LogSuccess("Finished!");
-            }
+            MyGame.Main.Initialize();
+            MyGame.Main.Start();
+
+            Debug.LogSuccess("Finished!");
+            FixedUpdate();
         }
 
         protected override void UnloadContent()
@@ -139,14 +129,7 @@ namespace Rander
                     Scr.Update();
                 }
 
-                // Sync all threads
-                foreach (Action call in ThreadSync.ToArray())
-                {
-                    call();
-                }
-                ThreadSync.Clear();
-
-                MyGame.Main.OnUpdate();
+                MyGame.Main.Update();
 
                 Level.Update();
             }
@@ -160,23 +143,38 @@ namespace Rander
 
             if (IsActive && !PauseGame)
             {
-                graphics.GraphicsDevice.Clear(BackgroundColor);
+                graphics.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, Screen.BackgroundColor, 0, 0);
+                RenderTarget2D target = new RenderTarget2D(GraphicsDevice, (int)GameSettings.UIScaleResolution.X, (int)GameSettings.UIScaleResolution.Y);
+                GraphicsDevice.SetRenderTarget(target);
 
-                Drawing.Begin(SpriteSortMode.FrontToBack, samplerState: Filter);
+                // Draw Objects
+                Drawing.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, Screen.Filter, null);
+
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
                 {
                     Com.Draw();
                 }
 
-                MyGame.Main.OnDraw();
+                MyGame.Main.Draw();
 
                 Level.Draw();
 
+                GraphicsDevice.SetRenderTarget(null);
+                Drawing.Draw(target, new Rectangle(0, 0, (int)(target.Width * Screen.Resolution.X / target.Width), (int)(target.Height * Screen.Resolution.Y / target.Height)), Color.White);
                 Drawing.End();
+
+                target.Dispose();
             }
 
             base.Draw(gameTime);
+        }
+
+        void FixedUpdate()
+        {
+            MyGame.Main.FixedUpdate();
+            Level.FixedUpdate();
+            Time.Wait(FixedUpdateTime, () => FixedUpdate());
         }
 
         public static void Close(bool CloseConsole = false)
@@ -187,7 +185,9 @@ namespace Rander
 
             Drawing.Dispose();
 
-            Debug.LogWarning("Disposing Resources...");
+            Debug.LogWarning("Closing Window...");
+
+            gameWindow.Dispose();
 
             if (CloseConsole)
             {
@@ -203,23 +203,6 @@ namespace Rander
         public static string ExecutableFolderPath = AppDomain.CurrentDomain.BaseDirectory;
         public static string ExecutableTempFolderPath = Path.GetTempPath() + "/" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
         public static string ContentPath;
-    }
-
-    public class Screen
-    {
-        public static Vector2 Resolution;
-        public readonly static Vector2 DeviceResolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-        public static bool Fullscreen;
-        public static bool AllowResizing = false;
-
-        public static void ApplyChanges()
-        {
-            Game.graphics.PreferredBackBufferWidth = Resolution.ToPoint().X;
-            Game.graphics.PreferredBackBufferHeight = Resolution.ToPoint().Y;
-            Game.graphics.IsFullScreen = Fullscreen;
-            Game.gameWindow.Window.AllowUserResizing = AllowResizing;
-            Game.graphics.ApplyChanges();
-        }
     }
 
     public class Draw2D : SpriteBatch

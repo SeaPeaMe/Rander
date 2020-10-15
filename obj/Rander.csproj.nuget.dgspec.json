@@ -45,9 +45,13 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "MonoGame.Content.Builder.Task": {
+            "Aether.Physics2D": {
               "target": "Package",
-              "version": "[3.8.0.1641, )"
+              "version": "[1.5.0, )"
+            },
+            "AssimpNet": {
+              "target": "Package",
+              "version": "[4.1.0, )"
             },
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
@@ -64,6 +68,10 @@
             "Ookii.Dialogs.Wpf.NETCore": {
               "target": "Package",
               "version": "[2.1.0, )"
+            },
+            "SpriteFontPlus": {
+              "target": "Package",
+              "version": "[0.8.1.40, )"
             }
           },
           "imports": [
