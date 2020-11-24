@@ -33,9 +33,9 @@ namespace Rander.Editor
             {
                 // Adds 2D Presets
                 Debug.LogWarning("Creating Presets...");
-                Presets.Save(new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, null, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Empty.pre", true);
-                Presets.Save(new Object2D("Editor_Preset2DObject_Image", Vector2.Zero, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White) }, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Image.pre", true);
-                Presets.Save(new Object2D("Editor_Preset2DObject_Text", Vector2.Zero, new Vector2(135, 30), 0, new Component2D[] { new Text2DComponent("Hello World!", DefaultValues.DefaultFont, Color.White, 0.18f, Alignment.TopLeft, true) }, Alignment.Center, 0, null, null), ContentLoader.ContentPath + "/Editor/Presets/2D/Text.pre", true);
+                Presets.Save(new Object2D("Editor_Preset2DObject", Vector2.Zero, new Vector2(50, 50), 0, null, Alignment.Center, 0), ContentLoader.ContentPath + "/Editor/Presets/2D/Empty.pre", true);
+                Presets.Save(new Object2D("Editor_Preset2DObject_Image", Vector2.Zero, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White) }, Alignment.Center, 0), ContentLoader.ContentPath + "/Editor/Presets/2D/Image.pre", true);
+                Presets.Save(new Object2D("Editor_Preset2DObject_Text", Vector2.Zero, new Vector2(135, 30), 0, new Component2D[] { new Text2DComponent("Hello World!", DefaultValues.DefaultFont, Color.White, 0.18f, Alignment.TopLeft, true) }, Alignment.Center, 0), ContentLoader.ContentPath + "/Editor/Presets/2D/Text.pre", true);
             }
         }
     }
@@ -97,7 +97,7 @@ namespace Rander.Editor
             RClick = new Object2D("Editor_RClickMenu", Vector2.Zero, new Vector2(250, 500), 0, new Component2D[] {
                 new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.Window),
                 new Spacer2DComponent(SpacerOption.VerticalSpacer, new Vector2(0, 5), Alignment.TopCenter, new Vector2(0, 5))
-            }, Alignment.TopLeft, EditorUILayer - 0.0004f, null, new Object2D[] { 
+            }, Alignment.TopLeft, EditorUILayer - 0.0004f, children: new Object2D[] { 
                 // Menu Items
                 new Object2D("Editor_RClickMenu_NewObject2D", Vector2.Zero, new Vector2(240, 25), 0, new Component2D[] {
                     new Image2DComponent(DefaultValues.PixelTexture, EditorTheme.ToolBar),

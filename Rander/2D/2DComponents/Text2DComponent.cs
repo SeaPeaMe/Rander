@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Rander._2D
 {
-    public class Text2DComponent : DrawableComponent2D
+    public class Text2DComponent : OffsetComponent2D
     {
         string txt = "";
         public string Text { get { return txt; } set { txt = value; if (LinkedObject != null) { UpdateSize(); } } }
@@ -13,7 +13,7 @@ namespace Rander._2D
         public float MaxFontSize = 0.18f;
         public float MinFontSize = 0.18f;
         public bool TextBreaking = true;
-        public int SubLayer = 1;
+        public int SubLayer = 2;
         public string FontPath;
         SpriteFont Fnt = DefaultValues.DefaultFont;
         [JsonIgnore] public SpriteFont Font { get { return Fnt; } set { Fnt = value; FontPath = ContentLoader.LoadedFonts.First((x) => x.Value == Fnt).Key; } }
@@ -188,7 +188,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.Position + Offset.Location.ToVector2(), Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize + Offset.Size.Y, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 100000));
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position + Offset.Location.ToVector2(), Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize + Offset.Size.Y, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
         }
     }
 }

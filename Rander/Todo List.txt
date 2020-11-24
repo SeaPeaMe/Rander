@@ -1,4 +1,25 @@
-﻿- Fix threading issues
-	= Hold down X, pump but don't release
-	= Wait until thread runs (5s)
-	= The X flashing will stop
+﻿=== RELEASE NOTES ===
+
+- Added the ability to get the corner/side of a 2DObject with pivoting, rotation and scale
+- Added the ability to align image components individually
+- Fixed overlapping buttons both being clicked
+- Fixed button alignment issues
+- Added ability to align images
+- Added Slider
+- Added 2D Camera
+- Optimised LoadSpriteSheet
+- Fixed layering issues when setting parent via creation
+- Fixed layering issues when adding children
+- Added keybinds to Input System
+- Changed WaitUntil check interval to every frame
+- Made clear level also clear camera(s)
+- Fixed FixedUpdate loop breaking on ClearLevel
+
+=== IN DEVELOPMENT ===
+
+
+
+=== TODO LIST ===
+
+- Fix Rotations
+- Add Relative Size

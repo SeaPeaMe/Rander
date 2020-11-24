@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 namespace Rander._2D
 {
-    class Button2DComponent : Component2D
+    class Button2DComponent : OffsetComponent2D
     {
+        static bool OtherButtonIsPressed = false;
         public event Action OnClick;
         public event Action OnClickOutside;
         public event Action OnRelease;
@@ -15,11 +16,10 @@ namespace Rander._2D
         public event Action OnEnter;
         public event Action OnExit;
 
+        bool IsBeingClicked = false;
         bool WasIn = false;
-        bool WasClicked = Input.Mouse.LeftButton == ButtonState.Pressed;
+        bool WasClicked = false;
 
-        Vector2 Left;
-        Vector2 Right;
         List<Vector2> Corners = new List<Vector2>();
         List<float> CursorDistances = new List<float>();
 
@@ -33,80 +33,90 @@ namespace Rander._2D
             OnHover += onHover;
             OnEnter += onEnter;
             OnExit += onExit;
+
+            OnClick += () =>
+            {
+                if (OtherButtonIsPressed == false)
+                {
+                    OtherButtonIsPressed = true;
+                    IsBeingClicked = true;
+                }
+            };
+
+            OnRelease += () =>
+            {
+                if (IsBeingClicked) {
+                    OtherButtonIsPressed = false;
+                    IsBeingClicked = false;
+                }
+            };
         }
         #endregion
 
         public override void Update()
         {
-            // Calculates side points
-            Vector2 MagnitudeRight = new Vector2(LinkedObject.Size.X * Math.Abs(1 - LinkedObject.Pivot.X));
-            Vector2 MagnitudeLeft = new Vector2(LinkedObject.Size.X * Math.Abs(LinkedObject.Pivot.X));
-            Vector2 PosOffsetLeftRight = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * (LinkedObject.Pivot.Y - 0.5f);
+            if (!OtherButtonIsPressed || IsBeingClicked) {
+                Corners.Clear();
+                Corners.Add(LinkedObject.GetCorner(Alignment.TopLeft));
+                Corners.Add(LinkedObject.GetCorner(Alignment.BottomLeft));
+                Corners.Add(LinkedObject.GetCorner(Alignment.TopRight));
+                Corners.Add(LinkedObject.GetCorner(Alignment.BottomRight));
 
-            Left = LinkedObject.Position - new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeLeft - PosOffsetLeftRight;
-            Right = LinkedObject.Position + new Vector2((float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation))) * MagnitudeRight - PosOffsetLeftRight;
+                // Calculates distances to each corner
+                CursorDistances.Clear();
+                CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[0]));
+                CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[1]));
+                CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[2]));
+                CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[3]));
 
-            // Calculates the corners of the button to triangulate the rectangle
-            Corners.Clear();
-            Vector2 CornerOffset = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(LinkedObject.Rotation)), (float)Math.Cos(MathHelper.ToRadians(LinkedObject.Rotation))) * LinkedObject.Size.Y * MathHelper.Clamp(LinkedObject.Pivot.Y + 0.5f, 0, 0.5f);
-            Corners.Add(Left - CornerOffset); // Top Left
-            Corners.Add(Left + CornerOffset); // Bottom Left
-            Corners.Add(Right - CornerOffset); // Top Right
-            Corners.Add(Right + CornerOffset); // Bottom Right
+                // Calculates triangle sizes
+                float RotRectArea = CalcTriangleArea(CursorDistances[0], CursorDistances[1], LinkedObject.Size.Y) + CalcTriangleArea(CursorDistances[1], CursorDistances[3], LinkedObject.Size.X) + CalcTriangleArea(CursorDistances[3], CursorDistances[2], LinkedObject.Size.Y) + CalcTriangleArea(CursorDistances[2], CursorDistances[0], LinkedObject.Size.X);
 
-            // Calculates distances to each corner
-            CursorDistances.Clear();
-            CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[0]));
-            CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[1]));
-            CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[2]));
-            CursorDistances.Add(Vector2.Distance(MouseInput.Position.ToVector2(), Corners[3]));
-
-            // Calculates triangle sizes
-            float RotRectArea = CalcTriangleArea(CursorDistances[0], CursorDistances[1], LinkedObject.Size.Y) + CalcTriangleArea(CursorDistances[1], CursorDistances[3], LinkedObject.Size.X) + CalcTriangleArea(CursorDistances[3], CursorDistances[2], LinkedObject.Size.Y) + CalcTriangleArea(CursorDistances[2], CursorDistances[0], LinkedObject.Size.X);
-
-            // When in the bounds of the rectangle
-            if (LinkedObject.Size.X * LinkedObject.Size.Y + 1f >= RotRectArea)
-            {
-                if (OnHover != null) OnHover();
-
-                if (!WasIn)
+                // When in the bounds of the rectangle
+                if (LinkedObject.Size.X * LinkedObject.Size.Y + 1f >= RotRectArea)
                 {
-                    WasIn = true;
-                    if (OnEnter != null) OnEnter();
+                    if (OnHover != null) OnHover();
+
+                    if (!WasIn)
+                    {
+                        WasIn = true;
+                        if (OnEnter != null) OnEnter();
+                    }
+
+                    if (Input.Mouse.LeftButton == ButtonState.Pressed && WasClicked == false)
+                    {
+                        WasClicked = true;
+                        if (OnClick != null) OnClick();
+                    }
+                }
+                else
+                {
+                    if (WasIn)
+                    {
+                        WasIn = false;
+                        if (OnExit != null) OnExit();
+                    }
+
+                    if (Input.Mouse.LeftButton == ButtonState.Pressed && WasClicked == false)
+                    {
+                        WasClicked = true;
+                        if (OnClickOutside != null) OnClickOutside();
+                    }
+                    else if (!WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                    {
+                        WasClicked = false;
+                    }
                 }
 
-                if (Input.Mouse.LeftButton == ButtonState.Pressed && WasClicked == false)
-                {
-                    WasClicked = true;
-                    if (OnClick != null) OnClick();
-                }
-                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
+                if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
                 {
                     WasClicked = false;
                     if (OnRelease != null) OnRelease();
                 }
 
-                if (Input.Mouse.LeftButton == ButtonState.Pressed)
+                if (Input.Mouse.LeftButton == ButtonState.Pressed && IsBeingClicked)
                 {
                     if (OnPress != null) OnPress();
-                }
-            }
-            else
-            {
-                if (WasIn)
-                {
-                    WasIn = false;
-                    if (OnExit != null) OnExit();
-                }
-
-                if (Input.Mouse.LeftButton == ButtonState.Pressed && WasClicked == false)
-                {
-                    WasClicked = true;
-                    if (OnClickOutside != null) OnClickOutside();
-                }
-                else if (WasClicked && Input.Mouse.LeftButton == ButtonState.Released)
-                {
-                    WasClicked = false;
                 }
             }
         }
@@ -120,11 +130,9 @@ namespace Rander._2D
             return (float)Math.Sqrt(s * (s - d1) * (s - d2) * (s - d3));
         }
 
-        // This was for debugging the bounds of the button
-        // -----------------------------------------------
         public override void Draw()
         {
-            if (Corners.Count != 0 && Debug.ShowButtonBounds == true)
+            if (Corners.Count != 0 && Debug.ShowButtonBounds == true && (!OtherButtonIsPressed || IsBeingClicked))
             {
                 Game.Drawing.DrawLine(Corners[0], Corners[1], Color.Blue, 1);
                 Game.Drawing.DrawLine(Corners[0], Corners[2], Color.Blue, 1);

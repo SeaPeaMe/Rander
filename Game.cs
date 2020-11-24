@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Rander._2D;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace Rander
         public static Draw2D Drawing;
         public static Microsoft.Xna.Framework.Game gameWindow;
         public static GameTime Gametime = new GameTime();
-        int FixedUpdateTime = (int)((float)1 / GameSettings.TargetFPS * 1000);
+        static int FixedUpdateTime = (int)((float)1 / GameSettings.TargetFPS * 1000);
 
         public static bool PauseGame = false;
 
@@ -77,8 +78,8 @@ namespace Rander
             // Load Base Scripts
             BaseScripts.Add(new MouseInput());
             BaseScripts.Add(new Rand());
-            BaseScripts.Add(new Time());
             BaseScripts.Add(new Input());
+            BaseScripts.Add(new Time());
             BaseScripts.Add(new DebugMenu());
 
             foreach (Component Com in BaseScripts.ToList())
@@ -143,12 +144,10 @@ namespace Rander
 
             if (IsActive && !PauseGame)
             {
-                graphics.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.Stencil | ClearOptions.DepthBuffer, Screen.BackgroundColor, 0, 0);
-                RenderTarget2D target = new RenderTarget2D(GraphicsDevice, (int)GameSettings.UIScaleResolution.X, (int)GameSettings.UIScaleResolution.Y);
-                GraphicsDevice.SetRenderTarget(target);
+                graphics.GraphicsDevice.Clear(Screen.BackgroundColor);
 
                 // Draw Objects
-                Drawing.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, Screen.Filter, null);
+                Drawing.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, Screen.Filter, null, transformMatrix: Level.Active2DCamera != null ? Level.Active2DCamera.Matrix : Matrix.Identity);
 
                 // Updates Base Scripts
                 foreach (Component Com in BaseScripts.ToList())
@@ -160,20 +159,20 @@ namespace Rander
 
                 Level.Draw();
 
-                GraphicsDevice.SetRenderTarget(null);
-                Drawing.Draw(target, new Rectangle(0, 0, (int)(target.Width * Screen.Resolution.X / target.Width), (int)(target.Height * Screen.Resolution.Y / target.Height)), Color.White);
                 Drawing.End();
-
-                target.Dispose();
             }
 
             base.Draw(gameTime);
         }
 
-        void FixedUpdate()
+        internal static void FixedUpdate()
         {
-            MyGame.Main.FixedUpdate();
-            Level.FixedUpdate();
+            if (!PauseGame)
+            {
+                MyGame.Main.FixedUpdate();
+                Level.FixedUpdate();
+            }
+
             Time.Wait(FixedUpdateTime, () => FixedUpdate());
         }
 

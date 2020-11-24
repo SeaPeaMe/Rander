@@ -12,19 +12,15 @@ namespace Rander
 
         public void Dispose()
         {
-            int y = 0;
-            foreach (var Row in Sheet)
+            for (int y = 0; y < Sheet.Count; y++)
             {
-                int x = 0;
-                foreach (var item in Row)
+                for (int x = 0; x < Sheet[y].Count; x++)
                 {
                     ContentLoader.DisposeTexture(ImageName + "_" + y + ":" + x);
-                    x++;
                 }
-                y++;
             }
 
-            Sheet.Clear();
+            Sheet = null;
             ImageName = "";
         }
     }

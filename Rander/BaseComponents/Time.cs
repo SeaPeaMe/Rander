@@ -13,11 +13,11 @@ namespace Rander
     {
         internal static List<WaitTimer> Timers = new List<WaitTimer>();
         public static float FrameTime = 0;
-        public static float TimeSinceStart = 0;
+        public static double TimeSinceStart = 0;
 
         public override void Update()
         {
-            TimeSinceStart = (float)Game.Gametime.TotalGameTime.TotalSeconds;
+            TimeSinceStart = Game.Gametime.TotalGameTime.TotalSeconds;
             FrameTime = (float)Game.Gametime.ElapsedGameTime.TotalSeconds;
 
             foreach (WaitTimer tim in Timers.ToArray())
@@ -46,6 +46,13 @@ namespace Rander
             return tim;
         }
 
+        public delegate void ActionWithTime(double Time);
+        public static void CountUntil(Func<bool> condition, ActionWithTime call)
+        {
+            double StartTime = (double)(TimeSinceStart * 1000);
+            WaitUntil(condition, () => call((double)(TimeSinceStart * 1000) - StartTime));
+        }
+
         public static void CancelWait(WaitTimer wait)
         {
             if (wait != null) wait.Dispose();
@@ -54,32 +61,32 @@ namespace Rander
         public class WaitTimer
         {
             public Action Call;
-            public int WaitTime;
+            public long WaitTime;
             public bool Repeat;
             Func<bool> Condition;
-            int TimeOnCreation;
+            long TimeOnCreation;
 
-            public WaitTimer(int waitTime, Action call, bool repeat = false)
+            public WaitTimer(long waitTime, Action call, bool repeat = false)
             {
                 Call = call;
                 WaitTime = waitTime;
                 Condition = () => 1 == 1;
                 Repeat = repeat;
-                TimeOnCreation = (int)(TimeSinceStart * 1000);
+                TimeOnCreation = (long)(TimeSinceStart * 1000);
             }
 
             public WaitTimer(Func<bool> condition, Action call)
             {
                 Call = call;
-                WaitTime = 10;
+                WaitTime = 0;
                 Condition = condition;
                 Repeat = true;
-                TimeOnCreation = (int)(TimeSinceStart * 1000);
+                TimeOnCreation = (long)(TimeSinceStart * 1000);
             }
 
             public void RunTimer()
             {
-                if ((int)(TimeSinceStart * 1000) >= TimeOnCreation + WaitTime)
+                if ((long)(TimeSinceStart * 1000) >= TimeOnCreation + WaitTime)
                 {
                     if (Condition())
                     {

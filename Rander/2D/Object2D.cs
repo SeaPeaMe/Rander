@@ -19,6 +19,47 @@ namespace Rander._2D
         #region Alignment/Pivot
         public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
+        public Vector2 GetCorner(Alignment Corner)
+        {
+            Vector2 MagnitudeRight = new Vector2(Size.X * Math.Abs(1 - Pivot.X));
+            Vector2 MagnitudeLeft = new Vector2(Size.X * Math.Abs(Pivot.X));
+            Vector2 CornerOffset = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(Rotation)), (float)Math.Cos(MathHelper.ToRadians(Rotation))) * Size.Y * (Pivot.Y - 0.5f);
+            Vector2 Top = new Vector2((float)Math.Sin(MathHelper.ToRadians(Rotation)), -(float)Math.Cos(MathHelper.ToRadians(Rotation))) * Size.Y * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f);
+
+            Vector2 Circ = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)), (float)Math.Sin(MathHelper.ToRadians(Rotation)));
+            Vector2 Left = -Circ * MagnitudeLeft - CornerOffset;
+            Vector2 Right = Circ * MagnitudeRight - CornerOffset;
+            
+            Vector2 Center = Position + new Vector2((Right.X + Left.X) * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f), (Right.Y + Left.Y) * MathHelper.Clamp(Pivot.X + 0.5f, 0, 0.5f));
+
+            Left += Position;
+            Right += Position;
+
+            switch (Corner)
+            {
+                case Alignment.TopLeft:
+                    return Left + Top;
+                case Alignment.TopCenter:
+                    return Center + Top;
+                case Alignment.TopRight:
+                    return Right + Top;
+                case Alignment.MiddleLeft:
+                    return Left;
+                case Alignment.Center:
+                    return Center;
+                case Alignment.MiddleRight:
+                    return Right;
+                case Alignment.BottomLeft:
+                    return Left - Top;
+                case Alignment.BottomCenter:
+                    return Center - Top;
+                case Alignment.BottomRight:
+                    return Right - Top;
+                default:
+                    return Vector2.Zero;
+            }
+        }
+
         public virtual void SetPivot(Alignment al)
         {
             Al = al;
@@ -78,12 +119,15 @@ namespace Rander._2D
                 foreach (Object2D Child in Children)
                 {
                     Child.Rotation = value;
-                    Child.RelativePosition = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)) * Vector2.Distance(Child.Pos, Pos), (float)Math.Sin(MathHelper.ToRadians(Rotation)) * Vector2.Distance(Child.Pos, Pos));
+
+                    float Magnitude = Vector2.Distance(Pos, Child.Pos);
+                    float RotationOffset = MathF.Atan(Size.Y / Size.X) + MathHelper.ToRadians(1);
+                    Child.Position = Pos + new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation) + RotationOffset) * Magnitude, (float)Math.Sin(MathHelper.ToRadians(Rotation) + RotationOffset) * Magnitude);
                 }
 
                 Rot = value;
                 if (RotationChanged != null) RotationChanged();
-                SetPivot(Align);
+                SetPivot(Pivot);
             }
         }
         public float RelativeRotation
@@ -103,7 +147,7 @@ namespace Rander._2D
                         Child.RelativePosition = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)) * Child.RelativePosition.X, (float)Math.Sin(MathHelper.ToRadians(Rotation)) * Child.RelativePosition.Y);
                     }
 
-                    SetPivot(Align);
+                    SetPivot(Pivot);
                     Rot = value - Parent.Rot;
                 }
 
@@ -156,11 +200,26 @@ namespace Rander._2D
         public delegate void Object2DEvent(Object2D object2d);
         public event Object2DEvent ChildAdded;
         #region Children
-        public void AddChild(Object2D object2d, float SubLayer = 1)
+        /// <summary>
+        /// Adds a child and changes its layer to the parent's
+        /// </summary>
+        /// <param name="object2d">The parent 2D Object</param>
+        /// <param name="SubLayer">The sub-layer of the child to the parent</param>
+        public void AddChild(Object2D object2d, int SubLayer)
         {
             Children.Add(object2d);
             object2d.Parent = this;
-            object2d.Layer = Layer + (SubLayer / 100000);
+            object2d.Layer = Layer + (SubLayer / 1000);
+            if (ChildAdded != null) ChildAdded(object2d);
+        }
+        /// <summary>
+        /// Adds a child, but does not change its Layer
+        /// </summary>
+        /// <param name="object2d">The parent 2D Object</param>
+        public void AddChild(Object2D object2d)
+        {
+            Children.Add(object2d);
+            object2d.Parent = this;
             if (ChildAdded != null) ChildAdded(object2d);
         }
 
@@ -172,8 +231,45 @@ namespace Rander._2D
         #endregion
 
         // Do relative size
+        Vector2 Sz = Vector2.One;
+        Vector2 DestroyedParentSz = Vector2.Zero;
+        public event Action SizeChanged;
+        public event Action RelativeSizeChanged;
         #region Get/Set Size
-        public Vector2 Size = new Vector2(100, 100);
+        public Vector2 RelativeSize
+        {
+            get { if (Parent != null) { return Sz / Parent.Size; } else { return Vector2.One; } }
+            set
+            {
+                // Sets the size and then updates all the children
+                if (Parent == null) // If the object has no parent, set the size normally
+                {
+                    Size = DestroyedParentSz * value;
+                }
+                else
+                {
+                    Size = Parent.Size * value;
+                }
+
+                if (RelativeSizeChanged != null) RelativeSizeChanged();
+            }
+        }
+        public Vector2 Size
+        {
+            get { return Sz; }
+            set
+            {
+                foreach (Object2D Child in Children)
+                {
+                    Child.Size = value + Child.RelativeSize;
+                    Child.Position = (value - Size);
+                }
+
+                Sz = value;
+
+                if (SizeChanged != null) SizeChanged();
+            }
+        }
         #endregion
 
         #region Creation
@@ -195,7 +291,7 @@ namespace Rander._2D
             SetPivot(Al);
         }
 
-        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null, Object2D[] children = null)
+        public Object2D(string objectName, Vector2 position, Vector2 size, float rotation = 0, Component2D[] components = null, Alignment alignment = Alignment.TopLeft, float layer = 0, Object2D parent = null, int subLayer = 1, Object2D[] children = null)
         {
             Size = size;
             SetPivot(alignment);
@@ -210,7 +306,7 @@ namespace Rander._2D
             if (Parent != null)
             {
                 Position = Parent.Position + position;
-                Parent.AddChild(this);
+                Parent.AddChild(this, subLayer);
             }
 
             // Goes through all the possible errors
@@ -226,7 +322,8 @@ namespace Rander._2D
                 int CurrentBiggest = 1;
                 foreach (string item in Num.ToList())
                 {
-                    CurrentBiggest = Math.Max(int.Parse(item.Substring(ObjectName.Length + 1)), CurrentBiggest) + 1;
+                    int.TryParse(item.Substring(ObjectName.Length + 1), out int num);
+                    CurrentBiggest = Math.Max(num, CurrentBiggest) + 1;
                 }
 
                 ObjectName += "_" + CurrentBiggest;
@@ -375,6 +472,7 @@ namespace Rander._2D
                 {
                     Child.DestroyedParentPos = Pos;
                     Child.DestroyedParentRot = Rot;
+                    Child.DestroyedParentSz = Sz;
                     Child.Parent = Parent;
                 }
             }
