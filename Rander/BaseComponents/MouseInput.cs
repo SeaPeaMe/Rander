@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Rander
 {
-    public class MouseInput : Component
+    public class MouseInput : BaseScript
     {
         public static MouseState MouseInfo;
         public static Point Position { get { return MouseInfo.Position; } }

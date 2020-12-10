@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using System.Linq;
+using System;
 
 namespace Rander._2D
 {
@@ -136,7 +137,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Rectangle Rect = new Rectangle(LinkedObject.MathPos.ToPoint() + Offset.Location, LinkedObject.MathSz.ToPoint() + Offset.Size);
+            Rectangle Rect = new Rectangle(new Point((int)Math.Round(LinkedObject.MathPos.X), (int)Math.Round(LinkedObject.MathPos.Y)) + Offset.Location, LinkedObject.MathSz.ToPoint() + Offset.Size);
             Game.Drawing.Draw(Texture, Rect, RenderRegion, Color, LinkedObject.MathRot, Pivot * new Vector2(Texture.Width, Texture.Height), SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
         }
     }

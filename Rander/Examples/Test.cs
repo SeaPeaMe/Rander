@@ -3,18 +3,30 @@ using Rander._2D;
 
 namespace Rander.Examples
 {
-    class Test
+    public class Test : BaseScript
     {
-        static SpriteSheet sht;
-        public static void Start()
+        Object2D Lvl;
+        Object2D Chl;
+        public override void Start()
         {
-            sht = ContentLoader.LoadSpriteSheet("Editor/TestImages/Floors1.png", new Vector2(16, 16));
-            new Object2D("SliderTest", Screen.Resolution / 2, new Vector2(50, 50), 0, new Component2D[] { new Image2DComponent(sht.Sheet[0][1]) });
+            float TileSize = 50;
+            float Gap = 5;
+
+            Lvl = new Object2D("Level", Vector2.Zero, new Vector2(TileSize), 0);
+            for (int y = 0; y < 20; y++)
+            {
+                for (int x = 0; x < 20; x++)
+                {
+                    Chl = Lvl.AddChild(new Object2D("BunchTest_" + x + "_" + y, new Vector2((x * TileSize) + x * Gap, (y * TileSize) + y * Gap), new Vector2(TileSize), 0, new Component2D[] { new Image2DComponent(DefaultValues.PixelTexture, Color.White) }));
+                }
+            }
         }
 
-        public static void Update()
+        public override void FixedUpdate()
         {
-
+            Lvl.Size += Vector2.One * 0.1f;
+            Lvl.Rotation += 0.01f;
+            Debug.Log(Chl.Position.ToString());
         }
     }
 }

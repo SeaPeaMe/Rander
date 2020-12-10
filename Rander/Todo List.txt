@@ -1,7 +1,8 @@
 ﻿=== RELEASE NOTES ===
 
-- Quick fix for text not rendering properly
-- Fixed alignment issues (forgot to add a single line lol)
+- Made Object2D.AddChild return the 2D object being parented
+- Fixed alignment issued with Image2DComponent
+- Added the ability to add BaseScripts (Scripts that will be executed at the start of the program)
 
 === IN DEVELOPMENT ===
 

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Rander
 {
-    public class Input : Component
+    public class Input : BaseScript
     {
 
         public static KeyboardState Keys;

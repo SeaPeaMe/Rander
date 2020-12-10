@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Rander
 {
-    public class Time : Component
+    public class Time : BaseScript
     {
         internal static List<WaitTimer> Timers = new List<WaitTimer>();
         public static float FrameTime = 0;

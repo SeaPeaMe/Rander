@@ -77,15 +77,16 @@ namespace Rander
             Screen.ApplyChanges();
 
             // Load Base Scripts
-            BaseScripts.Add(new MouseInput());
-            BaseScripts.Add(new Rand());
-            BaseScripts.Add(new Input());
-            BaseScripts.Add(new Time());
-            BaseScripts.Add(new DebugMenu());
+            IEnumerable<Type> scripts = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(TheType => TheType.IsClass && TheType.IsSubclassOf(typeof(BaseScript)));
 
-            foreach (Component Com in BaseScripts.ToList())
+            foreach (Type comp in scripts.ToList())
             {
-                Com.Start();
+                BaseScripts.Add((BaseScript)Activator.CreateInstance(comp));
+            }
+
+            foreach (Component scr in BaseScripts.ToList())
+            {
+                scr.Awake();
             }
 
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -105,10 +106,14 @@ namespace Rander
             DefaultValues.PixelTexture = ContentLoader.LoadTexture("Defaults/Pixel.png");
 
             Debug.LogWarning("Initializing Game...");
-            MyGame.Main.Initialize();
-            MyGame.Main.Start();
+
+            foreach (Component scr in BaseScripts.ToList())
+            {
+                scr.Start();
+            }
 
             Debug.LogSuccess("Finished!");
+
             FixedUpdate();
             PauseGame = false;
         }
@@ -131,8 +136,6 @@ namespace Rander
                 {
                     Scr.Update();
                 }
-
-                MyGame.Main.Update();
 
                 Level.Update();
             }
@@ -157,8 +160,6 @@ namespace Rander
                     Com.Draw();
                 }
 
-                MyGame.Main.Draw();
-
                 Level.Draw();
 
                 Drawing.End();
@@ -171,7 +172,11 @@ namespace Rander
         {
             if (!PauseGame)
             {
-                MyGame.Main.FixedUpdate();
+                foreach (Component Scr in BaseScripts.ToList())
+                {
+                    Scr.FixedUpdate();
+                }
+
                 Level.FixedUpdate();
             }
 
@@ -181,6 +186,12 @@ namespace Rander
         public static void Close(bool CloseConsole = false)
         {
             PauseGame = true;
+
+            foreach (Component Scr in BaseScripts.ToList())
+            {
+                Scr.OnDispose();
+            }
+
             Level.ClearLevel();
             PauseGame = true;
 

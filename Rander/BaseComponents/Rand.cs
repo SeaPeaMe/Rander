@@ -8,7 +8,7 @@ using System;
 
 namespace Rander
 {
-    public class Rand : Component
+    public class Rand : BaseScript
     {
 
         static Random Random = new Random(DateTime.Now.Millisecond + DateTime.Now.Second + DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year);

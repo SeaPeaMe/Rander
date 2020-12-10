@@ -10,7 +10,7 @@ using Rander.TestScripts;
 
 namespace Rander
 {
-    public class DebugMenu : Component2D
+    public class DebugMenu : BaseScript
     {
 
         bool DebugOpen = false;

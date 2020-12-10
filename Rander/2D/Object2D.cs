@@ -14,26 +14,27 @@ namespace Rander._2D
         public bool Enabled { get { return En; } set { foreach (Object2D Child in Children.ToArray()) { Child.Enabled = value; } En = value; } }
 
         Alignment Al = Alignment.TopLeft;
-        public Vector2 Pivot = Vector2.Zero;
+        Vector2 Pv = Vector2.Zero;
+        public Vector2 Pivot { get { return Pv; } private set { Pv = value; } }
         public event Action AlignmentChanged;
         #region Alignment/Pivot
         public Alignment Align { get { return Al; } set { SetPivot(value); } }
 
         public Vector2 GetCorner(Alignment Corner)
         {
-            Vector2 MagnitudeRight = new Vector2(Size.X * Math.Abs(1 - Pivot.X));
-            Vector2 MagnitudeLeft = new Vector2(Size.X * Math.Abs(Pivot.X));
-            Vector2 CornerOffset = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(Rotation)), (float)Math.Cos(MathHelper.ToRadians(Rotation))) * Size.Y * (Pivot.Y - 0.5f);
-            Vector2 Top = new Vector2((float)Math.Sin(MathHelper.ToRadians(Rotation)), -(float)Math.Cos(MathHelper.ToRadians(Rotation))) * Size.Y * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f);
+            Vector2 MagnitudeRight = new Vector2(MathSz.X * Math.Abs(1 - Pivot.X));
+            Vector2 MagnitudeLeft = new Vector2(MathSz.X * Math.Abs(Pivot.X));
+            Vector2 CornerOffset = new Vector2(-(float)Math.Sin(MathHelper.ToRadians(MathRot)), (float)Math.Cos(MathHelper.ToRadians(MathRot))) * MathSz.Y * (Pivot.Y - 0.5f);
+            Vector2 Top = new Vector2((float)Math.Sin(MathHelper.ToRadians(MathRot)), -(float)Math.Cos(MathHelper.ToRadians(MathRot))) * MathSz.Y * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f);
 
-            Vector2 Circ = new Vector2((float)Math.Cos(MathHelper.ToRadians(Rotation)), (float)Math.Sin(MathHelper.ToRadians(Rotation)));
+            Vector2 Circ = new Vector2((float)Math.Cos(MathHelper.ToRadians(MathRot)), (float)Math.Sin(MathHelper.ToRadians(MathRot)));
             Vector2 Left = -Circ * MagnitudeLeft - CornerOffset;
             Vector2 Right = Circ * MagnitudeRight - CornerOffset;
             
-            Vector2 Center = Position + new Vector2((Right.X + Left.X) * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f), (Right.Y + Left.Y) * MathHelper.Clamp(Pivot.X + 0.5f, 0, 0.5f));
+            Vector2 Center = MathPos + new Vector2((Right.X + Left.X) * MathHelper.Clamp(Pivot.Y + 0.5f, 0, 0.5f), (Right.Y + Left.Y) * MathHelper.Clamp(Pivot.X + 0.5f, 0, 0.5f));
 
-            Left += Position;
-            Right += Position;
+            Left += MathPos;
+            Right += MathPos;
 
             switch (Corner)
             {
@@ -98,11 +99,6 @@ namespace Rander._2D
             }
 
             if (AlignmentChanged != null) AlignmentChanged();
-        }
-
-        public virtual void SetPivot(Vector2 pivot)
-        {
-            Pivot = pivot;
         }
         #endregion
 
@@ -185,43 +181,11 @@ namespace Rander._2D
         public List<Object2D> Children = new List<Object2D>();
         public delegate void Object2DEvent(Object2D object2d);
         public event Object2DEvent ChildAdded;
-        #region Children
-        /// <summary>
-        /// Adds a child and changes its layer to the parent's
-        /// </summary>
-        /// <param name="object2d">The parent 2D Object</param>
-        /// <param name="SubLayer">The sub-layer of the child to the parent</param>
-        public void AddChild(Object2D object2d, int SubLayer)
-        {
-            Children.Add(object2d);
-            object2d.Parent = this;
-            object2d.Layer = Layer + (SubLayer / 1000);
-            object2d.CalcTransform();
-            if (ChildAdded != null) ChildAdded(object2d);
-        }
-        /// <summary>
-        /// Adds a child, but does not change its Layer
-        /// </summary>
-        /// <param name="object2d">The parent 2D Object</param>
-        public void AddChild(Object2D object2d)
-        {
-            Children.Add(object2d);
-            object2d.Parent = this;
-            object2d.CalcTransform();
-            if (ChildAdded != null) ChildAdded(object2d);
-        }
 
-        public void RemoveChild(Object2D object2d)
-        {
-            object2d.Parent = null;
-            Children.Remove(object2d);
-        }
-        #endregion
-
-        // Do relative size
         Vector2 Sz = Vector2.One;
         Vector2 DestroyedParentSz = Vector2.One;
         Vector2 CachedRelativeScale = Vector2.One;
+        Vector2 ScaleSinceStart = Vector2.Zero;
         public event Action SizeChanged;
         public event Action RelativeSizeChanged;
         #region Get/Set Size
@@ -305,6 +269,8 @@ namespace Rander._2D
             RelativeRotation = rotation;
             RelativeSize = size;
 
+            ScaleSinceStart = size;
+
             Layer = layer;
 
             ObjectName = objectName;
@@ -348,15 +314,53 @@ namespace Rander._2D
             {
                 foreach (Object2D Child in children)
                 {
-                    AddChild(Child);
                     Child.Position += position;
                     Child.Size *= Size;
                     Child.Rotation += rotation;
+                    AddChild(Child);
                 }
             }
 
             SetPivot(alignment);
-            CalcTransform();
+        }
+        #endregion
+
+        #region Children
+        /// <summary>
+        /// Adds a child and changes its layer to the parent's
+        /// </summary>
+        /// <param name="object2d">The parent 2D Object</param>
+        /// <param name="SubLayer">The sub-layer of the child to the parent</param>
+        public Object2D AddChild(Object2D object2d, int SubLayer)
+        {
+            Children.Add(object2d);
+            object2d.Parent = this;
+            object2d.Layer = Layer + (SubLayer / 1000);
+
+            object2d.CachedRelativeScale = object2d.Sz / Size;
+            object2d.CalcTransform();
+            if (ChildAdded != null) ChildAdded(object2d);
+            return object2d;
+        }
+        /// <summary>
+        /// Adds a child, but does not change its Layer
+        /// </summary>
+        /// <param name="object2d">The parent 2D Object</param>
+        public Object2D AddChild(Object2D object2d)
+        {
+            Children.Add(object2d);
+            object2d.Parent = this;
+
+            object2d.CachedRelativeScale = object2d.Sz / Size;
+            object2d.CalcTransform();
+            if (ChildAdded != null) ChildAdded(object2d);
+            return object2d;
+        }
+
+        public void RemoveChild(Object2D object2d)
+        {
+            object2d.Parent = null;
+            Children.Remove(object2d);
         }
         #endregion
 
@@ -365,15 +369,15 @@ namespace Rander._2D
         internal Vector2 MathSz;
         protected void CalcTransform()
         {
-            float RotOff = MathHelper.ToDegrees((float)Math.Atan(RelativePosition.Y / RelativePosition.X));
-            MathPos = (Parent != null) ? (Parent.Position + (new Vector2((float)Math.Cos(MathHelper.ToRadians(Parent.Rotation + RotOff)), (float)Math.Sin(MathHelper.ToRadians(Parent.Rotation + RotOff))) * Vector2.Distance(Parent.Position, Position))) : Position;
+            float RotOff = (RelativePosition.X == 0 && RelativePosition.Y == 0) ? 0 : MathHelper.ToDegrees((float)Math.Atan(RelativePosition.Y / RelativePosition.X));
+            MathPos = (Parent != null) ? (Parent.Position + ((new Vector2((float)Math.Cos(MathHelper.ToRadians(Parent.Rotation + RotOff)), (float)Math.Sin(MathHelper.ToRadians(Parent.Rotation + RotOff))) * Vector2.Distance(Parent.Position, Position)) * (Parent.Size / Parent.ScaleSinceStart))) : Position;
             MathSz = (Parent != null) ? (Parent.Size * CachedRelativeScale) : Size;
             MathRot = MathHelper.ToRadians((Parent != null) ? (Parent.Rotation + Rotation) : Rotation);
 
             foreach (Object2D Child in Children)
             {
-                Child.Position = Position + (Child.RelativePosition * (Vector2.One + (Vector2.One - Child.RelativeSize)));
-                Child.Size = Size * Child.CachedRelativeScale;
+                //Child.Position = Position + (Child.RelativePosition * (Vector2.One - Child.CachedRelativeScale));
+                //Child.Size = Size * Child.CachedRelativeScale;
                 Child.CalcTransform();
             }
         }
