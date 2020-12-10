@@ -355,6 +355,7 @@ namespace Rander._2D
                 }
             }
 
+            SetPivot(alignment);
             CalcTransform();
         }
         #endregion
