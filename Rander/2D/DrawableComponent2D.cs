@@ -2,7 +2,7 @@
 
 namespace Rander._2D
 {
-    public class DrawableComponent2D : Component2D
+    public class OffsetComponent2D : Component2D
     {
         public Rectangle Offset;
     }

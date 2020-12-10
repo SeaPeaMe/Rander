@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "Rander/1.0.0": {
         "dependencies": {
+          "Aether.Physics2D": "1.5.0",
           "AssimpNet": "4.1.0",
           "MonoGame.Framework.DesktopGL": "3.8.0.1641",
           "NETStandard.Library": "2.0.3",
@@ -17,6 +18,14 @@
         },
         "runtime": {
           "Rander.dll": {}
+        }
+      },
+      "Aether.Physics2D/1.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/Aether.Physics2D.dll": {
+            "assemblyVersion": "1.5.0.0",
+            "fileVersion": "1.5.0.0"
+          }
         }
       },
       "AssimpNet/4.1.0": {
@@ -139,6 +148,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Aether.Physics2D/1.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7LDYIDVLx3A+lduaJ2WMy6KR9Hptg8M7/lULKrQOmFbAhweSNx8h9H6SDRnI1kp3H9ahhHqIAZUfeBKPmGkLGg==",
+      "path": "aether.physics2d/1.5.0",
+      "hashPath": "aether.physics2d.1.5.0.nupkg.sha512"
     },
     "AssimpNet/4.1.0": {
       "type": "package",

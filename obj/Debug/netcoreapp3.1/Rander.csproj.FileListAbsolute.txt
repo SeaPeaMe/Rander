@@ -36,3 +36,5 @@ C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\Rander.pdb
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\Rander.genruntimeconfig.cache
 C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\Rander.csprojAssemblyReference.cache
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\bin\Debug\netcoreapp3.1\Aether.Physics2D.dll
+C:\Users\M.R\Desktop\StandaloneProjects\MonoGame\Rander\obj\Debug\netcoreapp3.1\Rander.csproj.CoreCompileInputs.cache

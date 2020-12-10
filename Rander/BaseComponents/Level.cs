@@ -11,9 +11,9 @@ namespace Rander
         public static Dictionary<SoundEffectInstance, SoundEffect> Sounds = new Dictionary<SoundEffectInstance, SoundEffect>();
         public static Dictionary<string, Object2D> Objects2D = new Dictionary<string, Object2D>();
         public static Dictionary<string, Object3D> Objects3D = new Dictionary<string, Object3D>();
-        public static List<Mask2DComponent> Masks = new List<Mask2DComponent>();
 
         public static Camera3DComponent Active3DCamera = null;
+        public static Camera2DComponent Active2DCamera = null;
 
         public static void SaveLevel(string Path)
         {
@@ -25,6 +25,9 @@ namespace Rander
             Game.PauseGame = true;
             Debug.LogWarning("--- CLEARING LEVEL ---");
             Debug.LogWarning("Disposing Objects & Instances...");
+            Debug.Log("     Cameras...");
+            Active2DCamera = null;
+            Active3DCamera = null;
             Debug.Log("     2D Objects...");
             Objects2D.Clear();
             Debug.Log("     Sound Instances...");
@@ -37,6 +40,9 @@ namespace Rander
 
             Debug.LogWarning("Disposing Timers...");
             Time.Timers.Clear();
+
+            Debug.LogWarning("Restarting Loops...");
+            Rander.Game.FixedUpdate();
 
             Debug.LogSuccess("--- LEVEL CLEAR SUCCESS ---");
             Game.PauseGame = false;

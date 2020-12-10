@@ -46,15 +46,26 @@ namespace Rander
 
         public static void DisposeTexture(Texture2D texture)
         {
-            string Key = Loaded2DTextures.First((x) => x.Value == texture).Key;
-            Loaded2DTextures.First((x) => x.Key == Key).Value.Dispose();
-            Loaded2DTextures.Remove(Key);
+            if (Loaded2DTextures.ContainsValue(texture)) {
+                string Key = Loaded2DTextures.First((x) => x.Value == texture).Key;
+                Loaded2DTextures.First((x) => x.Key == Key).Value.Dispose();
+                Loaded2DTextures.Remove(Key);
+            } else
+            {
+                Debug.LogError("The specified texture has not been loaded!");
+            }
         }
 
         public static void DisposeTexture(string texture)
         {
-            Loaded2DTextures.First((x) => x.Key == texture).Value.Dispose();
-            Loaded2DTextures.Remove(texture);
+            if (Loaded2DTextures.ContainsKey(texture)) {
+                Loaded2DTextures.First((x) => x.Key == texture).Value.Dispose();
+                Loaded2DTextures.Remove(texture);
+            }
+            else
+            {
+                Debug.LogError("There is no loaded texture called \"" + texture + "\"!");
+            }
         }
 
         public static void DisposeSpriteSheet(SpriteSheet sheet)
@@ -71,7 +82,7 @@ namespace Rander
 
             if (Sheet.Height % SectionSize.Y != 0 || Sheet.Width % SectionSize.X != 0)
             {
-                Debug.LogError("The sheet specified \"" + image + "\" (" + Sheet.Width + ", " + Sheet.Height + ") can not be divided evenly with given parameters (" + SectionSize.X + "," + SectionSize.Y + ") !", true);
+                Debug.LogError("The sheet specified \"" + image + "\" (" + Sheet.Width + ", " + Sheet.Height + ") can not be divided evenly with given parameters (" + SectionSize.X + "," + SectionSize.Y + ")!", true);
                 return null;
             }
 
@@ -80,13 +91,22 @@ namespace Rander
                 List<Texture2D> Row = new List<Texture2D>();
                 for (int x = 0; x < Sheet.Width; x += (int)SectionSize.X)
                 {
-                    Color[] col = new Color[(int)SectionSize.X * (int)SectionSize.Y];
-                    Sheet.GetData(0, new Rectangle(x, y, (int)SectionSize.X, (int)SectionSize.Y), col, 0, (int)SectionSize.X * (int)SectionSize.Y);
+                    if (Loaded2DTextures.ContainsKey(image + "_" + (y / (int)SectionSize.Y) + ":" + (x / (int)SectionSize.X)))
+                    {
+                        Texture2D tx = null;
+                        Loaded2DTextures.TryGetValue(image + "_" + (y / (int)SectionSize.Y) + ":" + (x / (int)SectionSize.X), out tx);
+                        Row.Add(tx);
+                    }
+                    else
+                    {
+                        Color[] col = new Color[(int)SectionSize.X * (int)SectionSize.Y];
+                        Sheet.GetData(0, new Rectangle(x, y, (int)SectionSize.X, (int)SectionSize.Y), col, 0, (int)SectionSize.X * (int)SectionSize.Y);
 
-                    Texture2D tex = new Texture2D(Game.graphics.GraphicsDevice, (int)SectionSize.X, (int)SectionSize.Y);
-                    tex.SetData(col);
-                    Row.Add(tex);
-                    Loaded2DTextures.Add(image + "_" + (int)(y / SectionSize.Y) + ":" + (int)(x / SectionSize.X), tex);
+                        Texture2D tex = new Texture2D(Game.graphics.GraphicsDevice, (int)SectionSize.X, (int)SectionSize.Y);
+                        tex.SetData(col);
+                        Row.Add(tex);
+                        Loaded2DTextures.Add(image + "_" + (y / (int)SectionSize.Y) + ":" + (x / (int)SectionSize.X), tex);
+                    }
                 }
                 sht.Sheet.Add(Row);
             }

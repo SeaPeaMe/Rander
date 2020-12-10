@@ -15,7 +15,7 @@ namespace Rander
 
         public static int RandomInt(int Min, int Max)
         {
-            return Random.Next(Min, Max);
+            return Random.Next(Min, Max + 1);
         }
 
         public static float RandomFloat(float Min, float Max)
