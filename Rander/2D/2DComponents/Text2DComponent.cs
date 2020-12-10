@@ -188,7 +188,7 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Game.Drawing.DrawString(Font, Text, LinkedObject.Position + Offset.Location.ToVector2(), Color, MathHelper.ToRadians(LinkedObject.Rotation), (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize + Offset.Size.Y, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
+            Game.Drawing.DrawString(Font, Text, LinkedObject.Position + Offset.Location.ToVector2(), Color, LinkedObject.MathRot, (LinkedObject.Size * LinkedObject.Pivot / FontSize) - (LinkedObject.Size * Pivot / FontSize) + PivotOffset, FontSize + Offset.Size.Y, SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
         }
     }
 }

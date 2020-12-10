@@ -73,6 +73,7 @@ namespace Rander
         {
             // Sets up the window to device's resolution and in full screen
             IsFixedTimeStep = false;
+            PauseGame = true;
             Screen.ApplyChanges();
 
             // Load Base Scripts
@@ -109,6 +110,7 @@ namespace Rander
 
             Debug.LogSuccess("Finished!");
             FixedUpdate();
+            PauseGame = false;
         }
 
         protected override void UnloadContent()

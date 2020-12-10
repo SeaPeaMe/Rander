@@ -136,8 +136,8 @@ namespace Rander._2D
 
         public override void Draw()
         {
-            Rectangle Rect = new Rectangle(LinkedObject.Position.ToPoint() + Offset.Location, LinkedObject.Size.ToPoint() + Offset.Size);
-            Game.Drawing.Draw(Texture, Rect, RenderRegion, Color, MathHelper.ToRadians(LinkedObject.Rotation), Pivot * new Vector2(Texture.Width, Texture.Height), SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
+            Rectangle Rect = new Rectangle(LinkedObject.MathPos.ToPoint() + Offset.Location, LinkedObject.MathSz.ToPoint() + Offset.Size);
+            Game.Drawing.Draw(Texture, Rect, RenderRegion, Color, LinkedObject.MathRot, Pivot * new Vector2(Texture.Width, Texture.Height), SpriteEffects.None, LinkedObject.Layer + ((float)SubLayer / 1000));
         }
     }
 }

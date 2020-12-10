@@ -14,12 +14,11 @@
 - Changed WaitUntil check interval to every frame
 - Made clear level also clear camera(s)
 - Fixed FixedUpdate loop breaking on ClearLevel
+- Fixed objects beginning to move before the game starts
+- Added relative positions, scaling and rotating
 
 === IN DEVELOPMENT ===
 
 
 
 === TODO LIST ===
-
-- Fix Rotations
-- Add Relative Size
